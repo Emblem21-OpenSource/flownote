@@ -19,7 +19,7 @@ Coming soon!
 
 `npm install flownote`
 
-### Setup
+### Example
 
 ```javascript
 import {
