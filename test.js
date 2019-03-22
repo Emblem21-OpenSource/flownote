@@ -5,6 +5,8 @@ process.on('unhandledRejection', (reason, p) => {
   process.exit(1)
 })
 
+process.on('warning', console.warn)
+
 require = require('esm')(module)
 
 require('./tests/action.js')

@@ -24,10 +24,7 @@
   "scripts": {
     "test": "ava",
     "test-watch": "ava --watch",
-    "test-coverage": "nyc ava",
-    "preversion": "npm test",
-    "version": "git add -A",
-    "postversion": "git commit -m \"Bumping version\" && git push origin master && "
+    "test-coverage": "nyc ava"
   },
   "license": "MIT",
   "repository": "Emblem21-OpenSource/flownote",

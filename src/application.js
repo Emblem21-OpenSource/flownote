@@ -33,12 +33,9 @@ class Application extends CommonClass {
   constructor (id, name, config, publicFlow, flows, actions, inputPipe, outputPipe, errorPipe) {
     super()
 
-    this.inputPipe = outputPipe || process.stdin
+    this.inputPipe = inputPipe || process.stdout
     this.outputPipe = outputPipe || process.stdout
     this.errorPipe = errorPipe || process.strerr
-
-    // Prepare stdin handling
-    this.inputPipe.setEncoding('utf8')
 
     this.fromJSON({
       id: id || IdGenerator()(),
@@ -50,6 +47,15 @@ class Application extends CommonClass {
       flows: flows || [],
       actions: actions || new Map()
     })
+  }
+
+  /**
+   * [listen description]
+   * @return {[type]} [description]
+   */
+  listen () {
+    // Prepare Readable stream handling for the inputPipe
+    this.inputPipe.setEncoding('utf8')
 
     this.inputPipe.on('readable', () => {
       // Gather a chunk of input
@@ -62,6 +68,14 @@ class Application extends CommonClass {
 
     // Register the StdIn end callback
     this.inputPipe.on('end', this.onShutdown)
+  }
+
+  /**
+   * [unlisten description]
+   * @return {[type]} [description]
+   */
+  unlisten () {
+    this.inputPipe.removeAllListeners()
   }
 
   /**
