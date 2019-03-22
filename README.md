@@ -176,7 +176,7 @@ For those interested in porting FlowNote to another language, here are the depen
 * ESM [v3.2.10](https://github.com/standard-things/esm/tree/3.2.10): Easy import/export support
 * Fast Safe Stringify [v2.0.6](https://github.com/davidmarkclements/fast-safe-stringify/tree/v2.0.6): Fast JSON representation (Event emissions)
 
-These dependencies are needed and will also have to be ported or similar alternatives:
+These dependencies are needed and will also have to be ported or be given similar alternatives:
 
 * Ohm [v0.14.0](https://github.com/harc/ohm/tree/v0.14.0): Parser, lexer, and compiler
 * Flatted [v2.0.0](https://github.com/WebReflection/flatted/tree/v2.0.0): Safely represents and restores circular JSON (Application snapshots)
