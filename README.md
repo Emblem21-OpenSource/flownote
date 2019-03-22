@@ -15,8 +15,6 @@ FlowNote is a programming language designed to help reason about and represent f
 
 ### Installation
 
-Coming soon!
-
 `npm install flownote`
 
 ### Example
@@ -140,9 +138,13 @@ Within Actions, variables of the Request can be `set` or `get`. Instead of overw
 
 If you accidentally connect Nodes, Milestones, in a Channel that results in a cyclical loop, FlowNote will detect it and throw a `CyclicalError`.
 
-### Domain Specific Langauge
+### Domain Specific Langauge (Coming soon!)
 
-FlowNote is designed to bring lingustic tooling to flow-based programming.  As a result, it has grammar. It's currently experimental, so check back later.  An intended example would be:
+FlowNote is designed to bring lingustic tooling to flow-based programming.  As a result, it has grammar. It's currently experimental, so check back later.  To generate the following Flow:
+
+![](docs/flowExample.png)
+
+... you can use the following code:
 
 ```flownote
 // clickHandler.flow

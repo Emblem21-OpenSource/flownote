@@ -1,0 +1,24 @@
+{
+  "name": "flownote",
+  "version": "1.0.0",
+  "description": "Language for flow-based programming ",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava",
+    "test-watch": "ava --watch",
+    "test-coverage": "nyc ava"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esm": "3.2.10",
+    "fast-safe-stringify": "2.0.6",
+    "flatted": "2.0.0",
+    "hyperid": "1.4.1",
+    "ohm-js": "0.14.0"
+  },
+  "devDependencies": {
+    "ava": "1.0.0-rc.1",
+    "nyc": "13.1.0"
+  }
+}

@@ -1,0 +1,47 @@
+Empath {
+  Flow
+    = Path
+    | Assignment
+    | EmptyListOf<Nodes, Channel>
+
+  Assignment = label "=" Path
+
+  Path = NonemptyListOf<Nodes, Channel>
+
+  Nodes
+    = MetaNode
+    | Node
+
+  MetaNode = Node "(" ListOf<Node, ",">")"  
+
+  Node
+    = JumpNode
+    | SuppressedNode
+    | IdentityNode
+    | StandardNode
+  JumpNode = "@" StandardNode
+  SuppressedNode = StandardNode "*"
+  IdentityNode = StandardNode "#" label
+  StandardNode = label Properties? ~"="
+
+  Channel
+    = ErrorChannel
+    | PlainChannel
+    | NamedChannel
+  ErrorChannel = label Properties? "!"
+  PlainChannel = "-" Properties? ">"
+  NamedChannel = label Properties? ">"
+
+  Properties = "{" ListOf<Property, ","> "}"
+  Property = label ":" label
+
+  label = (alnum|"_")+
+  string  (a string literal) = "\"" (~"\"" ~"\n" any)* "\""
+  number  (a number literal)
+    = digit* "." digit+  -- fract
+    | digit+             -- whole
+  space += comment
+  comment
+    = "/*" (~"*/" any)* "*/"  -- multiLine
+    | "//" (~"\n" any)*       -- singleLine
+}
