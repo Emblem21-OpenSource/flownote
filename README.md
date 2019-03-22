@@ -78,15 +78,17 @@ const result = await app.request('GET', '/testFlow', {
 })
 ```
 
+To see more isolated examples, check out the [flowExamples.js](tests/flowExamples.js) test.
+
 ## _Concepts_
 
 ### Application
 
-Applications contain Flows (which represent your business logic.) and an Event Queue (for Event progression).  Applications have a `request(httpMethod, httpRoute, parameters)` method which will pass a request through the cooresponding Flow. Applications also can take input and send output to pipes. By default, Applications receive input from  `stdin` and emit all Events progression to `stdout` and `stderr` accordingly.
+Applications contain Flows (which represent your business logic.) and an Event Queue (for Event progression).  Applications have a `request(httpMethod, httpRoute, parameters)` method which will pass a request through the corresponding Flow. Applications also can take input and send output to pipes. By default, Applications receive input from  `stdin` and emit all Events progression to `stdout` and `stderr` accordingly.
 
 ### Flows
 
-Flows contain Nodes and Milestones that are connected together via Channels. Flows can also connect to Flows for maximum reusability of business logic.
+Flows contain Nodes and Milestones that are connected together via Channels. Flows can also connect to Flows to maximize reuse of business logic.
 
 ### Event Queue
 
@@ -102,11 +104,11 @@ Nodes contain Actions and connect to one or more Channels. Node Actions are resp
 
 ### Milestones
 
-Milestones will execute all of their Actions and any Actions that have been `schedule`d prior to the Milestone. Once all `schedule`d Actions are executed, the schedule will be emptied.  It is HIGHLY recommended to `schedule` future Actions in previous Node Actions that are related to retrieving or commiting information to persistent and/or non-idempotent services.  If you don't do this, you will experience difficult-to-reverse transactional situations during parallel processing. Like Nodes, Milestones also connect to one or more Channels and are responsible for their own `dispatch`ing.
+Milestones will execute all of their Actions and any Actions that have been `schedule`d prior to the Milestone. Once all `schedule`d Actions are executed, the schedule will be emptied.  It is HIGHLY recommended to `schedule` future Actions in previous Node Actions that are related to retrieving or committing information to persistent and/or non-idempotent services.  If you don't do this, you will experience difficult-to-reverse transactional situations during parallel processing. Like Nodes, Milestones also connect to one or more Channels and are responsible for their own `dispatch`ing.
 
 ### Channels
 
-Channels are how information is passed between Nodes and Milestones. They accept speicfic events to manage Event progression. If a Node or Milestone throws an error and the preceding Channel had retry options set, the failed Event will be retried upon the erroring Node or Milestone a number of times according to those options. Channels can also have one or more Actions.
+Channels are how information is passed between Nodes and Milestones. They accept specific events to manage Event progression. If a Node or Milestone throws an error and the preceding Channel had retry options set, the failed Event will be retried upon the exception-throwing Node or Milestone a number of times according to those options. Channels can also have one or more Actions.
 
 ## _Features_
 
@@ -138,27 +140,27 @@ Within Actions, variables of the Request can be `set` or `get`. Instead of overw
 
 If you accidentally connect Nodes, Milestones, in a Channel that results in a cyclical loop, FlowNote will detect it and throw a `CyclicalError`.
 
-### Domain Specific Langauge (Coming soon!)
+### Domain Specific Language (Coming soon!)
 
-FlowNote is designed to bring lingustic tooling to flow-based programming.  As a result, it has grammar. It's currently experimental, so check back later.  To generate the following Flow:
+FlowNote is designed to bring the linguistic part of our brains to help reason about and design flow-based programming tasks.  As a result, it has grammar. It's currently experimental, so check back later.  To generate the following Flow:
 
 ![](docs/flowExample.png)
 
 ... you can use the following code:
 
-```flownote
+```java
 // clickHandler.flow
 
-root = getClick -> extractXY
-root xyChannel{ retry:3 }> movePlayer*
-root BoundaryError> displaySyntaxError
+clickEndpoint = getClick -> extractXY
+clickEndpoint xyChannel{ retry:3 }> movePlayer*
+clickEndpoint BoundaryError> displaySyntaxError
 
-clickFlow(GET /click) = root
+clickFlow(GET /click) = clickEndpoint
 ```
 
-In this example, we assume that all Nodes are predefined with predefined Actions.  This example will establish a Flow that can be reached via a `GET /click` Request. The Flow starts with `getClick`, which gets click data from the input pipe. That data is then passed to the `extractXY` via a `StandardChannel`. These connected Nodes are stored into a `root` variable. From there, we use an `xyChannel` to attach the `movePlayer` Node to `extractXY` (at the end of `root`). `xyChannel` has retry options and the `movePlayer` has an asterik, which means it is to act as a `Milestone` since it is committing changes to a player's location.  Additionally, we would also like to handle any BoundaryErrors `extractXY` can generate, so we use a `BoundaryError` Channel to connect the `extractXY` Node to the `displaySyntaxError` Node.  Finally, we attach the root to the clickFlow and expose the clickFlow to `GET /click` Requests.
+In this example, we assume that all Nodes are predefined with predefined Actions.  This example will establish a Flow that can be reached via a `GET /click` Request. The Flow starts with `getClick`, which gets click data from the input pipe. That data is then passed to the `extractXY` via a `StandardChannel`. These connected Nodes are stored into a `clickEndpoint` variable. From there, we use an `xyChannel` to attach the `movePlayer` Node to `extractXY` (at the end of `clickEndpoint`). `xyChannel` has retry options and the `movePlayer` has an asterik, which means it is to act as a `Milestone` since it is committing changes to a player's location.  Additionally, we would also like to handle any BoundaryErrors `extractXY` can generate, so we use a `BoundaryError` Channel to connect the `extractXY` Node to the `displaySyntaxError` Node.  Finally, we attach the clickEndpoint to the clickFlow and expose the clickFlow to `GET /click` Requests.
 
-In four lines of code, we can orchestrate multiple functions together with retry functionality, error handling, sane transactional persistance, and expose them for usage very easily. As a Request moves through Nodes and Channels and Milestones and its values are `set`, the output pipe of the Application will emit JSONs of all Event Progression.
+In four lines of code, we can orchestrate multiple functions together with retry functionality, error handling, sane transactional persistence, and expose them for usage very easily. As a Request moves through Nodes and Channels and Milestones and its values are `set`, the output pipe of the Application will emit JSONs of all Event Progression.
 
 ## _Future_
 
@@ -166,9 +168,9 @@ In four lines of code, we can orchestrate multiple functions together with retry
 * Allow alternative Event Queues to be utilized.
 * Allow Event retries to have a programmatic number of attempts.
 * Allow Event retries to have programmatic delays for throttling compliance.
-* Allow for endpoints and Requests to specify what data they return. (State, varible history, and flow navigation)
+* Allow for endpoints and Requests to specify what data they return. (State, variable history, and flow navigation)
 * Allow Applications to easily integrate into HTTPable services or their middleware.
-* Begin testing the lexxer and parser for simplified FlowNote notation.
+* Begin testing the lexer and parser for simplified FlowNote notation.
 * Build basic library of common Actions that integrate into popular services.
 * Flesh out documentation.
 * Integrate announcement of line coverage for tests via Travis CI.
