@@ -3,6 +3,7 @@ import Spider from './spider'
 
 const Action = require('./action')
 const CommonClass = require('./utils/commonClass')
+const Log = require('./utils/log')
 
 class Channel extends CommonClass {
   /**
@@ -97,6 +98,8 @@ class Channel extends CommonClass {
       }
     }
 
+    this.log = new Log(this.id, 'Channel', this.name, this.application.config.logLevel, this.application.outputPipe, this.application.errorPipe)
+
     return this
   }
 
@@ -133,11 +136,11 @@ class Channel extends CommonClass {
    * @return {[type]}               [description]
    */
   async process (event, actionContext) {
-    this.application.logDebug('Processing channel', this.name)
+    this.log.debug('Processing channel')
     this.application.emit('Channel', this, event.request)
 
     for (const action of this.actions) {
-      this.application.logDebug('Executing channel action', action.name)
+      this.log.debug(`Executing channel action ${action.name}`)
       this.application.emit('Action', action, event.request)
       await action.execute(actionContext)
     }

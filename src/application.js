@@ -7,6 +7,7 @@ const EventQueue = require('./eventQueue')
 const Action = require('./action')
 const Request = require('./request')
 const CommonClass = require('./utils/commonClass')
+const Log = require('./utils/log')
 
 const noop = () => {}
 
@@ -29,14 +30,18 @@ class Application extends CommonClass {
    * @param  {[type]} flows      [description]
    * @return {[type]}            [description]
    */
-  constructor (id, name, config, publicFlow, flows, actions) {
+  constructor (id, name, config, publicFlow, flows, actions, inputPipe, outputPipe, errorPipe) {
     super()
+
+    this.inputPipe = outputPipe || process.stdin
+    this.outputPipe = outputPipe || process.stdout
+    this.errorPipe = errorPipe || process.strerr
 
     this.fromJSON({
       id: id || IdGenerator()(),
       name: name || 'Unnamed',
       config: Object.assign({
-        logLevel: LOG_LEVEL.info
+        logLevel: LOG_LEVEL.info,
       }, config || {}),
       publicFlow: publicFlow || undefined,
       flows: flows || [],
@@ -150,6 +155,9 @@ class Application extends CommonClass {
         this.registerAction(result.actions[i][0], new Action(this).fromJSON(result.actions[i][1]))
       }
     }
+
+    this.log = new Log(this.id, 'Application', this.name, this.config.logLevel, this.outputPipe, this.errorPipe)
+
     return this
   }
 
@@ -173,7 +181,7 @@ class Application extends CommonClass {
    * @return {[type]}             [description]
    */
   dispatch (type, request, flow, from, retries = 0, error) {
-    this.logDebug('Dispatch starts from', from.name, 'with type', type)
+    this.log.debug(`Dispatch starts from ${from.name} with type ${type}`)
 
     if (from.to) {
       if (from.to instanceof Array) {
@@ -182,8 +190,8 @@ class Application extends CommonClass {
 
         for (const channel in from.to) {
           if (from.to[channel].accepts.indexOf(type) > -1) {
-            this.logDebug('... and leads to', from.to[channel].name)
-            this.logDebug('Dispatching', type, 'to', from.to[channel].name)
+            this.log.debug(`... and leads to ${from.to[channel].name}`)
+            this.log.debug(`Dispatching ${type} to ${from.to[channel].name}`)
             const event = new Event(this, undefined, type, request, from.to[channel], flow, retries)
             this.eventQueue.push(event)
             dispatched = true
@@ -192,7 +200,6 @@ class Application extends CommonClass {
 
         if (!dispatched) {
           if (error) {
-            this.logDebug('Throwing error 1')
             // Throw an error if an Error channel was not found
             this.emit('Flow.end', flow, request, error)
           }
@@ -202,11 +209,10 @@ class Application extends CommonClass {
       } else {
         if (error) {
           // Throw an error if an Error channel was not found
-          this.logDebug('Throwing error 2')
           this.emit('Flow.end', flow, request, error)
         } else {
           // Dealing with a Channel
-          this.logDebug('... and leads to', from.to.name)
+          this.log.debug('... and leads to', from.to.name)
           const event = new Event(this, undefined, type, request, from.to, flow, retries)
           this.eventQueue.push(event)
         }
@@ -214,10 +220,9 @@ class Application extends CommonClass {
     } else {
       if (error) {
         // Throw an error if an Error channel was not found
-        this.logDebug('Throwing error 3')
         this.emit('Flow.end', flow, request, error)
       } else {
-        this.logDebug('... and leads to', from.to.name)
+        this.log.debug(`... and leads to ${from.to.name}`)
         const event = new Event(this, undefined, type, request, from.to, flow, retries)
         this.eventQueue.push(event)
       }
@@ -387,7 +392,7 @@ class Application extends CommonClass {
    * @return {[type]}        [description]
    */
   async request (method, path, params) {
-    this.logDebug('Starting Request...')
+    this.log.debug('Starting Request...')
     const flow = this.getFlowByHttp(method, path)
 
     if (typeof params === 'string') {

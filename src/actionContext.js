@@ -1,4 +1,5 @@
 const instances = new WeakMap()
+const Log = require('./utils/log')
 
 class ActionContext {
   /**
@@ -16,6 +17,8 @@ class ActionContext {
       location,
       request
     })
+
+    this.log = new Log(request.id, 'ActionContext', location.name, application.config.logLevel, application.outputPipe, application.errorPipe)
   }
 
   /**
@@ -68,26 +71,26 @@ class ActionContext {
    */
   async waitFor (stepId, callback) {
     const { application, request } = instances.get(this)
-    application.logDebug('Registering waitFor...')
+    this.log.debug('Registering waitFor...')
 
     // Check to see if the step has already been processed
     for (const step in request.steps) {
       if (request.steps[step].stepId === stepId) {
-        application.logDebug('Resolving waitFor...')
+        this.log.debug('Resolving waitFor...')
         return callback(request)
       }
     }
 
     return new Promise((resolve, reject) => {
       const listener = application.on('Node', async (source, resultRequest, error) => {
-        application.logDebug(`Waiting for ${source.name}...`)
+        this.log.debug(`Waiting for ${source.name}...`)
         if (error !== undefined) {
           return reject(resultRequest)
         }
 
         if (resultRequest === request && source.id === stepId) {
           let result
-          application.logDebug(`WaitFor ${source.name} complete.`)
+          this.log.debug(`WaitFor ${source.name} complete.`)
           application.off(listener)
           if (callback) {
             result = await callback(resultRequest)

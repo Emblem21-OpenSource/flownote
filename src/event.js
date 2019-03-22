@@ -6,6 +6,7 @@ import Flow from './flow'
 
 const Request = require('./request')
 const CommonClass = require('./utils/commonClass')
+const Log = require('./utils/log')
 
 class Event extends CommonClass {
   /**
@@ -24,7 +25,6 @@ class Event extends CommonClass {
         id: id || this.application.getUniqueId(),
         request: request || undefined,
         from: from || undefined,
-        // target: target || undefined,
         flow: flow || undefined,
         type: type || 'event',
         retries: retries || 0,
@@ -59,7 +59,6 @@ class Event extends CommonClass {
       id: this.id,
       request: this.request,
       from: this.from.id,
-      // target: this.target.id,
       type: this.type,
       flow: this.flow.id,
       retries: this.retries
@@ -93,16 +92,11 @@ class Event extends CommonClass {
     }
 
     if (result.from instanceof Node || result.from instanceof Milestone || result.from instanceof Channel || result.from instanceof Flow) {
-    // if (result.target instanceof Node || result.target instanceof Milestone || result.target instanceof Channel || result.target instanceof Flow) {
       this.from = result.from
-      // this.target = result.target
     } else if (result.from !== undefined) {
-    // } else if (result.target !== undefined) {
       const existingNode = new Spider().search(this.application, result.from) // result.from will be an id
-      // const existingNode = new Spider().search(this.application, result.target) // result.from will be an id
       // The node/channel/milestone/flow will exist at the time the event is rehydrated
       this.from = existingNode
-      // this.target = existingNode
     }
 
     if (result.flow instanceof Flow) {

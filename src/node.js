@@ -2,6 +2,7 @@ import Channel from './channel'
 
 const Action = require('./action')
 const CommonClass = require('./utils/commonClass')
+const Log = require('./utils/log')
 
 class Node extends CommonClass {
   /**
@@ -81,6 +82,8 @@ class Node extends CommonClass {
       }
     }
 
+    this.log = new Log(this.id, 'Node', this.name, this.application.config.logLevel, this.application.outputPipe, this.application.errorPipe)
+
     return this
   }
 
@@ -116,11 +119,11 @@ class Node extends CommonClass {
    * @return {[type]}               [description]
    */
   async process (event, actionContext) {
-    this.application.logDebug('Processing node', this.name)
+    this.log.debug(`Processing node ${this.name}`)
     this.application.emit('Node', this, event.request)
 
     for (const action of this.actions) {
-      this.application.logDebug('Executing node action', action.name)
+      this.log.debug(`Executing node action ${action.name}`)
       this.application.emit('Action', action, event.request)
       await action.execute(actionContext)
     }

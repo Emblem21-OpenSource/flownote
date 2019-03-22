@@ -3,6 +3,7 @@ import Spider from './spider'
 
 const CommonClass = require('./utils/commonClass')
 const Request = require('./request')
+const Log = require('./utils/log')
 
 const noop = () => {}
 
@@ -107,6 +108,8 @@ class Flow extends CommonClass {
     this.onError = noop
     this.onComplete = noop
 
+    this.log = new Log(this.id, 'Flow', this.name, this.application.config.logLevel, this.application.outputPipe, this.application.errorPipe)
+
     return this
   }
 
@@ -139,9 +142,9 @@ class Flow extends CommonClass {
     this.application.emit('Flow.start', this, request)
 
     return new Promise((resolve, reject) => {
-      this.application.logDebug(`Waiting for Request ${request.id} to complete...`)
+      this.log.debug(`Waiting for Request ${request.id} to complete...`)
       const listener = this.application.on('Flow.end', (source, resultRequest, error) => {
-        this.application.logDebug('Handling flow end...')
+        this.log.debug('Handling flow end...')
 
         if (error !== undefined) {
           return reject(error)
@@ -149,12 +152,12 @@ class Flow extends CommonClass {
 
         if (resultRequest === request) {
           this.application.off(listener)
-          this.application.logDebug(`Request ${request.id} complete.`)
+          this.log.debug(`Request ${request.id} complete.`)
           resolve(resultRequest.getState())
         }
       })
 
-      this.application.logDebug('Dispatching flow...')
+      this.log.debug('Dispatching flow...')
       this.application.dispatch(`Flow.start`, request, this, this)
     })
   }
@@ -166,11 +169,11 @@ class Flow extends CommonClass {
    * @return {[type]}               [description]
    */
   async process (event, actionContext) {
-    this.application.logDebug('Processing flow', this.name)
+    this.log.debug('Processing flow', this.name)
     this.application.emit('Flow.start', this, event.request)
 
     if (this.to !== undefined) {
-      this.application.logDebug('Dispatching event to proceed to node from flow...')
+      this.log.debug('Dispatching event to proceed to node from flow...')
       this.application.dispatch(`Node.${this.to.name}`, event.request, this, this.to)
     }
   }

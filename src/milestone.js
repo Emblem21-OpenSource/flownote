@@ -2,6 +2,7 @@ import Channel from './channel'
 
 const Action = require('./action')
 const CommonClass = require('./utils/commonClass')
+const Log = require('./utils/log')
 
 class Milestone extends CommonClass {
   /**
@@ -83,6 +84,8 @@ class Milestone extends CommonClass {
 
     this.requestIdHistory = []
 
+    this.log = new Log(this.id, 'Milestone', this.name, this.application.config.logLevel, this.application.outputPipe, this.application.errorPipe)
+
     return this
   }
 
@@ -119,12 +122,16 @@ class Milestone extends CommonClass {
    * @return {[type]}               [description]
    */
   async process (event, actionContext) {
+    this.log.debug(`Processing Milestone`)
     this.application.emit('Milestone.start', this, event.request)
     for (const action of this.actions) {
+      this.log.debug(`Executing Milestone action ${action.name}`)
+      this.application.emit('Action', action, event.request)
       await action.execute(actionContext)
     }
 
     for (const accumulatedAction of event.request.accumulatedActions) {
+      this.log.debug(`Executing Accumulated action ${action.name}`)
       this.application.emit('Action', accumulatedAction, event.request)
       await accumulatedAction.execute(actionContext)
     }

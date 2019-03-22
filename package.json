@@ -17,7 +17,7 @@
     "flow",
     "etl",
     "pipeline",
-    "unity"
+    "unity",
     "piping",
     "pipes"
   ],
@@ -36,6 +36,8 @@
     "node": ">=8.11.1"
   },
   "dependencies": {
+    "chalk": "^2.4.2",
+    "colors": "^1.2.0-rc0",
     "esm": "3.2.10",
     "fast-safe-stringify": "2.0.6",
     "flatted": "2.0.0",

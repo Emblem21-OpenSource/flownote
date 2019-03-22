@@ -2,6 +2,7 @@ const CyclicalError = require('./errors/cyclicalError')
 
 const noop = () => {}
 const stacks = new WeakMap()
+const Log = require('./utils/log')
 
 /**
  *
@@ -36,6 +37,22 @@ class Request {
     this.accumulatedActions = []
     this.steps = []
     this.stack = stacks.set(this, new Map())
+
+    this.log = new Log(this.id, 'Request', this.application.name, this.application.config.logLevel, this.application.outputPipe, this.application.errorPipe)
+  }
+
+  /**
+   * [toJSON description]
+   * @return {[type]} [description]
+   */
+  toJSON () {
+    return {
+      id: this.id,
+      changes: this.changes,
+      accumulatedActions: this.accumulatedActions,
+      steps: this.steps,
+      state: this.getState()
+    }
   }
 
   /**
