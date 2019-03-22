@@ -37,6 +37,9 @@ class Application extends CommonClass {
     this.outputPipe = outputPipe || process.stdout
     this.errorPipe = errorPipe || process.strerr
 
+    // Prepare stdin handling
+    this.inputPipe.setEncoding('utf8')
+
     this.fromJSON({
       id: id || IdGenerator()(),
       name: name || 'Unnamed',
@@ -47,6 +50,18 @@ class Application extends CommonClass {
       flows: flows || [],
       actions: actions || new Map()
     })
+
+    this.inputPipe.on('readable', () => {
+      // Gather a chunk of input
+      const chunk = this.inputPipe.read()
+      if (chunk !== null) {
+        // @TODO Possible buffering?
+        this.onInput.call(self, chunk)
+      }
+    })
+
+    // Register the StdIn end callback
+    this.inputPipe.on('end', this.onShutdown)
   }
 
   /**
@@ -56,6 +71,22 @@ class Application extends CommonClass {
    */
   setOnEvent (callback) {
     this.onEvent = callback || noop
+  }
+
+  /**
+   * [setOnInput description]
+   * @param {Function} callback [description]
+   */
+  setOnInput (callback) {
+    this.onInput = callback || noop
+  }
+
+  /**
+   * [setOnInput description]
+   * @param {Function} callback [description]
+   */
+  setOnShutdown (callback) {
+    this.onShutdown = callback || noop
   }
 
   /**
@@ -131,6 +162,8 @@ class Application extends CommonClass {
     this.eventQueue = new EventQueue(this, result.eventQueue || [])
     this.listeners = []
     this.onEvent = noop
+    this.onInput = noop
+    this.onShutdown = noop
 
     if (result.publicFlow instanceof Flow) {
       this.publicFlow = result.publicFlow

@@ -84,7 +84,7 @@ To see more isolated examples, check out the [flowExamples.js](tests/flowExample
 
 ### Application
 
-Applications contain Flows (which represent your business logic.) and an Event Queue (for Event progression).  Applications have a `request(httpMethod, httpRoute, parameters)` method which will pass a request through the corresponding Flow. Applications also can take input and send output to pipes. By default, Applications receive input from  `stdin` and emit all Events progression to `stdout` and `stderr` accordingly.
+Applications contain Flows (which represent your business logic.) and an Event Queue (for Event progression).  Applications have a `request(httpMethod, httpRoute, parameters)` method which will pass a request through the corresponding Flow. Applications also can take input and send output to pipes. By default, Applications receive input from  `stdin` and emit all Events progression to `stdout` and `stderr` accordingly.  Input pipe chunks are processed by the callback passed into `setOnInput()`. If the input pipe closes, the callback passed into `setOnShutdown()` will fire.
 
 ### Flows
 
@@ -172,6 +172,6 @@ In four lines of code, we can orchestrate multiple functions together with retry
 * Allow Applications to easily integrate into HTTPable services or their middleware.
 * Begin testing the lexer and parser for simplified FlowNote notation.
 * Build basic library of common Actions that integrate into popular services.
-* Flesh out documentation.
+* Provide robust documentation designed for onboarding.
 * Integrate announcement of line coverage for tests via Travis CI.
 * Allow for browser-friendly implementation.
