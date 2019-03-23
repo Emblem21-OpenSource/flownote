@@ -143,6 +143,10 @@ By default, Applications receive input from  `stdin` and emit all Events progres
 
 Applications initiate requests into Flows with the `request(httpMethod, httpRoute, parameters)` method. which will pass a request through the corresponding Flow. To simplify usage, Application instances can pass their `httpRequestHandler` method into any `http.createServer()` method and HTTP requests will map to Flows according to their method and route definitions.  HTTP GET queries are converted into parameters automatically.
 
+### Browser-Friendly
+
+FlowNote can be ran in the browser as well! Go [here](https://cdn.rawgit.com/emblem21-opensource/flownote>/master/dist/index.html) and checkout the console and network tabs! If you'd like to test out the browser builds locally, run `npm run browser-test` and open `http://localhost:1000`.
+
 ### Domain Specific Language (Coming soon!)
 
 FlowNote is designed to bring the linguistic part of our brains to help reason about and design flow-based programming tasks.  As a result, it has grammar. It's currently experimental, so check back later.  To generate the following Flow:
@@ -178,7 +182,6 @@ In four lines of code, we can orchestrate multiple functions together with retry
 * Build basic library of common Actions that integrate into popular services.
 * Provide robust documentation designed for onboarding.
 * Integrate announcement of line coverage for tests
-* Allow for browser-friendly implementation.
 
 ## _Developing_
 
