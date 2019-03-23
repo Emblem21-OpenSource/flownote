@@ -30,7 +30,7 @@
     "browser-build": "./node_modules/.bin/webpack --mode production --colors",
     "browser-test": "./node_modules/.bin/webpack-dev-server --mode development --hot --colors",
     "preversion": "npm test",
-    "version": "npm run browser-build"
+    "version": "npm run browser-build && git add -A && git commit -m 'New Release'"
   },
   "license": "MIT",
   "repository": "Emblem21-OpenSource/flownote",

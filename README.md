@@ -180,6 +180,10 @@ In four lines of code, we can orchestrate multiple functions together with retry
 * Integrate announcement of line coverage for tests
 * Allow for browser-friendly implementation.
 
+## _Developing_
+
+When you're ready to submit pull requests, make sure you create a new branch off of the most recent tag (`git checkout -b <nameOfYourBranch> <version>`), modify your code, run `npm version patch`, then push the commit.
+
 ## _Porting_
 
 For those interested in porting FlowNote to another language, here are the dependencies that are optional:
