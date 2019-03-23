@@ -1,6 +1,6 @@
 {
   "name": "flownote",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0",
   "description": "Language for flow-based programming",
   "main": "index.js",
   "keywords": [
