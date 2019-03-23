@@ -1,6 +1,6 @@
 {
   "name": "flownote",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.6",
   "description": "Language for flow-based programming",
   "main": "index.js",
   "keywords": [
@@ -31,7 +31,8 @@
     "browser-test": "./node_modules/.bin/webpack-dev-server --mode development --hot --colors",
     "preversion": "npm test",
     "version": "npm run browser-build && git add -A && git commit -m 'New Release'",
-    "publish": " npm publish --tag next --access public"
+    "publish-next": "npm publish --tag next --access public",
+    "publish-latest": "npm publish --tag latest --access public"
   },
   "license": "MIT",
   "repository": "Emblem21-OpenSource/flownote",
