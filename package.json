@@ -44,8 +44,8 @@
   },
   "devDependencies": {
     "ava": "1.0.0-rc.1",
-    "clinic": "^4.0.0",
-    "fuzzur": "^0.1.2",
+    "clinic": "4.0.0",
+    "fuzzur": "0.1.2",
     "nyc": "13.1.0"
   }
 }

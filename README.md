@@ -75,9 +75,7 @@ To see more isolated examples, check out the [flowExamples.js](tests/flowExample
 
 ### Application
 
-Applications contain Flows (which represent your business logic.) and an Event Queue (for Event progression).  Applications have a `request(httpMethod, httpRoute, parameters)` method which will pass a request through the corresponding Flow. Applications also can take input and send output to pipes.
-
-By default, Applications receive input from  `stdin` and emit all Events progression to `stdout` and `stderr` accordingly.  Input pipe chunks are processed by the callback passed into `setOnInput()`. If the input pipe closes, the callback passed into `setOnShutdown()` will fire. You have to manually activate `stdin` listening with a call to `listen()`. To stop `stdin` processing, use `unlisten()`
+Applications contain Flows (which represent your business logic.) and an Event Queue (for Event progression).
 
 ### Flows
 
@@ -133,6 +131,18 @@ Within Actions, variables of the Request can be `set` or `get`. Instead of overw
 
 If you accidentally connect Nodes, Milestones, in a Channel that results in a cyclical loop, FlowNote will detect it and throw a `CyclicalError`.
 
+### Profiling
+
+FlowNote uses [Clinic](https://clinicjs.org/) to perform profiling. You can run a profile with `npm run profiler` for a simple overview and `npm run profiler-explorer` for a comprehensive profile breakdown.
+
+### Custom Streaming
+
+By default, Applications receive input from  `stdin` and emit all Events progression to `stdout` and `stderr` accordingly.  Custom streams can passed into the Application's constructor. Input data events are passed to the callback set with `setOnInput()`. When the input strean closes, the callback passed into `setOnShutdown()` will fire. You have to manually activate input stream listening with a call to `listen()`. To stop taking input stream events, use `unlisten()`
+
+### HTTP Server Integration
+
+Applications initiate requests into Flows with the `request(httpMethod, httpRoute, parameters)` method. which will pass a request through the corresponding Flow. To simplify usage, Application instances can pass their `httpRequestHandler` method into any `http.createServer()` method and HTTP requests will map to Flows according to their method and route definitions.  HTTP GET queries are converted into parameters automatically.
+
 ### Domain Specific Language (Coming soon!)
 
 FlowNote is designed to bring the linguistic part of our brains to help reason about and design flow-based programming tasks.  As a result, it has grammar. It's currently experimental, so check back later.  To generate the following Flow:
@@ -157,16 +167,17 @@ In four lines of code, we can orchestrate multiple functions together with retry
 
 ## _Future_
 
-* Fuzz test the Event Queue to ensure memory leaks aren't happening
 * Allow alternative Event Queues to be utilized.
 * Allow Event retries to have a programmatic number of attempts.
 * Allow Event retries to have programmatic delays for throttling compliance.
 * Allow for endpoints and Requests to specify what data they return. (State, variable history, and flow navigation)
-* Allow Applications to easily integrate into HTTPable services or their middleware.
+* Allow HTTP handler to throw 404s.
+* Allow HTTP POST requests to convert their body into parameters.
+* Improve performance by dealing with the limits of setImmediate.
 * Begin testing the lexer and parser for simplified FlowNote notation.
 * Build basic library of common Actions that integrate into popular services.
 * Provide robust documentation designed for onboarding.
-* Integrate announcement of line coverage for tests via Travis CI.
+* Integrate announcement of line coverage for tests
 * Allow for browser-friendly implementation.
 
 ## _Porting_
@@ -177,6 +188,7 @@ For those interested in porting FlowNote to another language, here are the depen
 * Colors [v1.2.0-rc0](https://github.com/Marak/colors.js/tree/v1.2.0-rc0): Cross-terminal coloring tool
 * ESM [v3.2.10](https://github.com/standard-things/esm/tree/3.2.10): Easy import/export support
 * Fast Safe Stringify [v2.0.6](https://github.com/davidmarkclements/fast-safe-stringify/tree/v2.0.6): Fast JSON representation (Event emissions)
+* ClinicJS [v4.0.0](https://github.com/nearform/node-clinic/tree/v4.0.0): Profiling tool
 
 These dependencies are needed and will also have to be ported or be given similar alternatives:
 

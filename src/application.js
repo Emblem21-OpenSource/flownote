@@ -50,6 +50,19 @@ class Application extends CommonClass {
   }
 
   /**
+   * [onHttpRequest description]
+   * @param  {[type]} req [description]
+   * @param  {[type]} res [description]
+   * @return {[type]}     [description]
+   */
+  async httpRequestHandler (req, res) {
+    const parts = req.url.split('?')
+    const result = await app.request(req.method, parts[0], parts[1])
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end(JSON.stringify(result))
+  }
+
+  /**
    * [listen description]
    * @return {[type]} [description]
    */
