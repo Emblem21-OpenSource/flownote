@@ -145,7 +145,7 @@ Applications initiate requests into Flows with the `request(httpMethod, httpRout
 
 ### Browser-Friendly
 
-FlowNote can be ran in the browser as well! Go [here](https://cdn.rawgit.com/emblem21-opensource/flownote>/master/dist/index.html) and checkout the console and network tabs! If you'd like to test out the browser builds locally, run `npm run browser-test` and open `http://localhost:1000`.
+FlowNote can be ran in the browser as well! Go [here](https://htmlpreview.github.io/?https://github.com/Emblem21-OpenSource/flownote/blob/master/dist/index.html) and checkout the console and network tabs! If you'd like to test out the browser builds locally, run `npm run browser-test` and open `http://localhost:1000`.
 
 ### Domain Specific Language (Coming soon!)
 
