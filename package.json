@@ -26,7 +26,9 @@
     "test-watch": "ava --watch",
     "test-coverage": "nyc ava",
     "profiler": "./node_modules/.bin/clinic doctor --autocannon / --method GET -- node profiler.js",
-    "profiler-explorer": "./node_modules/.bin/clinic bubbleprof --autocannon / --method GET -- node profiler.js"
+    "profiler-explorer": "./node_modules/.bin/clinic bubbleprof --autocannon / --method GET -- node profiler.js",
+    "browser-build": "./node_modules/.bin/webpack --mode production --colors",
+    "browser-test": "./node_modules/.bin/webpack-dev-server --mode development --hot --colors"
   },
   "license": "MIT",
   "repository": "Emblem21-OpenSource/flownote",
@@ -43,9 +45,25 @@
     "ohm-js": "0.14.0"
   },
   "devDependencies": {
+    "@babel/core": "7.4.0",
+    "@babel/plugin-syntax-dynamic-import": "7.2.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.4.0",
+    "@babel/preset-env": "7.4.2",
+    "autoprefixer": "9.5.0",
     "ava": "1.0.0-rc.1",
+    "babel-core": "6.26.3",
+    "babel-loader": "8.0.5",
+    "babel-preset-env": "1.7.0",
+    "clean-webpack-plugin": "2.0.1",
     "clinic": "4.0.0",
+    "compression-webpack-plugin": "2.0.0",
+    "copy-webpack-plugin": "5.0.2",
     "fuzzur": "0.1.2",
-    "nyc": "13.1.0"
+    "nyc": "13.1.0",
+    "terser": "3.17.0",
+    "webpack": "4.29.6",
+    "webpack-cli": "3.3.0",
+    "webpack-dev-server": "3.2.1",
+    "webpack-md5-hash": "0.0.6"
   }
 }

@@ -1,4 +1,4 @@
-# FlowNote
+![FlowNote](docs/logo.png)
 
 FlowNote is a programming language designed to help reason about and represent flow-based paradigms.
 

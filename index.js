@@ -1,14 +1,4 @@
 require = require('esm')(module)
+const FlowNote = require('./src/index')
 
-exports.Action = require('./src/action.js')
-exports.Application = require('./src/application.js')
-exports.Channel = require('./src/channel.js')
-exports.Event = require('./src/event.js')
-exports.Flow = require('./src/flow.js')
-exports.Milestone = require('./src/milestone.js')
-exports.Node = require('./src/node.js')
-exports.Request = require('./src/request.js')
-exports.Spider = require('./src/spider.js')
-exports.StandardChannel = require('./src/channels/standardChannel.js')
-exports.StandardNode = require('./src/nodes/standardNode.js')
-exports.ErrorChannel = require('./src/channels/errorChannel.js')
+module.exports = FlowNote

@@ -219,7 +219,7 @@ test('Self-referential flow to trigger cyclical error', async t => {
   }
 })
 
-test('Flow with waitFor', async t => {
+test.skip('Flow with waitFor', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
   app.setPublicFlow(flow)

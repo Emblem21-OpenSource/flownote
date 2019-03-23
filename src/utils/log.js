@@ -17,15 +17,15 @@ const LOG_LEVEL = {
  * @return {[type]}      [description]
  */
 const getLog = (id, type, name, data) => {
-  const header = colors.gray.dim('<') + 
+  const header = colors.gray.dim('<') +
     colors.yellow(new Date().toISOString()) +
     colors.gray('>') +
-    ' ' + 
+    ' ' +
     colors.cyan(type) +
     colors.white('.') +
     colors.magenta(name) +
-    ' ' + 
-    colors.gray('[') + 
+    ' ' +
+    colors.gray('[') +
     colors.blue(id) +
     colors.gray(']') +
     colors.green(' ')
@@ -40,7 +40,6 @@ const getLog = (id, type, name, data) => {
 
 class Log {
   constructor (contextId, contextType, contextName, logLevel, outputPipe, errorPipe) {
-
     this.contextId = contextId
     this.contextName = contextName
     this.contextType = contextType

@@ -11,15 +11,6 @@ const Log = require('./utils/log')
 
 const noop = () => {}
 
-const LOG_LEVEL = {
-  error: 1,
-  warning: 2,
-  info: 3,
-  debug: 4
-}
-
-process.on('unhandledRejection', () => {})
-
 class Application extends CommonClass {
   /**
    * [constructor description]
@@ -41,7 +32,7 @@ class Application extends CommonClass {
       id: id || IdGenerator()(),
       name: name || 'Unnamed',
       config: Object.assign({
-        logLevel: LOG_LEVEL.info,
+        logLevel: 3
       }, config || {}),
       publicFlow: publicFlow || undefined,
       flows: flows || [],
@@ -57,8 +48,8 @@ class Application extends CommonClass {
    */
   async httpRequestHandler (req, res) {
     const parts = req.url.split('?')
-    const result = await app.request(req.method, parts[0], parts[1])
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    const result = await this.request(req.method, parts[0], parts[1])
+    res.writeHead(200, { 'Content-Type': 'text/plain' })
     res.end(JSON.stringify(result))
   }
 
@@ -72,11 +63,7 @@ class Application extends CommonClass {
 
     this.inputPipe.on('readable', () => {
       // Gather a chunk of input
-      const chunk = this.inputPipe.read()
-      if (chunk !== null) {
-        // @TODO Possible buffering?
-        this.onInput.call(self, chunk)
-      }
+      this.onInput(this.inputPipe.read())
     })
 
     // Register the StdIn end callback
@@ -471,63 +458,6 @@ class Application extends CommonClass {
 
     return result
   }
-
-  /**
-   * [warn description]
-   * @param  {...[type]} args [description]
-   * @return {[type]}         [description]
-   */
-  logWarning (...args) {
-    if (this.config.logLevel >= LOG_LEVEL.warn) {
-      console.warn(getLogHeader(this.id), args.join(' '))
-    }
-    return this
-  }
-
-  /**
-   * [error description]
-   * @param  {...[type]} args [description]
-   * @return {[type]}         [description]
-   */
-  logError (...args) {
-    if (this.config.logLevel >= LOG_LEVEL.error) {
-      console.error(getLogHeader(this.id), args.join(' '))
-    }
-    return this
-  }
-
-  /**
-   * [log description]
-   * @param  {...[type]} args [description]
-   * @return {[type]}         [description]
-   */
-  logDebug (...args) {
-    if (this.config.logLevel >= LOG_LEVEL.debug) {
-      console.log(getLogHeader(this.id), args.join(' '))
-    }
-    return this
-  }
-
-  /**
-   * [info description]
-   * @param  {...[type]} args [description]
-   * @return {[type]}         [description]
-   */
-  logInfo (...args) {
-    if (this.config.logLevel >= LOG_LEVEL.info) {
-      console.info(getLogHeader(this.id), args.join(' '))
-    }
-    return this
-  }
-}
-
-/**
- * [description]
- * @param  {[type]} id [description]
- * @return {[type]}    [description]
- */
-const getLogHeader = (id) => {
-  return `<${new Date().toISOString()}>`
 }
 
 export { Application as default }

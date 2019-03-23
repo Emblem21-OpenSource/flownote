@@ -60,7 +60,7 @@ function createApp () {
   return app
 }
 
-test.only('Fuzz Testing Request', async t => {
+test('Fuzz Testing Request', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
   app.setPublicFlow(flow)
