@@ -1,6 +1,6 @@
 {
   "name": "flownote",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Language for flow-based programming",
   "main": "index.js",
   "keywords": [
@@ -26,7 +26,7 @@
     "test-watch": "ava --watch",
     "test-coverage": "nyc ava",
     "profiler": "./node_modules/.bin/clinic doctor --autocannon / --method GET -- node profiler.js",
-    "profiler-graph": "./node_modules/.bin/clinic bubbleprof --autocannon / --method GET -- node profiler.js"
+    "profiler-explorer": "./node_modules/.bin/clinic bubbleprof --autocannon / --method GET -- node profiler.js"
   },
   "license": "MIT",
   "repository": "Emblem21-OpenSource/flownote",
