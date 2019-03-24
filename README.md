@@ -10,7 +10,7 @@ FlowNote is a programming language designed to help reason about and represent f
 
 ### Example
 
-```javascript
+```
 import {
   Application,
   Flow,
@@ -105,7 +105,7 @@ Channels are how information is passed between Nodes and Milestones. They accept
 
 ### Output Emission
 
-When a Request is started, a Request is finished, a Flow is started, a Flow has reached an end, a Node/Milestone/Channel Action is being run, a Request variable is `change`d, or an Error is thrown, a JSON object about that Event is printed to the Application's output/error pipes. This is designed primarily for Unity or other render-only platforms to have total transparency into the lifecycle of a FlowNote process.
+When a Request is started, a Request is finished, a Flow is started, a Flow has reached an end, a Node/Milestone/Channel Action is being run, a Request variable is `change`d, or an Error is thrown, a JSON object about that Event is printed to the Application's output/error streams. This is designed primarily for Unity or other render-only platforms to have total transparency into the lifecycle of a FlowNote process.
 
 ### Error Pathing
 
@@ -162,25 +162,25 @@ import 'custom.flow'
 // Create Nodes that execute a series of Actions
 node getClick = extractClickData, extractPlayerId
 node extractXY = getXYCoordsFromClickData
-node movePlayer = getPlayerById, detectPlyerMovementEvents, movePlayer, dispatchPlayerMovementEvents
+node movePlayer = getPlayerById, detectPlayerMovementEvents, movePlayer, dispatchPlayerMovementEvents
 node displayBoundaryError = getPlayerById, sendBoundaryError
 node notifyRoom = getBroadcastMessage, getRoomByPlayerId, broadcastToRoom
 
 // Create a Flow that can be accessed via GET /click
-// The getClick Node has been silenced (@) and will not emit events.
+// The getClick Node has been silenced ($) and will not emit events.
 // getClick connects via a StandardChannel (->) to an extractXY Node.
 // The extractXY Node is given an instance name of "clickBranch"
-flow click(GET /click) = getClick@ -> extractXY#clickBranch
+flow click(GET /click) = getClick$ -> extractXY#clickBranch
 
-// Using the "clickBranch" instance name, we attach an xyChannel (-xyChannel>) to the extractXY Node within the click Flow.
-// Then we connect the xyChannel to a movePlayer Node and allow the Channel to retry exceptions from movePlayer three times.
+// Using the "clickBranch" instance name, we attach a Coordinates Channel (-Coordinates>) to the extractXY Node within the click Flow.
+// Then we connect the Coordinates Channel to a movePlayer Node and allow the Channel to retry exceptions from movePlayer three times.
 // The movePlayer Node is given an instance name of "move".
 // The movePlayer also will have a Milestone after it to commit all accumulated Actions.
-clickBranch -xyChannel{ retry: 3 }> movePlayer#move*
+clickBranch -Coordinates{ retry: 3 }> movePlayer#move*
 
 // Using the "clickBranch" instance name, we attach an ErrorChannel (-ErrorChannel!) to the extractXY Node within the click Flow that accepts BoundaryErrors.
 // Attach a displayError to the ErrorChannel.
-clickBranch -BoundaryError! displayError
+clickBranch -BoundaryError! displayBoundaryError
 
 // Using the "clickBranch" instance name, we attach a notifyRoom node to the extractXY in the click Flow via a StandardChannel. (->)
 // Ensure that notifyRoom waits (...) for the movePlayer Node within the click Flow to complete before performing its actions.
@@ -188,9 +188,7 @@ clickBranch -> notifyRoom ... move
 
 ```
 
-In this example, we assume that all Nodes are predefined with predefined Actions.  This example will establish a Flow that can be reached via a `GET /click` Request. The Flow starts with `getClick`, which gets click data from the input pipe. That data is then passed to the `extractXY` via a `StandardChannel`. These connected Nodes are stored into a `clickEndpoint` variable. From there, we use an `xyChannel` to attach the `movePlayer` Node to `extractXY` (at the end of `clickEndpoint`). `xyChannel` has retry options and the `movePlayer` has an asterik, which means it is to act as a `Milestone` since it is committing changes to a player's location.  Additionally, we would also like to handle any BoundaryErrors `extractXY` can generate, so we use a `BoundaryError` Channel to connect the `extractXY` Node to the `displaySyntaxError` Node.  Finally, we attach the clickEndpoint to the clickFlow and expose the clickFlow to `GET /click` Requests.
-
-In four lines of code, we can orchestrate multiple functions together with retry functionality, error handling, sane transactional persistence, and expose them for usage very easily. As a Request moves through Nodes and Channels and Milestones and its values are `set`, the output pipe of the Application will emit JSONs of all Event Progression.
+In nine lines of code, we can orchestrate multiple functions together with retry functionality, error handling, sane transactional persistence, and expose them for usage very easily. As a Request moves through Nodes and Channels and Milestones and its values are `set`, the output stream of the Application will emit JSONs of all Event Progression.
 
 ## _Future_
 
@@ -205,6 +203,7 @@ In four lines of code, we can orchestrate multiple functions together with retry
 * Build basic library of common Actions that integrate into popular services.
 * Provide robust documentation designed for onboarding.
 * Integrate announcement of line coverage for tests
+* Setup Dockerfile
 
 ## _Developing_
 
