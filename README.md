@@ -10,7 +10,7 @@ FlowNote is a programming language designed to help reason about and represent f
 
 ### Example
 
-```
+```javascript
 import {
   Application,
   Flow,
