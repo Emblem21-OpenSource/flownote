@@ -6,10 +6,10 @@ const querystring = require('querystring')
 const IdGenerator = require('./utils/IdGenerator')
 const EventQueue = require('./eventQueue')
 const Action = require('./action')
+const Delegate = require('./delegate')
 const Request = require('./request')
 const CommonClass = require('./utils/commonClass')
 const Log = require('./utils/log')
-const numCPUs = require('os').cpus().length
 const stringify = require('fast-safe-stringify')
 
 const noop = () => {}
@@ -83,12 +83,8 @@ class Application extends CommonClass {
       // Register the StdIn end callback
       this.inputPipe.on('end', this.onShutdown)
 
-      for (let i = 0; i < numCPUs; i++) {
-        cluster.fork()
-      }
-
-      cluster.on('message', function emitHandler (worker, message) {
-        switch (message.event) {
+      this.delegate.start(function masterHandler (message) {
+        switch (message._event) {
           case 'emit':
             emit(this, {
               type: message.type,
@@ -97,49 +93,20 @@ class Application extends CommonClass {
               error: message.error
             })
             break
-          case 'executeActionComplete':
-          case 'initiateApplicationComplete':
-            const delegate = this.delegates.get(message.delegateId)
-            delete message.delegateId
-
-            if (message.error) {
-              delegate.reject(message)
-            } else {
-              delegate.resolve(message)
-            }
+        }
+      }, async (message) => {
+        switch (message._event) {
+          case 'executeAction':
+            return this.executeAction(message.method, message.path, message.params)
+          case 'initiateApplication':
+            this.fromJSON(message.json)
             break
         }
       })
-
       const json = this.toJSON()
-
-      for (const id in cluster.workers) {
-        cluster.workers[id].on('message', async (worker, message) => {
-          switch (message.event) {
-            case 'executeAction':
-              const result = await this.executeAction(message.method, message.path, message.params)
-              result.delegateId = message.delegateId
-              worker.send('executeActionComplete', result)
-              break
-            case 'initiateApplication':
-              this.fromJSON(message.json)
-              worker.send('initiateApplicationComplete', {
-                delegateId: message.delegateId
-              })
-              break
-          }
-        }).send('initiateApplication', json)
-      }
+      this.delegate.sendAll('initiateApplication', json)
 
       this.listening = true
-
-      const delegateId = this.nextDelegateId
-
-      this.nextDelegateId += 1
-
-      return new Promise((resolve, reject) => {
-        this.registerDelegate(delegateId, resolve, reject)
-      })
     }
   }
 
@@ -151,9 +118,7 @@ class Application extends CommonClass {
     if (cluster.isMaster && this.listening) {
       this.inputPipe.removeAllListeners()
 
-      for (const id in cluster.workers) {
-        cluster.workers[id].kill()
-      }
+      this.delegate.stop()
 
       this.listening = false
     }
@@ -263,6 +228,7 @@ class Application extends CommonClass {
     this.nextWorker = 0
     this.nextDelegateId = 0
     this.delegates = new Map()
+    this.delegate = new Delegate()
 
     if (result.publicFlow instanceof Flow) {
       this.publicFlow = result.publicFlow
@@ -499,7 +465,7 @@ class Application extends CommonClass {
     if (cluster.isMaster) {
       emit(this, message)
     } else if (cluster.isWorker) {
-      message.event = 'emit'
+      message._event = 'emit'
       process.send(message)
     }
   }
@@ -539,45 +505,17 @@ class Application extends CommonClass {
    * @return {[type]}        [description]
    */
   async request (method, path, params) {
-    var i = 0
-    let worker
-    for (const id in cluster.workers) {
-      if (i === this.nextWorker) {
-        worker = cluster.workers[id]
-        break
-      }
-      i += 1
-    }
+    const promise = this.delegate.send('executeAction', {
+      method,
+      path,
+      params
+    })
 
-    this.nextWorker = (this.nextWorker + 1) % (numCPUs + 1)
-
-    if (worker === undefined) {
-      // Use the master process
+    if (!promise) {
       return this.executeAction(method, path, params)
     } else {
-      // Use a child process
-      const delegateId = this.nextDelegateId
-
-      worker.send('executeAction', {
-        method,
-        path,
-        params,
-        delegateId
-      })
-
-      this.nextDelegateId += 1
-
-      return new Promise((resolve, reject) => {
-        this.registerDelegate(delegateId, resolve, reject)
-      })
+      return promise
     }
-  }
-
-  registerDelegate (delegateId, resolve, reject) {
-    this.delegates.set(delegateId, {
-      resolve,
-      reject
-    })
   }
 
   /**
@@ -588,7 +526,6 @@ class Application extends CommonClass {
    * @return {[type]}        [description]
    */
   async executeAction (method, path, params) {
-    this.nextWorker = (this.nextWorker + 1) % numCPUs
     this.log.debug('Starting Request...')
     const flow = this.getFlowByHttp(method, path)
 
