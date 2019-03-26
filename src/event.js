@@ -6,7 +6,6 @@ import Flow from './flow'
 
 const Request = require('./request')
 const CommonClass = require('./utils/commonClass')
-const Log = require('./utils/log')
 
 class Event extends CommonClass {
   /**

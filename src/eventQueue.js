@@ -4,6 +4,7 @@ import ActionContext from './actionContext'
 
 const CommonClass = require('./utils/commonClass')
 const Log = require('./utils/log')
+// const numCPUs = require('os').cpus().length
 
 const pendingEventsMap = new WeakMap()
 

@@ -1,5 +1,6 @@
 const instances = new WeakMap()
 const Log = require('./utils/log')
+const Store = require('./store')
 
 class ActionContext {
   /**
@@ -50,6 +51,27 @@ class ActionContext {
   get (key) {
     const { request } = instances.get(this)
     return request.getState()[key]
+  }
+
+  /**
+   * [fromStore description]
+   * @param  {[type]} name [description]
+   * @param  {[type]} key  [description]
+   * @return {[type]}      [description]
+   */
+  fromStore (name, key) {
+    return Store.get(name, key)
+  }
+
+  /**
+   * [toStore description]
+   * @param  {[type]} name  [description]
+   * @param  {[type]} key   [description]
+   * @param  {[type]} value [description]
+   * @return {[type]}       [description]
+   */
+  toStore (name, key, value) {
+    Store.set(name, key, value)
   }
 
   /**
