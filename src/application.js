@@ -36,7 +36,6 @@ class Application extends CommonClass {
    */
   constructor (id, name, config, publicFlow, flows, actions, inputPipe, outputPipe, errorPipe) {
     super()
-
     this.inputPipe = inputPipe || process.stdout
     this.outputPipe = outputPipe || process.stdout
     this.errorPipe = errorPipe || process.strerr
@@ -51,6 +50,7 @@ class Application extends CommonClass {
       flows: flows || [],
       actions: actions || new Map()
     })
+    this.log.debug(`Constructing application...`)
   }
 
   /**
@@ -82,7 +82,7 @@ class Application extends CommonClass {
 
       // Register the StdIn end callback
       this.inputPipe.on('end', this.onShutdown)
-
+      this.log.debug(`Starting application delegators...`)
       this.delegate.start(function masterHandler (message) {
         switch (message._event) {
           case 'emit':
@@ -98,15 +98,11 @@ class Application extends CommonClass {
         switch (message._event) {
           case 'executeAction':
             return this.executeAction(message.method, message.path, message.params)
-          case 'initiateApplication':
-            this.fromJSON(message.json)
-            break
         }
       })
-      const json = this.toJSON()
-      this.delegate.sendAll('initiateApplication', json)
 
       this.listening = true
+      this.log.debug(`Application listening...`)
     }
   }
 
@@ -116,8 +112,9 @@ class Application extends CommonClass {
    */
   unlisten () {
     if (cluster.isMaster && this.listening) {
+      this.log.debug(`Application no longer listening...`)
       this.inputPipe.removeAllListeners()
-
+      this.log.debug(`Stopping application delegators...`)
       this.delegate.stop()
 
       this.listening = false
@@ -228,7 +225,7 @@ class Application extends CommonClass {
     this.nextWorker = 0
     this.nextDelegateId = 0
     this.delegates = new Map()
-    this.delegate = new Delegate()
+    this.delegate = new Delegate(this)
 
     if (result.publicFlow instanceof Flow) {
       this.publicFlow = result.publicFlow
@@ -505,6 +502,7 @@ class Application extends CommonClass {
    * @return {[type]}        [description]
    */
   async request (method, path, params) {
+    this.log.info(`Requesting ${method} ${path} with ${params}...`)
     const promise = this.delegate.send('executeAction', {
       method,
       path,

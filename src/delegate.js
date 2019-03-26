@@ -6,7 +6,8 @@ class Delegate {
    * [constructor description]
    * @return {[type]} [description]
    */
-  constructor () {
+  constructor (application) {
+    this.application = application
     this.nextId = 0
     this.nextWorker = 0
     this.delegates = new Map()
@@ -28,6 +29,7 @@ class Delegate {
         const delegate = this.delegates.get(message._id)
 
         try {
+          this.application.log.debug(`Master listener...`)
           const result = await masterListener(message)
           if (message._event === 'workerComplete') {
             this.delegates.delete(message._id)
@@ -42,8 +44,9 @@ class Delegate {
       })
 
       for (const id in cluster.workers) {
-        cluster.workers[id].on('message', async function (worker, message) {
-          const result = await workerListener(message) || {}
+        cluster.workers[id].on('message', function (message) {
+          this.application.log.debug(`Worker listener...`)
+          const result = workerListener(message) || {}
           result._id = message._id
           result._event = 'workerComplete'
           process.send(result)
@@ -80,9 +83,10 @@ class Delegate {
    */
   sendAll (event, data) {
     if (cluster.isMaster) {
-      data.event = event
+      this.application.log.debug(`Delegating ${event} to all workers...`)
+      data._event = event
       for (const id in cluster.workers) {
-        cluster.workers[id].send(event, data)
+        cluster.workers[id].send(data)
       }
     }
   }
@@ -109,41 +113,24 @@ class Delegate {
       this.nextWorker = (this.nextWorker + 1) % (numCPUs + 1)
 
       if (worker === undefined) {
+        this.application.log.debug(`Master process is to be used.`)
         return false
       } else {
+        this.application.log.debug(`Process ${worker.id} is to be used.`)
         data._id = this.getNextId()
         data._event = event
-        worker.send(data)
 
         return new Promise((resolve, reject) => {
           this.delegates.set(data._id, {
             resolve,
             reject
           })
+          worker.send(data)
+          this.application.log.debug(`Delegation underway for ${event}...`)
         })
       }
     }
     return false
-  }
-
-  /**
-   * [onComplete description]
-   * @param  {[type]} delegateId [description]
-   * @param  {[type]} message    [description]
-   * @param  {[type]} error      [description]
-   * @return {[type]}            [description]
-   */
-  onComplete (delegateId, message, error) {
-    if (cluster.isMaster) {
-      const delegate = this.delegates.get(delegateId)
-      delete message.delegateId
-
-      if (error) {
-        delegate.reject(message)
-      } else {
-        delegate.resolve(message)
-      }
-    }
   }
 }
 
