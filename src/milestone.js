@@ -95,6 +95,7 @@ class Milestone extends CommonClass {
    * @return {[type]}         [description]
    */
   connect (channel) {
+    this.application.log.debug(`Connecting channel ${channel.name}:${channel.id} to ${this.name} milestone`)
     this.to.push(channel)
   }
 

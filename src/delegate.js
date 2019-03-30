@@ -1,5 +1,5 @@
 const cluster = require('cluster')
-const numCPUs = require('os').cpus().length
+const numCPUs = 1 || require('os').cpus().length
 
 class Delegate {
   /**
@@ -16,15 +16,10 @@ class Delegate {
   /**
    * [start description]
    * @param  {[type]} masterListener [description]
-   * @param  {[type]} workerListener [description]
    * @return {[type]}                [description]
    */
-  start (masterListener, workerListener) {
+  startMaster (masterListener) {
     if (cluster.isMaster) {
-      for (let i = 0; i < numCPUs; i++) {
-        cluster.fork()
-      }
-
       cluster.on('message', async (worker, message) => {
         const delegate = this.delegates.get(message._id)
 
@@ -43,24 +38,41 @@ class Delegate {
         }
       })
 
-      for (const id in cluster.workers) {
-        cluster.workers[id].on('message', function (message) {
-          this.application.log.debug(`Worker listener...`)
-          const result = workerListener(message) || {}
-          result._id = message._id
-          result._event = 'workerComplete'
-          process.send(result)
-        })
+      cluster.setupMaster({
+        silent: true
+      })
+
+      for (let i = 0; i < numCPUs; i++) {
+        cluster.fork()
       }
     }
+  }
+
+  /**
+   * [startWorker description]
+   * @param  {[type]} workerListener [description]
+   * @return {[type]}                [description]
+   */
+  startWorker (workerListener) {
+    this.outputPipe.write('Starting worker')
+    process.on('message', async function (message) {
+      this.outputPipe.write('wack2')
+      this.application.log.debug(`Worker listener...`)
+      const result = await workerListener(message) || {}
+      result._id = message._id
+      result._event = 'workerComplete'
+      process.send(result)
+    })
+    // worker.process.stdout.pipe(this.application.outputPipe)
+    // worker.process.stderr.pipe(this.application.errorPipe)
   }
 
   /**
    * [stop description]
    * @return {[type]} [description]
    */
-  stop () {
-    for (const id in cluster.workers) {
+  stopMaster () {
+    for (var id = 0, len = cluster.workers.length; id < len; id++) {
       cluster.workers[id].kill()
     }
   }
@@ -81,11 +93,11 @@ class Delegate {
    * @param  {[type]} data  [description]
    * @return {[type]}       [description]
    */
-  sendAll (event, data) {
+  async sendAll (event, data) {
     if (cluster.isMaster) {
       this.application.log.debug(`Delegating ${event} to all workers...`)
       data._event = event
-      for (const id in cluster.workers) {
+      for (var id = 0, len = cluster.workers.length; id < len; id++) {
         cluster.workers[id].send(data)
       }
     }
@@ -102,7 +114,7 @@ class Delegate {
       var i = 0
       let worker
 
-      for (const id in cluster.workers) {
+      for (var id = 0, len = cluster.workers.length; id < len; id++) {
         if (i === this.nextWorker) {
           worker = cluster.workers[id]
           break

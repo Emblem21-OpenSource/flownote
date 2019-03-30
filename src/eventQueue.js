@@ -40,6 +40,15 @@ class EventQueue extends CommonClass {
 
     if (enqueue) {
       this.log.debug('Scheduling event queue processing...')
+      /*
+      return new Promise(resolve => {
+        resolve(this.process())
+      })
+      /*
+      Promise.resolve().then(() => {
+        return this.process()
+      })
+      */
       setImmediate(() => {
         return this.process()
       })

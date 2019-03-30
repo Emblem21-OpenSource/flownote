@@ -96,7 +96,7 @@ class ActionContext {
     this.log.debug('Registering waitFor...')
 
     // Check to see if the step has already been processed
-    for (const step in request.steps) {
+    for (var step = 0, len = request.steps.length; step < len; step++) {
       if (request.steps[step].stepId === stepId) {
         this.log.debug('Resolving waitFor...')
         return callback(request)

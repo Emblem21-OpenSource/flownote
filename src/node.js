@@ -109,6 +109,7 @@ class Node extends CommonClass {
    * @return {[type]} [description]
    */
   connect (channel) {
+    this.application.log.debug(`Connecting ${channel.name}:${channel.id} channel to ${this.name} name`)
     this.to.push(channel)
   }
 

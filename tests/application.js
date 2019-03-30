@@ -39,7 +39,8 @@ test('Define Application', t => {
   t.is(app.name, appName)
   t.deepEqual(app.config, {
     a: 7,
-    logLevel: 3
+    logLevel: 2,
+    silent: true
   })
   t.is(app.publicFlow, flow)
   t.is(app.flows.length, 1)
@@ -117,7 +118,8 @@ test('Application.loadFlattened', t => {
   t.is(restoredApp.name, appName)
   t.deepEqual(restoredApp.config, {
     a: 7,
-    logLevel: 3
+    logLevel: 2,
+    silent: true
   })
   t.is(restoredApp.publicFlow.id, flow.id)
   t.is(restoredApp.flows.length, 1)

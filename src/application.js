@@ -1,28 +1,17 @@
 import Flow from './flow'
 import Event from './event'
 
-const cluster = require('cluster')
 const querystring = require('querystring')
 const IdGenerator = require('./utils/IdGenerator')
 const EventQueue = require('./eventQueue')
 const Action = require('./action')
-const Delegate = require('./delegate')
+// const Delegate = require('./delegate')
 const Request = require('./request')
 const CommonClass = require('./utils/commonClass')
 const Log = require('./utils/log')
 const stringify = require('fast-safe-stringify')
 
 const noop = () => {}
-
-function emit (application, message) {
-  if (application.listening) {
-    if (message.error) {
-      application.errorPipe.write(stringify(message))
-    } else {
-      application.outputPipe.write(stringify(message))
-    }
-  }
-}
 
 class Application extends CommonClass {
   /**
@@ -36,21 +25,24 @@ class Application extends CommonClass {
    */
   constructor (id, name, config, publicFlow, flows, actions, inputPipe, outputPipe, errorPipe) {
     super()
-    this.inputPipe = inputPipe || process.stdout
+
+    this.inputPipe = inputPipe || process.stdin
     this.outputPipe = outputPipe || process.stdout
-    this.errorPipe = errorPipe || process.strerr
+    this.errorPipe = errorPipe || process.stderr
 
     this.fromJSON({
       id: id || IdGenerator()(),
       name: name || 'Unnamed',
       config: Object.assign({
-        logLevel: 3
+        logLevel: 2,
+        silent: true
       }, config || {}),
       publicFlow: publicFlow || undefined,
       flows: flows || [],
       actions: actions || new Map()
     })
-    this.log.debug(`Constructing application...`)
+
+    this.log.info('FlowNote running...')
   }
 
   /**
@@ -70,39 +62,64 @@ class Application extends CommonClass {
    * [listen description]
    * @return {[type]} [description]
    */
-  listen () {
+  async listen () {
+    this.log.debug('Listening')
+    this.log.debug(this.listening)
     // Prepare Readable stream handling for the inputPipe
-    if (cluster.isMaster && !this.listening) {
+    if (!this.listening) {
+      // Master
       this.inputPipe.setEncoding('utf8')
 
       this.inputPipe.on('readable', () => {
         // Gather a chunk of input
-        this.onInput(this.inputPipe.read())
+        let chunk
+        while ((chunk = this.inputPipe.read()) !== null) {
+          this.onInput(chunk)
+        }
       })
 
       // Register the StdIn end callback
       this.inputPipe.on('end', this.onShutdown)
-      this.log.debug(`Starting application delegators...`)
-      this.delegate.start(function masterHandler (message) {
-        switch (message._event) {
-          case 'emit':
-            emit(this, {
-              type: message.type,
-              data: message.data,
-              state: message.state,
-              error: message.error
-            })
-            break
-        }
-      }, async (message) => {
-        switch (message._event) {
-          case 'executeAction':
-            return this.executeAction(message.method, message.path, message.params)
-        }
-      })
 
       this.listening = true
-      this.log.debug(`Application listening...`)
+      /*
+      if (cluster.isMaster) {
+        this.log.debug(`Starting workers...`)
+
+        const delegatePromise = new Promise(resolve => {
+          let completed = 0
+          cluster.on('online', (worker) => {
+            this.log.debug(`Worker ${worker.id} ready`)
+            completed += 1
+            if (completed === numCPUs) {
+              resolve()
+            }
+          })
+
+          this.delegate.startMaster(function masterHandler (message) {
+            switch (message._event) {}
+          })
+        })
+
+        delegatePromise.then(() => {
+          this.listening = true
+          this.log.debug(`Application ready`)
+        })
+
+        return delegatePromise
+      } else {
+        // Worker
+        this.outputPipe.write('Worker listen')
+        this.delegate.startWorker(async message => {
+          switch (message._event) {
+            case 'executeAction':
+              this.application.debug('Got message', message)
+              return this.executeAction(message.method, message.path, message.params)
+          }
+        })
+        this.listening = true
+      }
+      */
     }
   }
 
@@ -111,11 +128,11 @@ class Application extends CommonClass {
    * @return {[type]} [description]
    */
   unlisten () {
-    if (cluster.isMaster && this.listening) {
+    if (this.listening) {
       this.log.debug(`Application no longer listening...`)
       this.inputPipe.removeAllListeners()
-      this.log.debug(`Stopping application delegators...`)
-      this.delegate.stop()
+      // this.log.debug(`Stopping application delegators...`)
+      // this.delegate.stopMaster()
 
       this.listening = false
     }
@@ -223,9 +240,7 @@ class Application extends CommonClass {
     this.onShutdown = noop
     this.listening = false
     this.nextWorker = 0
-    this.nextDelegateId = 0
-    this.delegates = new Map()
-    this.delegate = new Delegate(this)
+    // this.delegate = new Delegate(this)
 
     if (result.publicFlow instanceof Flow) {
       this.publicFlow = result.publicFlow
@@ -242,6 +257,7 @@ class Application extends CommonClass {
         this.registerFlow(new Flow(this).fromJSON(result.flows[i]))
       }
     }
+
     for (i = 0, len = result.actions.length; i < len; i++) {
       if (result.actions[i] instanceof Action) {
         result.actions[i].application = this
@@ -261,6 +277,7 @@ class Application extends CommonClass {
    * @param {[type]} flow [description]
    */
   setPublicFlow (flow) {
+    this.log.debug(`Connecting ${flow.name}:${flow.id} flow to ${this.name} application`)
     this.publicFlow = flow
     if (this.flows.indexOf(flow) === -1) {
       this.registerFlow(flow)
@@ -283,7 +300,7 @@ class Application extends CommonClass {
         // Dealing with a Node or Milestone
         let dispatched = false
 
-        for (const channel in from.to) {
+        for (var channel = 0, len = from.to.length; channel < len; channel++) {
           if (from.to[channel].accepts.indexOf(type) > -1) {
             this.log.debug(`... and leads to ${from.to[channel].name}`)
             this.log.debug(`Dispatching ${type} to ${from.to[channel].name}`)
@@ -407,7 +424,7 @@ class Application extends CommonClass {
    * @return {[type]}      [description]
    */
   registerFlow (flow) {
-    for (const index in this.flows) {
+    for (var index = 0, len = this.flows.length; index < len; index++) {
       // Overwrite any flow with matching unique data
       if (this.flows[index].id === flow.id || (this.flows[index].endpointRoute === flow.endpointRoute && this.flows[index].endpointMethod === flow.endpointMethod)) {
         this.flows[flow] = flow
@@ -423,6 +440,7 @@ class Application extends CommonClass {
    * @return {[type]}      [description]
    */
   connect (node) {
+    this.log.debug(`Connecting ${node.name}:${node.id} to ${this.name} applicaiton`)
     this.publicFlow.connect(node)
   }
 
@@ -459,11 +477,12 @@ class Application extends CommonClass {
 
     this.onEvent(message)
 
-    if (cluster.isMaster) {
-      emit(this, message)
-    } else if (cluster.isWorker) {
-      message._event = 'emit'
-      process.send(message)
+    if (this.config.silent === false) {
+      if (error) {
+        this.errorPipe.write(stringify(message))
+      } else {
+        this.outputPipe.write(stringify(message))
+      }
     }
   }
 
@@ -503,17 +522,37 @@ class Application extends CommonClass {
    */
   async request (method, path, params) {
     this.log.info(`Requesting ${method} ${path} with ${params}...`)
+
+    const flow = this.getFlowByHttp(method, path)
+
+    if (typeof params === 'string') {
+      params = querystring.parse(params)
+    } else if (!(params instanceof Object)) {
+      throw new TypeError(`Unknown flow request of type ${typeof params}`)
+    }
+
+    this.emit('Request.start', this, params)
+
+    const request = new Request(this, params, flow, flow.to)
+
+    const result = await flow.request(params, request)
+
+    this.emit('Request.end', this, request)
+
+    return result
+    /*
     const promise = this.delegate.send('executeAction', {
       method,
       path,
       params
     })
 
-    if (!promise) {
-      return this.executeAction(method, path, params)
-    } else {
+    if (promise) {
       return promise
+    } else {
+      return this.executeAction(method, path, params)
     }
+    */
   }
 
   /**
@@ -523,6 +562,7 @@ class Application extends CommonClass {
    * @param  {[type]} params [description]
    * @return {[type]}        [description]
    */
+  /*
   async executeAction (method, path, params) {
     this.log.debug('Starting Request...')
     const flow = this.getFlowByHttp(method, path)
@@ -543,6 +583,7 @@ class Application extends CommonClass {
 
     return result
   }
+  */
 }
 
 export { Application as default }

@@ -29,6 +29,7 @@
     "test-coverage": "nyc ava",
     "profiler": "./node_modules/.bin/clinic doctor --autocannon / --method GET -- node profiler.js",
     "profiler-explorer": "./node_modules/.bin/clinic bubbleprof --autocannon / --method GET -- node profiler.js",
+    "profiler-performance": "./node_modules/.bin/deoptigate -- node --allow-natives-syntax profiler.js",
     "browser-build": "./node_modules/.bin/webpack --mode production --colors",
     "browser-test": "./node_modules/.bin/webpack-dev-server --mode development --hot --colors",
     "preversion": "npm test",
@@ -44,6 +45,7 @@
   },
   "dependencies": {
     "babel-eslint": "^10.0.1",
+    "bluebird": "^3.5.3",
     "colors": "^1.2.0-rc0",
     "eslint": "^5.15.3",
     "eslint-config-standard": "^12.0.0",

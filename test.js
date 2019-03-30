@@ -5,8 +5,6 @@ process.on('unhandledRejection', (reason, p) => {
   process.exit(1)
 })
 
-process.on('unhandledRejection', () => {})
-
 process.on('warning', console.warn)
 
 require = require('esm')(module)

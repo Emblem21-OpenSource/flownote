@@ -5,12 +5,11 @@ import Application from '../../src/application'
 
 const Action = require('../../src/action')
 const http = require('http')
-const cluster = require('cluster')
 
 const app = new Application(undefined, 'Test App', {
-  logLevel: 4
+  logLevel: 2,
+  silent: true
 })
-app.listen()
 
 const doubleXAction = new Action(app, undefined, 'doubleX', function doubleX () {
   this.set('x', this.get('x') * 2)
@@ -69,27 +68,28 @@ addXAndYNode.connect(channelB)
 channelB.connect(halveXNode)
 halveXNode.connect(channelC)
 channelC.connect(subtractXFromYNode)
+/*
+const request = async () => {
+  return app.request('GET', '/testFlow', {
+    x: 7,
+    y: 10
+  })
+}
 
-if (cluster.isMaster) {
-  const request = async () => {
-    return app.request('GET', '/testFlow', {
-      x: 7,
-      y: 10
-    })
-  }
+const requests = []
 
-  const requests = []
+setTimeout(async () => {
+  app.log.debug('Profiler Start')
+  await app.listen()
 
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 1; i++) {
     requests.push(request())
   }
 
-  setTimeout(async () => {
-    await Promise.all(requests)
-  }, 2000)
-}
+  await Promise.all(requests)
+}, 0)
+*/
 
-/*
 // Create an HTTP server
 const httpServer = http.createServer(async (req, res) => {
   const result = await app.request('GET', '/testFlow', {
@@ -102,4 +102,3 @@ const httpServer = http.createServer(async (req, res) => {
 })
 
 module.exports = httpServer
-*/

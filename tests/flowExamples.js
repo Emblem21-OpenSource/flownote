@@ -14,7 +14,7 @@ const CyclicalError = require('../src/errors/cyclicalError')
  */
 function createApp () {
   const app = new Application(undefined, 'Test App', {
-    logLevel: 3
+    logLevel: 2
   })
 
   const doubleXAction = new Action(app, undefined, 'doubleX', function doubleX () {
