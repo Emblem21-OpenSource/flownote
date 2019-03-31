@@ -28,13 +28,4 @@ clickBranch -BoundaryError! displayBoundaryError
 // Ensure that notifyRoom waits (...) for the movePlayer Node within the click Flow to complete before performing its actions.
 clickBranch -> notifyRoom ... move
 
-Get Click Node is Extract Click Data and Extract Player Id
-Extract X Y Node is Get X Y Coords From Click Data
-Move Player Node is Get Player By Id, Detect Player Movement Events, Move Player, and Dispatch Player Movement Events
-Display Boundary Error Node is Get Player By Id and Send Boundary Error
-Notify Room Node is Get Broadcast Message, Get Room By Player Id, and Broadcast To Room
 
-Click Flow (GET /click) is a quieted Get Click that connects to Extract X Y (as Click Branch)
-Click Branch connects with coordinates to Move Player (as Move) then commits
-Click Branch errors with boundary error to Display Boundary Error
-Click Branch connects to Notify Room and waits for Move

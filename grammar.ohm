@@ -7,9 +7,10 @@ FlowNote {
     | LinguisticNodeDefinition
     | LinguisticFlowDefinition
     | LinguisticPath
+    | EmptyListOf<Nodes, Channel>
 
   FlowDefinition = "flow" label "(" HttpMethods "/" ListOf<label, "/"> ")" "=" NonemptyListOf<Nodes, Channel>
-  LinguisticFlowDefinition = Concept "Flow" "(" HttpMethods "/" ListOf<label, "/"> ")" "is"
+  LinguisticFlowDefinition = Concept "Flow" "(" HttpMethods "/" ListOf<label, "/"> ")" "is" NonemptyListOf<LinguisticNodes, LinguisticPathSeparator>
 
   NodeDefinition = "node" label Properties? "=" Actions
   LinguisticNodeDefinition = Concept "Node" "is" LinguisticActions
@@ -40,6 +41,12 @@ FlowNote {
   LinguisticMilestone = LinguisticNode "then commits"
 
   Node
+    = WaitsFor
+    | NodeBase
+
+  WaitsFor = NodeBase "..." StandardNode
+
+  NodeBase
     = SilentNode
     | IdentityNode
     | StandardNode
@@ -48,6 +55,12 @@ FlowNote {
   StandardNode = label
   
   LinguisticNode
+    = LinguisticWaitsFor
+    | LinguisticNodeBase
+
+  LinguisticWaitsFor = LinguisticNodeBase "and waits for" LinguisticStandardNode
+
+  LinguisticNodeBase
     = LinguisticSilentNode
     | LinguisticIdentityNode
     | LinguisticStandardNode
@@ -55,15 +68,13 @@ FlowNote {
   LinguisticIdentityNode = LinguisticStandardNode "(as" Concept ")"
   LinguisticStandardNode = Concept
 
-  Concept = ListOf<label, space>
+  Concept = NonemptyListOf<label, space>
 
   Channel
     = ErrorChannel
     | PlainChannel
     | NamedChannel
-    | WaitsFor
 
-  WaitsFor = "..."
   ErrorChannel = "-" label Properties? "!"
   PlainChannel = "-" Properties? ">"
   NamedChannel = "-" label Properties? ">"
@@ -72,9 +83,7 @@ FlowNote {
     = LinguisticErrorChannel
     | LinguisticPlainChannel
     | LinguisticNamedChannel
-    | LinguisticWaitsFor
 
-  LinguisticWaitsFor = "and waits for" Concept
   LinguisticErrorChannel = "errors with" Concept "to"
   LinguisticPlainChannel = "connects to"
   LinguisticNamedChannel = "connects with" Concept "to"
