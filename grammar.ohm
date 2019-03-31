@@ -1,39 +1,52 @@
-Empath {
-  Flow
-    = Path
-    | Assignment
-    | EmptyListOf<Nodes, Channel>
+FlowNote {
+  Expression
+    = NodeDefinition
+    | FlowDefinition
+    | Path
 
-  Assignment = label "=" Path
+  FlowDefinition = "flow" label "(" HttpMethods "/" ListOf<label, "/"> ")" "=" NonemptyListOf<Nodes, Channel>
 
-  Path = NonemptyListOf<Nodes, Channel>
+  NodeDefinition = "node" label Properties? "=" Actions
+
+  Path = StandardNode Channel NonemptyListOf<Nodes, Channel>
 
   Nodes
-    = MetaNode
+    = Milestone
     | Node
 
-  MetaNode = Node "(" ListOf<Node, ",">")"  
+  Milestone = Node "*"
 
   Node
-    = JumpNode
-    | SuppressedNode
+    = SilentNode
     | IdentityNode
     | StandardNode
-  JumpNode = "@" StandardNode
-  SuppressedNode = StandardNode "*"
+  SilentNode = StandardNode "$"
   IdentityNode = StandardNode "#" label
-  StandardNode = label Properties? ~"="
-
+  StandardNode = label
+  
   Channel
     = ErrorChannel
     | PlainChannel
     | NamedChannel
-  ErrorChannel = label Properties? "!"
+    | WaitsFor
+
+  WaitsFor = "..."
+  ErrorChannel = "-" label Properties? "!"
   PlainChannel = "-" Properties? ">"
-  NamedChannel = label Properties? ">"
+  NamedChannel = "-" label Properties? ">"
+
+  Actions = ListOf<label, ",">
 
   Properties = "{" ListOf<Property, ","> "}"
   Property = label ":" label
+
+  HttpMethods
+    = "GET"
+    | "POST"
+    | "PUT"
+    | "DELETE"
+    | "OPTIONS"
+    | "HEAD"
 
   label = (alnum|"_")+
   string  (a string literal) = "\"" (~"\"" ~"\n" any)* "\""
