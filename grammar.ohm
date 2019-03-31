@@ -3,18 +3,41 @@ FlowNote {
     = NodeDefinition
     | FlowDefinition
     | Path
+    | Import
+    | LinguisticNodeDefinition
+    | LinguisticFlowDefinition
+    | LinguisticPath
 
   FlowDefinition = "flow" label "(" HttpMethods "/" ListOf<label, "/"> ")" "=" NonemptyListOf<Nodes, Channel>
+  LinguisticFlowDefinition = Concept "Flow" "(" HttpMethods "/" ListOf<label, "/"> ")" "is"
 
   NodeDefinition = "node" label Properties? "=" Actions
+  LinguisticNodeDefinition = Concept "Node" "is" LinguisticActions
+
+  Actions = ListOf<label, ",">
+  LinguisticActionsPlural = ListOf<Concept, ","> "and" Concept
+  LinguisticActionsSingular = Concept
+  LinguisticActions
+    = LinguisticActionsPlural
+    | LinguisticActionsSingular
 
   Path = StandardNode Channel NonemptyListOf<Nodes, Channel>
+  LinguisticPath = LinguisticStandardNode LinguisticChannel NonemptyListOf<LinguisticNodes, LinguisticPathSeparator>
+
+  LinguisticPathSeparator = "that" LinguisticChannel
+
+  Import = "import" "\"" label "."? label? "\""
 
   Nodes
     = Milestone
     | Node
 
+  LinguisticNodes
+    = LinguisticMilestone
+    | LinguisticNode
+
   Milestone = Node "*"
+  LinguisticMilestone = LinguisticNode "then commits"
 
   Node
     = SilentNode
@@ -24,6 +47,16 @@ FlowNote {
   IdentityNode = StandardNode "#" label
   StandardNode = label
   
+  LinguisticNode
+    = LinguisticSilentNode
+    | LinguisticIdentityNode
+    | LinguisticStandardNode
+  LinguisticSilentNode = "a silent" LinguisticStandardNode
+  LinguisticIdentityNode = LinguisticStandardNode "(as" Concept ")"
+  LinguisticStandardNode = Concept
+
+  Concept = ListOf<label, space>
+
   Channel
     = ErrorChannel
     | PlainChannel
@@ -35,7 +68,17 @@ FlowNote {
   PlainChannel = "-" Properties? ">"
   NamedChannel = "-" label Properties? ">"
 
-  Actions = ListOf<label, ",">
+  LinguisticChannel
+    = LinguisticErrorChannel
+    | LinguisticPlainChannel
+    | LinguisticNamedChannel
+    | LinguisticWaitsFor
+
+  LinguisticWaitsFor = "and waits for" Concept
+  LinguisticErrorChannel = "errors with" Concept "to"
+  LinguisticPlainChannel = "connects to"
+  LinguisticNamedChannel = "connects with" Concept "to"
+
 
   Properties = "{" ListOf<Property, ","> "}"
   Property = label ":" label

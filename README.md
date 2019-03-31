@@ -190,6 +190,21 @@ clickBranch -> notifyRoom ... move
 
 In nine lines of code, we can orchestrate multiple functions together with retry functionality, error handling, sane transactional persistence, and expose them for usage very easily. As a Request moves through Nodes and Channels and Milestones and its values are `set`, the output stream of the Application will emit JSONs of all Event Progression.
 
+Additionally, FlowNote will allow BDD-compliant grammar as well:
+
+```
+Get Click Node is Extract Click Data and Extract Player Id
+Extract X Y Node is Get X Y Coords From Click Data
+Move Player Node is Get Player By Id, Detect Player Movement Events, Move Player, and Dispatch Player Movement Events
+Display Boundary Error Node is Get Player By Id and Send Boundary Error
+Notify Room Node is Get Broadcast Message, Get Room By Player Id, and Broadcast To Room
+
+Click Flow (GET /click) is a silent Get Click that connects to Extract X Y (as Click Branch)
+Click Branch connects with coordinates to Move Player (as Move) then commits
+Click Branch errors with boundary error to Display Boundary Error
+Click Branch connects to Notify Room and waits for Move
+```
+
 ## _Future_
 
 * Allow alternative Event Queues to be utilized.
