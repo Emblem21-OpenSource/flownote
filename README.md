@@ -202,7 +202,7 @@ NotifyRoom Node is GetBroadcastMessage, GetRoomByPlayerId and BroadcastToRoom
 Click Flow (GET /click) is a silent GetClick that connects to ExtractXY (as ClickBranch)
 ClickBranch connects with Coordinates to MovePlayer (as Move) then commits
 ClickBranch errors with BoundaryError to DisplayBoundaryError
-ClickBranch connects to NotifyRoom and waits for Move
+ClickBranch connects to NotifyRoom but waits for Move
 ```
 
 ## _Future_

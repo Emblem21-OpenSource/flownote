@@ -239,7 +239,7 @@ class Application extends CommonClass {
     this.onInput = noop
     this.onShutdown = noop
     this.listening = false
-    this.nextWorker = 0
+    this.nodeAliases = new Map()
     // this.delegate = new Delegate(this)
 
     if (result.publicFlow instanceof Flow) {
@@ -432,6 +432,24 @@ class Application extends CommonClass {
       }
     }
     this.flows.push(flow)
+  }
+
+  /**
+   * [setNodeAlias description]
+   * @param {[type]} name [description]
+   * @param {[type]} node [description]
+   */
+  setNodeAlias (name, node) {
+    this.nodeAliases.set(name, node)
+  }
+
+  /**
+   * [getNodeAlias description]
+   * @param  {[type]} name [description]
+   * @return {[type]}      [description]
+   */
+  getNodeAlias (name) {
+    return this.nodeAliases(name)
   }
 
   /**
