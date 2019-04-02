@@ -14,10 +14,9 @@ class Milestone extends CommonClass {
    * @param  {[type]} to       [description]
    * @return {[type]}          [description]
    */
-  constructor (application, flow, id, name, strategy, to, actions) {
+  constructor (application, id, name, strategy, to, actions) {
     super()
     this.application = application
-    this.flow = flow
     if (name !== undefined) {
       this.fromJSON({
         id: id || this.application.getUniqueId(),
@@ -132,19 +131,12 @@ class Milestone extends CommonClass {
     }
 
     for (const accumulatedAction of event.request.accumulatedActions) {
-      this.log.debug(`Executing Accumulated action ${action.name}`)
+      this.log.debug(`Executing Accumulated action ${accumulatedAction.name}`)
       this.application.emit('Action', accumulatedAction, event.request)
       await accumulatedAction.execute(actionContext)
     }
 
     this.application.emit('Milestone.end', this, event.request)
-
-    if (this.to === undefined) {
-      // The Flow has ended
-      this.application.emit('Flow.end', this.flow, event.request)
-    } else {
-      // this.application.dispatch(Channel)
-    }
   }
 }
 

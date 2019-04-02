@@ -26,7 +26,7 @@ test('Define Milestone', t => {
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
-  const milestone = new Milestone(app, flow, undefined, milestoneName, 'fcfs', [], [ action ])
+  const milestone = new Milestone(app, undefined, milestoneName, 'fcfs', [], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   milestone.connect(channel)
@@ -49,7 +49,7 @@ test('Milestone.asFlattened', t => {
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
-  const milestone = new Milestone(app, flow, undefined, milestoneName, 'fcfs', [], [ action ])
+  const milestone = new Milestone(app, undefined, milestoneName, 'fcfs', [], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   milestone.connect(channel)
@@ -72,7 +72,7 @@ test('Milestone.asFlattened (Circular)', t => {
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
-  const milestone = new Milestone(app, flow, undefined, milestoneName, 'fcfs', [], [ action ])
+  const milestone = new Milestone(app, undefined, milestoneName, 'fcfs', [], [ action ])
 
   milestone.connect(channel)
   channel.connect(milestone)
@@ -93,7 +93,7 @@ test('Milestone.loadFlattened', t => {
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
-  const milestone = new Milestone(app, flow, undefined, milestoneName, 'fcfs', [], [ action ])
+  const milestone = new Milestone(app, undefined, milestoneName, 'fcfs', [], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   flow.connect(milestone)
@@ -121,7 +121,7 @@ test('Milestone.loadFlattened (Circular)', t => {
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
-  const milestone = new Milestone(app, flow, undefined, milestoneName, 'fcfs', [], [ action ])
+  const milestone = new Milestone(app, undefined, milestoneName, 'fcfs', [], [ action ])
 
   flow.connect(milestone)
   milestone.connect(channel)
@@ -148,7 +148,7 @@ test('Milestone.addAction with Action', t => {
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
-  const milestone = new Milestone(app, flow, undefined, milestoneName, 'fcfs', [], [ action ])
+  const milestone = new Milestone(app, undefined, milestoneName, 'fcfs', [], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   milestone.connect(channel)
@@ -169,7 +169,7 @@ test('Milestone.addAction with String', t => {
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
-  const milestone = new Milestone(app, flow, undefined, milestoneName, 'fcfs', [], [ action ])
+  const milestone = new Milestone(app, undefined, milestoneName, 'fcfs', [], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   milestone.connect(channel)
@@ -190,7 +190,7 @@ test('Milestone.connect', t => {
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
-  const milestone = new Milestone(app, flow, undefined, milestoneName, 'fcfs', [], [ action ])
+  const milestone = new Milestone(app, undefined, milestoneName, 'fcfs', [], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   milestone.connect(channel)

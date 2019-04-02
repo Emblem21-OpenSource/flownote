@@ -1,12 +1,6 @@
 import Application from './application'
-import Milestone from './milestone'
-import StandardChannel from './channels/standardChannel'
-import ErrorChannel from './channels/errorChannel'
-import StandardNode from './nodes/standardNode'
-import Flow from './flow'
-import Spider from './spider'
+import Compiler from './compiler'
 
-const Action = require('./action')
 const fs = require('fs')
 const ohm = require('ohm-js')
 
@@ -71,76 +65,31 @@ class Semantics {
    * @param  {String} content
    * @return {Flow}
    */
-  evaluate (content, application) {
+  compile (content, application) {
     if (application === undefined) {
       application = new Application(undefined, 'App', {}, undefined, undefined, [ /* actions */ ], undefined, undefined, undefined)
     }
 
-    const nodeFactory = {}
-    const nodeAliases = {}
-    let targetFlow
+    this.compiler = new Compiler(application)
 
     const semantics = this.grammar.createSemantics().addOperation('eval', {
       Expression: (line) => {
-        return line.eval()
+        return this.compiler.Expression(line)
       },
       FlowDefinition: (_1, flowName, _2, httpMethod, _3, httpEndpoint, _4, config, _5, path) => {
-        const method = httpMethod.eval()
-        const endpoint = httpEndpoint.eval()
-
-        const flow = application.getFlowByHttp(method, endpoint)
-
-        if (flow) {
-          targetFlow = flow
-        } else {
-          targetFlow = new Flow(application, undefined, flowName.eval(), config.eval(), undefined, method, endpoint, undefined)
-        }
-
-        const steps = path.asIteration().value
-        let firstStep, lastStep
-
-        steps.forEach(step => {
-          const stepInstance = step.eval()
-
-          if (firstStep !== undefined) {
-            firstStep = stepInstance
-          }
-
-          if (lastStep !== undefined) {
-            lastStep.connect(stepInstance)
-          }
-
-          lastStep = stepInstance
-        })
-
-        targetFlow.connect(firstStep)
+        return this.compiler.FlowDefinition(flowName, httpMethod, httpEndpoint, config, path)
       },
       LinguisticFlowDefinition: (flowName, _1, _2, httpMethod, _3, httpEndpoint, _4, config, _5, _6, path) => {
-        // @TODO
+        return this.compiler.FlowDefinition(flowName, httpMethod, httpEndpoint, config, path)
       },
       NodeDefinition: (_1, nodeName, properties, _2, actions) => {
-        const nodeNameInstance = nodeName.eval()
-
-        if (nodeFactory[nodeNameInstance] === undefined) {
-          nodeFactory[nodeNameInstance] = (nodeName, tags, config, actions) => {
-            return new StandardNode(application, undefined, nodeName || nodeNameInstance, undefined, tags, actions)
-          }
-        }
-        return nodeFactory[nodeNameInstance](nodeName.eval(), properties.eval().tags, actions.eval())
+        return this.compiler.NodeDefinition(nodeName, properties, actions)
       },
       LinguisticNodeDefinition: (nodeName, _2, _3, actions) => {
-        // @TODO
+        return this.compiler.NodeDefinition(nodeName, {}, actions)
       },
       Actions: (actions) => {
-        const list = actions.asIteration().value
-        const result = []
-        list.forEach(actionLabel => {
-          const action = application.requireAction(actionLabel.eval(), function () {
-            // @TODO Fill out this stub
-          })
-          result.push(action)
-        })
-        return result
+        return this.compiler.Actions(actions)
       },
       LinguisticActionsPlural: (actions, _1, action) => {
         // @TODO
@@ -152,165 +101,118 @@ class Semantics {
         // @TODO
       },
       Path: (nodeName, channel, path) => {
-        // @TODO
+        return this.compiler.Path(nodeName, channel, path)
+      },
+      nonemptyListOf: (token, separator, tokens) => {
+        return this.compiler.nonemptyListOf(token, separator, tokens)
       },
       LinguisticPath: (nodeName, channel, path) => {
-        // @TODO
+        return this.compiler.Path(nodeName, channel, path)
       },
       LinguisticPathSeparator: (_, channel) => {
-        return channel.eval()
+        // @TODO
       },
       Import: (_1, _2, fileName, _3, extension) => {
-        const contents = fs.readFileSync(`${fileName.eval()}.${extension.eval()}`)
-        // @TODO
-        return {}
+        return this.compiler.Import(fileName, extension)
       },
       Nodes: (node) => {
-        return node.eval()
+        return this.compiler.Nodes(node)
       },
       LinguisticNodes: (node) => {
-        return node.eval()
+        return this.compiler.Nodes(node)
       },
       Milestone: (nodeName, _) => {
-        return new Milestone(application, targetFlow, undefined, `Commit ${nodeName}`, 'fcfs', [], [])
+        return this.compiler.Milestone(nodeName)
       },
       LinguisticMilestone: (nodeName, _) => {
-        return new Milestone(application, targetFlow, undefined, `Commit ${nodeName}`, 'fcfs', [], [])
+        return this.compiler.Milestone(nodeName)
       },
       Node: (node) => {
-        return node.eval()
+        return this.compiler.Node(node)
       },
       WaitsFor: (nodeName, _, waitsFor) => {
-
+        return this.compiler.WaitsFor(nodeName, waitsFor)
       },
       NodeBase: (node) => {
-        return node.eval()
+        return this.compiler.NodeBase(node)
       },
       SilentNode: (nodeName, _) => {
-        const name = nodeName.eval()
-
-        if (nodeAliases[name]) {
-          return nodeAliases[name]
-        }
-
-        nodeFactory[name](name, undefined, undefined, {
-          silent: true
-        })
+        return this.compiler.SilentNode(nodeName)
       },
       IdentityNode: (nodeName, _, aliasLabel) => {
-        const name = nodeName.eval()
-        const alias = aliasLabel.eval()
-
-        const node = nodeFactory[name](name, undefined, undefined, {
-          silent: true
-        })
-
-        if (nodeAliases[alias] === undefined) {
-          nodeAliases[alias] = node
-        }
-
-        return node
+        return this.compiler.IdentityNode(nodeName, aliasLabel)
       },
       StandardNode: (nodeName) => {
-        const name = nodeName.eval()
-
-        if (nodeAliases[name]) {
-          return nodeAliases[name]
-        }
-
-        nodeFactory[name](name, undefined, undefined, {})
+        return this.compiler.StandardNode(nodeName)
       },
       LinguisticNode: (node) => {
-        return node.eval()
+        return this.compiler.Node(node)
       },
       LinguisticWaitsFor: (nodeName, _, alias) => {
-
+        return this.compiler.WaitsFor(nodeName, alias)
       },
       LinguisticNodeBase: (node) => {
-        return node.eval()
+        return this.compiler.NodeBase(node)
       },
       LinguisticSilentNode: (_, nodeName) => {
-        // @TODO
+        return this.compiler.SilentNode(nodeName)
       },
-      LinguisticIdentityNode: (nodeName, _1, alias, _2) => {
-        // @TODO
+      LinguisticIdentityNode: (nodeName, _1, aliasLabel, _2) => {
+        return this.compiler.IdentityNode(nodeName, aliasLabel)
       },
       LinguisticStandardNode: (nodeName) => {
-        // @TODO
+        return this.compiler.StandardNode(nodeName)
       },
       Concept: (words) => {
-        const result = []
-        words.forEach(word => {
-          result.push(word.eval())
-        })
-        return result.join(' ')
+        return this.compiler.Concept(words)
       },
       Channel: (channel) => {
-        return channel.eval()
+        return this.compiler.Channel(channel)
       },
       ErrorChannel: (_1, channelName, properties, _2) => {
-        const name = channelName.eval()
-        const props = properties.eval()
-        return new ErrorChannel(application, undefined, name, undefined, [ name ], props.retry, [])
+        return this.compiler.ErrorChannel(channelName, properties)
       },
       PlainChannel: (_1, properties, _2) => {
-        const props = properties.eval()
-        return new StandardChannel(application, undefined, 'Plain', undefined, [], props.retry, [])
+        return this.compiler.PlainChannel(properties)
       },
       NamedChannel: (_1, channelName, properties, _2) => {
-        const name = channelName.eval()
-        const props = properties.eval()
-        return new StandardChannel(application, undefined, name, undefined, [ name ], props.retry, [])
+        return this.compiler.NamedChannel(channelName, properties)
       },
       LinguisticChannel: (channel) => {
-        return channel.eval()
+        return this.compiler.Channel(channel)
       },
       LinguisticErrorChannel: (_1, channelName, properties, _2) => {
-        // @TODO
+        return this.compiler.ErrorChannel(channelName, properties)
       },
       LinguisticPlainChannel: (_1, properties, _2) => {
-        // @TODO
+        return this.compiler.PlainChannel(properties)
       },
       LinguisticNamedChannel: (_1, channelName, properties, _2) => {
-        // @TODO
+        return this.compiler.NamedChannel(channelName, properties)
       },
       Properties: (_1, properties, _2) => {
-        const result = {}
-        properties.forEach(property => {
-          const propertyResult = property.eval()
-          result[propertyResult[0]] = propertyResult[1]
-        })
-        return result
+        return this.compiler.Properties(properties)
       },
       Property: (key, _, value) => {
-        return [key.eval(), value.eval()]
+        return this.compiler.Property(key, value)
       },
       HttpMethods: (method) => {
-        return method.eval()
+        return this.compiler.HttpMethods(method)
       },
       label: (label) => {
-        return label.eval()
+        return this.compiler.label(label)
       },
       string: (_1, string, _2) => {
-        return string.eval()
+        return this.compiler.string(string)
       },
-      number: (whole, _, decimal) => {
-        const num1 = whole.eval()
-        let num2 = '0'
-
-        if (_.eval()) {
-          num2 = '0.' + decimal.eval()
-        } else {
-          num2 = '0'
-        }
-
-        return (Number)(num1) + (Number)(num2)
+      number: (whole, dot, decimal) => {
+        return this.compiler.number(whole, dot, decimal)
       },
       space: (space) => {
-        return space.eval()
+        return this.compiler.space(space)
       },
       comment: (_1, comments, _2) => {
-        return comments.eval()
+        return this.compiler.comment(comments)
       }
     })
 
