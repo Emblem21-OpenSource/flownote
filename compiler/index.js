@@ -1,4 +1,4 @@
-import Application from '../application'
+import Application from '../src/application'
 import Semantics from './semantics'
 
 const fs = require('fs')

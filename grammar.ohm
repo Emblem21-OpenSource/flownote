@@ -9,8 +9,8 @@ FlowNote {
     | LinguisticPath
     | EmptyListOf<Nodes, Channel>
 
-  FlowDefinition = "flow" label "(" HttpMethods "/" ListOf<label, "/"> ")" properties? "=" NonemptyListOf<Nodes, Channel>
-  LinguisticFlowDefinition = Concept "Flow" "(" HttpMethods "/" ListOf<label, "/"> ")" properties? "is" NonemptyListOf<LinguisticNodes, LinguisticPathSeparator>
+  FlowDefinition = "flow" label "(" HttpMethods "/" ListOf<label, "/"> ")" Properties? "=" NonemptyListOf<Nodes, Channel>
+  LinguisticFlowDefinition = Concept "Flow" "(" HttpMethods "/" ListOf<label, "/"> ")" Properties? "is" NonemptyListOf<LinguisticNodes, LinguisticPathSeparator>
 
   NodeDefinition = "node" label Properties? "=" Actions
   LinguisticNodeDefinition = Concept "Node" "is" LinguisticActions
@@ -85,7 +85,7 @@ FlowNote {
     | LinguisticNamedChannel
 
   LinguisticErrorChannel = "errors with" Concept Properties? "to"
-  LinguisticPlainChannel = "connects" properties? "to"
+  LinguisticPlainChannel = "connects" Properties? "to"
   LinguisticNamedChannel = "connects with" Concept Properties? "to"
 
 

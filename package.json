@@ -36,7 +36,7 @@
     "version": "npm run browser-build && git add -A && git commit -m 'New Release'",
     "publish-next": "npm publish --tag next --access public",
     "publish-latest": "npm publish --tag latest --access public",
-    "compile": "node -r esm compiler/index.js"
+    "compile": "node -r esm compiler.js"
   },
   "license": "MIT",
   "repository": "Emblem21-OpenSource/flownote",

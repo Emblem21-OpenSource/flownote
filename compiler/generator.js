@@ -1,8 +1,8 @@
-import StandardChannel from '../channels/standardChannel'
-import ErrorChannel from '../channels/errorChannel'
-import StandardNode from '../nodes/standardNode'
-import StandardMilestone from '../nodes/standardMilstone'
-import Flow from '../flow'
+import StandardChannel from '../src/channels/standardChannel'
+import ErrorChannel from '../src/channels/errorChannel'
+import StandardNode from '../src/nodes/standardNode'
+import StandardMilestone from '../src/nodes/standardMilestone'
+import Flow from '../src/flow'
 
 // const fs = require('fs')
 
