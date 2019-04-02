@@ -1,27 +1,24 @@
-import Application from './application'
-import Compiler from './compiler'
+import Generator from './generator'
 
-const fs = require('fs')
 const ohm = require('ohm-js')
+const fs = require('fs')
 
 class Semantics {
   /**
    * [constructor description]
-   * @param  {[type]} grammarFilePath [description]
    * @return {[type]}                 [description]
    */
-  constructor (grammarFilePath) {
+  constructor () {
     this.grammer = undefined
-    this.grammarFilePath = grammarFilePath
   }
 
   /**
    * Loads a grammar file into the Semantics
    */
-  async loadGrammar () {
+  async loadGrammar (grammarFilePath) {
     if (!this.isGrammarLoaded()) {
       return new Promise((resolve, reject) => {
-        fs.readFile(this.grammarFilePath, 'utf8', (err, contents) => {
+        fs.readFile(grammarFilePath, 'utf8', (err, contents) => {
           if (err) {
             reject(err)
           } else {
@@ -60,36 +57,31 @@ class Semantics {
   }
 
   /**
-   * Returns a valid FlowNote structure
-   * @TODO
-   * @param  {String} content
-   * @return {Flow}
+   * [getGenerator description]
+   * @param  {[type]} application [description]
+   * @return {[type]}             [description]
    */
-  compile (content, application) {
-    if (application === undefined) {
-      application = new Application(undefined, 'App', {}, undefined, undefined, [ /* actions */ ], undefined, undefined, undefined)
-    }
+  getGenerator (application) {
+    const generator = new Generator(application)
 
-    this.compiler = new Compiler(application)
-
-    const semantics = this.grammar.createSemantics().addOperation('eval', {
+    return this.grammar.createSemantics().addOperation('eval', {
       Expression: (line) => {
-        return this.compiler.Expression(line)
+        return generator.Expression(line)
       },
       FlowDefinition: (_1, flowName, _2, httpMethod, _3, httpEndpoint, _4, config, _5, path) => {
-        return this.compiler.FlowDefinition(flowName, httpMethod, httpEndpoint, config, path)
+        return generator.FlowDefinition(flowName, httpMethod, httpEndpoint, config, path)
       },
       LinguisticFlowDefinition: (flowName, _1, _2, httpMethod, _3, httpEndpoint, _4, config, _5, _6, path) => {
-        return this.compiler.FlowDefinition(flowName, httpMethod, httpEndpoint, config, path)
+        return generator.FlowDefinition(flowName, httpMethod, httpEndpoint, config, path)
       },
       NodeDefinition: (_1, nodeName, properties, _2, actions) => {
-        return this.compiler.NodeDefinition(nodeName, properties, actions)
+        return generator.NodeDefinition(nodeName, properties, actions)
       },
       LinguisticNodeDefinition: (nodeName, _2, _3, actions) => {
-        return this.compiler.NodeDefinition(nodeName, {}, actions)
+        return generator.NodeDefinition(nodeName, {}, actions)
       },
       Actions: (actions) => {
-        return this.compiler.Actions(actions)
+        return generator.Actions(actions)
       },
       LinguisticActionsPlural: (actions, _1, action) => {
         // @TODO
@@ -101,124 +93,129 @@ class Semantics {
         // @TODO
       },
       Path: (nodeName, channel, path) => {
-        return this.compiler.Path(nodeName, channel, path)
+        return generator.Path(nodeName, channel, path)
       },
       nonemptyListOf: (token, separator, tokens) => {
-        return this.compiler.nonemptyListOf(token, separator, tokens)
+        return generator.nonemptyListOf(token, separator, tokens)
       },
       LinguisticPath: (nodeName, channel, path) => {
-        return this.compiler.Path(nodeName, channel, path)
+        return generator.Path(nodeName, channel, path)
       },
       LinguisticPathSeparator: (_, channel) => {
         // @TODO
       },
       Import: (_1, _2, fileName, _3, extension) => {
-        return this.compiler.Import(fileName, extension)
+        return generator.Import(fileName, extension)
       },
       Nodes: (node) => {
-        return this.compiler.Nodes(node)
+        return generator.Nodes(node)
       },
       LinguisticNodes: (node) => {
-        return this.compiler.Nodes(node)
+        return generator.Nodes(node)
       },
       Milestone: (nodeName, _) => {
-        return this.compiler.Milestone(nodeName)
+        return generator.Milestone(nodeName)
       },
       LinguisticMilestone: (nodeName, _) => {
-        return this.compiler.Milestone(nodeName)
+        return generator.Milestone(nodeName)
       },
       Node: (node) => {
-        return this.compiler.Node(node)
+        return generator.Node(node)
       },
       WaitsFor: (nodeName, _, waitsFor) => {
-        return this.compiler.WaitsFor(nodeName, waitsFor)
+        return generator.WaitsFor(nodeName, waitsFor)
       },
       NodeBase: (node) => {
-        return this.compiler.NodeBase(node)
+        return generator.NodeBase(node)
       },
       SilentNode: (nodeName, _) => {
-        return this.compiler.SilentNode(nodeName)
+        return generator.SilentNode(nodeName)
       },
       IdentityNode: (nodeName, _, aliasLabel) => {
-        return this.compiler.IdentityNode(nodeName, aliasLabel)
+        return generator.IdentityNode(nodeName, aliasLabel)
       },
       StandardNode: (nodeName) => {
-        return this.compiler.StandardNode(nodeName)
+        return generator.StandardNode(nodeName)
       },
       LinguisticNode: (node) => {
-        return this.compiler.Node(node)
+        return generator.Node(node)
       },
       LinguisticWaitsFor: (nodeName, _, alias) => {
-        return this.compiler.WaitsFor(nodeName, alias)
+        return generator.WaitsFor(nodeName, alias)
       },
       LinguisticNodeBase: (node) => {
-        return this.compiler.NodeBase(node)
+        return generator.NodeBase(node)
       },
       LinguisticSilentNode: (_, nodeName) => {
-        return this.compiler.SilentNode(nodeName)
+        return generator.SilentNode(nodeName)
       },
       LinguisticIdentityNode: (nodeName, _1, aliasLabel, _2) => {
-        return this.compiler.IdentityNode(nodeName, aliasLabel)
+        return generator.IdentityNode(nodeName, aliasLabel)
       },
       LinguisticStandardNode: (nodeName) => {
-        return this.compiler.StandardNode(nodeName)
+        return generator.StandardNode(nodeName)
       },
       Concept: (words) => {
-        return this.compiler.Concept(words)
+        return generator.Concept(words)
       },
       Channel: (channel) => {
-        return this.compiler.Channel(channel)
+        return generator.Channel(channel)
       },
       ErrorChannel: (_1, channelName, properties, _2) => {
-        return this.compiler.ErrorChannel(channelName, properties)
+        return generator.ErrorChannel(channelName, properties)
       },
       PlainChannel: (_1, properties, _2) => {
-        return this.compiler.PlainChannel(properties)
+        return generator.PlainChannel(properties)
       },
       NamedChannel: (_1, channelName, properties, _2) => {
-        return this.compiler.NamedChannel(channelName, properties)
+        return generator.NamedChannel(channelName, properties)
       },
       LinguisticChannel: (channel) => {
-        return this.compiler.Channel(channel)
+        return generator.Channel(channel)
       },
       LinguisticErrorChannel: (_1, channelName, properties, _2) => {
-        return this.compiler.ErrorChannel(channelName, properties)
+        return generator.ErrorChannel(channelName, properties)
       },
       LinguisticPlainChannel: (_1, properties, _2) => {
-        return this.compiler.PlainChannel(properties)
+        return generator.PlainChannel(properties)
       },
       LinguisticNamedChannel: (_1, channelName, properties, _2) => {
-        return this.compiler.NamedChannel(channelName, properties)
+        return generator.NamedChannel(channelName, properties)
       },
       Properties: (_1, properties, _2) => {
-        return this.compiler.Properties(properties)
+        return generator.Properties(properties)
       },
       Property: (key, _, value) => {
-        return this.compiler.Property(key, value)
+        return generator.Property(key, value)
       },
       HttpMethods: (method) => {
-        return this.compiler.HttpMethods(method)
+        return generator.HttpMethods(method)
       },
       label: (label) => {
-        return this.compiler.label(label)
+        return generator.label(label)
       },
       string: (_1, string, _2) => {
-        return this.compiler.string(string)
+        return generator.string(string)
       },
       number: (whole, dot, decimal) => {
-        return this.compiler.number(whole, dot, decimal)
+        return generator.number(whole, dot, decimal)
       },
       space: (space) => {
-        return this.compiler.space(space)
+        return generator.space(space)
       },
       comment: (_1, comments, _2) => {
-        return this.compiler.comment(comments)
+        return generator.comment(comments)
       }
     })
+  }
 
-    const match = this.grammar.match(content)
-    semantics(match).eval()
-    return application
+  /**
+   * [getMatches description]
+   * @param  {[type]} content [description]
+   * @return {[type]}         [description]
+   */
+  getMatches (content) {
+    return this.grammar.match(content)
   }
 }
 

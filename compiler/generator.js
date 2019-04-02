@@ -1,12 +1,12 @@
-import StandardChannel from './channels/standardChannel'
-import ErrorChannel from './channels/errorChannel'
-import StandardNode from './nodes/standardNode'
-import StandardMilestone from './nodes/standardMilstone'
-import Flow from './flow'
+import StandardChannel from '../channels/standardChannel'
+import ErrorChannel from '../channels/errorChannel'
+import StandardNode from '../nodes/standardNode'
+import StandardMilestone from '../nodes/standardMilstone'
+import Flow from '../flow'
 
 // const fs = require('fs')
 
-class Compiler {
+class Generator {
   /**
    * [constructor description]
    * @param  {[type]} application [description]
@@ -46,6 +46,7 @@ class Compiler {
     const pathRootNode = path.eval()
 
     flow.connect(pathRootNode)
+    this.application.registerFlow(flow)
   }
 
   /**
@@ -381,4 +382,4 @@ class Compiler {
   }
 }
 
-export { Compiler as default }
+export { Generator as default }
