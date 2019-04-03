@@ -25,23 +25,25 @@ FlowNote {
   Import = "import" "\"" label "."? label? "\""
 
   Nodes
-    = Node
-    | Milestone
+    = WaitsFor
+    | Node
 
-  Milestone = Node "*"
+  WaitsFor = Node "..." StandardNode
 
   Node
-    = WaitsFor
-    | NodeBase
-
-  WaitsFor = NodeBase "..." StandardNode
-
-  NodeBase
     = IdentityNode
     | SilentNode
+    | NodeBase
+
+  IdentityNode = NodeBase "#" label
+
+  SilentNode = NodeBase "$"
+  
+  NodeBase
+    = Milestone
     | StandardNode
-  IdentityNode = StandardNode "#" label
-  SilentNode = StandardNode "$"
+
+  Milestone = StandardNode "*"  
   StandardNode = label
   
   Channel

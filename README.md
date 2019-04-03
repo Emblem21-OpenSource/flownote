@@ -176,7 +176,7 @@ flow click(GET /click) = getClick$ -> extractXY#clickBranch
 // Then we connect the Coordinates Channel to a movePlayer Node and allow the Channel to retry exceptions from movePlayer three times.
 // The movePlayer Node is given an instance name of "move".
 // The movePlayer also will have a Milestone after it to commit all accumulated Actions.
-clickBranch -Coordinates{ retry: 3 }> movePlayer#move*
+clickBranch -Coordinates{ retry: 3 }> movePlayer*#move
 
 // Using the "clickBranch" instance name, we attach an ErrorChannel (-ErrorChannel!) to the extractXY Node within the click Flow that accepts BoundaryErrors.
 // Attach a displayError to the ErrorChannel.

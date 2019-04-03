@@ -357,10 +357,11 @@ class Generator {
   Properties (properties) {
     console.log('Properties')
     const result = {}
-    properties.forEach(property => {
+    const propertiesInstance = properties.eval()
+
+    propertiesInstance.forEach(property => {
       if (property !== undefined) {
-        const propertyResult = property.eval()
-        result[propertyResult[0]] = propertyResult[1]
+        result[property[0]] = property[1]
       }
     })
     return result

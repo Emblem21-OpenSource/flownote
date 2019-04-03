@@ -6,27 +6,11 @@ class Semantics {
    * [constructor description]
    * @return {[type]}                 [description]
    */
-  constructor (semantics) {
+  constructor (semantics, grammarFilePath) {
     this.semantics = semantics
     this.grammer = undefined
-  }
-
-  /**
-   * Loads a grammar file into the Semantics
-   */
-  async loadGrammar (grammarFilePath) {
-    if (!this.isGrammarLoaded()) {
-      return new Promise((resolve, reject) => {
-        fs.readFile(grammarFilePath, 'utf8', (err, contents) => {
-          if (err) {
-            reject(err)
-          } else {
-            this.grammar = ohm.grammar(contents)
-            resolve(contents)
-          }
-        })
-      })
-    }
+    this.filename = grammarFilePath
+    this.grammar = ohm.grammar(fs.readFileSync(this.filename, 'utf8'))
   }
 
   /**

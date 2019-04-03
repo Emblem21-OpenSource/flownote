@@ -6,7 +6,7 @@ node notifyRoom = getBroadcastMessage, getRoomByPlayerId, broadcastToRoom
 
 flow click(GET /click) = getClick$ -> extractXY#clickBranch
 
-clickBranch -Coordinates{ retry: 3 }> movePlayer#move*
+clickBranch -Coordinates{ retry: 3 }> movePlayer*#move
 
 clickBranch -BoundaryError! displayBoundaryError
 
