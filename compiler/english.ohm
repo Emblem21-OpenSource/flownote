@@ -1,59 +1,40 @@
 FlowNote {
   Expression
-    = NodeDefinition
-    | FlowDefinition
-    | Path
+    = NodeTypes
+    | FlowTypes
+    | PathTypes
     | Import
-    | LinguisticNodeDefinition
-    | LinguisticFlowDefinition
-    | LinguisticPath
     | EmptyListOf<Nodes, Channel>
 
-  FlowDefinition = "flow" label "(" HttpMethods "/" ListOf<label, "/"> ")" Properties? "=" NonemptyListOf<Nodes, Channel>
+  FlowTypes
+    = LinguisticFlowDefinition
+  NodeTypes
+    = LinguisticNodeDefinition
+  PathTypes
+    = LinguisticPath
+
   LinguisticFlowDefinition = Concept "Flow" "(" HttpMethods "/" ListOf<label, "/"> ")" Properties? "is" NonemptyListOf<LinguisticNodes, LinguisticPathSeparator>
 
-  NodeDefinition = "node" label Properties? "=" Actions
   LinguisticNodeDefinition = Concept "Node" "is" LinguisticActions
 
-  Actions = ListOf<label, ",">
   LinguisticActionsPlural = ListOf<Concept, ","> "and" Concept
   LinguisticActionsSingular = Concept
   LinguisticActions
     = LinguisticActionsPlural
     | LinguisticActionsSingular
 
-  Path = StandardNode Channel NonemptyListOf<Nodes, Channel>
   LinguisticPath = LinguisticStandardNode LinguisticChannel NonemptyListOf<LinguisticNodes, LinguisticPathSeparator>
 
   LinguisticPathSeparator = "that" LinguisticChannel
 
   Import = "import" "\"" label "."? label? "\""
 
-  Nodes
-    = Milestone
-    | Node
-
   LinguisticNodes
     = LinguisticMilestone
     | LinguisticNode
 
-  Milestone = Node "*"
   LinguisticMilestone = LinguisticNode "then commits"
 
-  Node
-    = WaitsFor
-    | NodeBase
-
-  WaitsFor = NodeBase "..." StandardNode
-
-  NodeBase
-    = SilentNode
-    | IdentityNode
-    | StandardNode
-  SilentNode = StandardNode "$"
-  IdentityNode = StandardNode "#" label
-  StandardNode = label
-  
   LinguisticNode
     = LinguisticWaitsFor
     | LinguisticNodeBase
@@ -70,15 +51,6 @@ FlowNote {
 
   Concept = NonemptyListOf<label, space>
 
-  Channel
-    = ErrorChannel
-    | PlainChannel
-    | NamedChannel
-
-  ErrorChannel = "-" label Properties? "!"
-  PlainChannel = "-" Properties? ">"
-  NamedChannel = "-" label Properties? ">"
-
   LinguisticChannel
     = LinguisticErrorChannel
     | LinguisticPlainChannel
@@ -87,7 +59,6 @@ FlowNote {
   LinguisticErrorChannel = "errors with" Concept Properties? "to"
   LinguisticPlainChannel = "connects" Properties? "to"
   LinguisticNamedChannel = "connects with" Concept Properties? "to"
-
 
   Properties = "{" ListOf<Property, ","> "}"
   Property = label ":" label
@@ -103,10 +74,14 @@ FlowNote {
   label = (alnum|"_")+
   string  (a string literal) = "\"" (~"\"" ~"\n" any)* "\""
   number  (a number literal)
-    = digit* "." digit+  -- fract
-    | digit+             -- whole
+    = fraction
+    | whole
+  fraction = digit* "." digit+
+  whole = digit+
   space += comment
   comment
-    = "/*" (~"*/" any)* "*/"  -- multiLine
-    | "//" (~"\n" any)*       -- singleLine
+    = multiLineComment
+    | singleLineComment
+  multiLineComment = "/*" (~"*/" any)* "*/"
+  singleLineComment = "//" (~"\n" any)*
 }

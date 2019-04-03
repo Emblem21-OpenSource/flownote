@@ -1,11 +1,8 @@
 import Compiler from './compiler/index'
 
 async function start () {
-  console.log(1)
-  const compiler = new Compiler('grammar.ohm')
-  console.log(2)
-  const application = await compiler.compileFile('compiler/test.flow')
-  console.log(3)
+  const compiler = new Compiler('compiler/test.flow', 'compiler/default.ohm', 'compiler/default-semantics.js')
+  const application = compiler.compile('compiler/test.flow')
   console.log(application)
 }
 

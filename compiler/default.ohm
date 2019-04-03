@@ -1,0 +1,80 @@
+FlowNote {
+  Expression
+    = NodeTypes
+    | FlowTypes
+    | Import 
+    | PathTypes
+    | comment
+    | EmptyListOf<Nodes, Channel>
+
+  FlowTypes
+    = FlowDefinition
+  NodeTypes
+    = NodeDefinition
+  PathTypes
+    = Path
+
+  FlowDefinition = "flow" label "(" HttpMethods "/" ListOf<label, "/"> ")" Properties? "=" NonemptyListOf<Nodes, Channel>
+
+  NodeDefinition = "node" label Properties? "=" Actions
+
+  Actions = ListOf<label, ",">
+
+  Path = StandardNode Channel NonemptyListOf<Nodes, Channel>
+
+  Import = "import" "\"" label "."? label? "\""
+
+  Nodes
+    = Node
+    | Milestone
+
+  Milestone = Node "*"
+
+  Node
+    = WaitsFor
+    | NodeBase
+
+  WaitsFor = NodeBase "..." StandardNode
+
+  NodeBase
+    = IdentityNode
+    | SilentNode
+    | StandardNode
+  IdentityNode = StandardNode "#" label
+  SilentNode = StandardNode "$"
+  StandardNode = label
+  
+  Channel
+    = ErrorChannel
+    | NamedChannel
+    | PlainChannel
+
+  ErrorChannel = "-" label Properties? "!"
+  NamedChannel = "-" label Properties? ">"
+  PlainChannel = "-" Properties? ">"
+
+  Properties = "{" ListOf<Property, ","> "}"
+  Property = label ":" label
+
+  HttpMethods
+    = "GET"
+    | "POST"
+    | "PUT"
+    | "DELETE"
+    | "OPTIONS"
+    | "HEAD"
+
+  label = (alnum|"_")+
+  string  (a string literal) = "\"" (~"\"" ~"\n" any)* "\""
+  number  (a number literal)
+    = fraction
+    | whole
+  fraction = digit* "." digit+
+  whole = digit+
+  space += comment
+  comment
+    = multiLineComment
+    | singleLineComment
+  multiLineComment = "/*" (~"*/" any)* "*/"
+  singleLineComment = "//" (~"\n" any)*
+}

@@ -13,9 +13,36 @@ class Generator {
    * @return {[type]}             [description]
    */
   constructor (application) {
-    this.application = this.application
+    this.application = application
     this.nodeFactories = {}
     this.nodeAliases = {}
+  }
+
+  /**
+   * [FlowTypes description]
+   * @param {[type]} flow [description]
+   */
+  FlowTypes (flow) {
+    console.log('FlowTypes')
+    return flow.eval()
+  }
+
+  /**
+   * [NodeTypes description]
+   * @param {[type]} node [description]
+   */
+  NodeTypes (node) {
+    console.log('NodeTypes')
+    return node.eval()
+  }
+
+  /**
+   * [PathTypes description]
+   * @param {[type]} path [description]
+   */
+  PathTypes (path) {
+    console.log('PathTypes')
+    return path.eval()
   }
 
   /**
@@ -23,6 +50,7 @@ class Generator {
    * @param {[type]} line [description]
    */
   Expression (line) {
+    console.log('Expression')
     return line.eval()
   }
 
@@ -35,6 +63,7 @@ class Generator {
    * @param {[type]} path         [description]
    */
   FlowDefinition (flowName, httpMethod, httpEndpoint, config, path) {
+    console.log('FlowDefinition')
     const method = httpMethod.eval()
     const endpoint = httpEndpoint.eval()
 
@@ -55,18 +84,23 @@ class Generator {
    * @param {[type]} properties [description]
    * @param {[type]} actions    [description]
    */
-  NodeDefinition (nodeName, properties, actions) {
-    const nodeNameInstance = nodeName.eval()
+  NodeDefinition (nodeLabel, properties, actions) {
+    console.log('NodeDefinition')
+    const nodeName = nodeLabel.eval()
 
-    if (this.nodeFactories[nodeNameInstance] === undefined) {
-      this.nodeFactories[nodeNameInstance] = (nodeName, tags, config, actions) => {
-        return new StandardNode(this.application, undefined, nodeName || nodeNameInstance, undefined, tags, actions)
-      }
-    } else {
-      throw new Error(`Node definition already exists for the ${nodeNameInstance}.`)
+    if (this.nodeAliases[nodeName]) {
+      return this.nodeAliases[nodeName]
     }
 
-    return this.nodeFactories[nodeNameInstance](nodeName.eval(), properties.eval().tags, actions.eval())
+    if (this.nodeFactories[nodeName] === undefined) {
+      this.nodeFactories[nodeName] = (nodeName, tags, config, actions) => {
+        return new StandardNode(this.application, undefined, nodeName, undefined, tags, actions)
+      }
+    } else {
+      throw new Error(`Node definition already exists for the ${nodeName}.`)
+    }
+    const propertiesInstance = properties.eval()
+    return this.nodeFactories[nodeName](nodeName, [ /* @TODO */], propertiesInstance, actions.eval())
   }
 
   /**
@@ -74,14 +108,17 @@ class Generator {
    * @param {[type]} actions [description]
    */
   Actions (actions) {
+    console.log('Actions')
     const list = actions.eval()
     const result = []
 
     list.forEach(actionLabel => {
-      const action = this.application.requireAction(actionLabel.eval(), function () {
-        // @TODO Fill out this stub
-      })
-      result.push(action)
+      if (actionLabel !== undefined) {
+        const action = this.application.requireAction(actionLabel, function () {
+          // @TODO Fill out this stub
+        })
+        result.push(action)
+      }
     })
 
     return result
@@ -93,15 +130,18 @@ class Generator {
    * @param {[type]} channel  [description]
    * @param {[type]} path     [description]
    */
-  Path (nodeName, channel, path) {
-    const rootNode = nodeName.eval()
+  Path (node, channel, path) {
+    console.log('Path')
+    const rootNode = node.eval()
     const steps = path.eval()
     const channelInstance = channel.eval()
     let lastNode = channelInstance
 
     steps.forEach(step => {
-      lastNode.connect(step)
-      lastNode = step
+      if (step !== undefined) {
+        lastNode.connect(step)
+        lastNode = step
+      }
     })
 
     rootNode.connect(channelInstance)
@@ -110,13 +150,14 @@ class Generator {
   }
 
   /**
-   * [nonemptyListOf description]
+   * [NonemptyListOf description]
    * @param  {[type]} token     [description]
    * @param  {[type]} separator [description]
    * @param  {[type]} tokens    [description]
    * @return {[type]}           [description]
    */
-  nonemptyListOf (token, separator, tokens) {
+  NonemptyListOf (token, separator, tokens) {
+    console.log('NonemptyListOf')
     const separatorInstance = separator.eval()
 
     if (separatorInstance instanceof StandardChannel) {
@@ -132,6 +173,7 @@ class Generator {
    * @param {[type]} extension [description]
    */
   Import (fileName, extension) {
+    console.log('Import')
     // const contents = fs.readFileSync(`${fileName.eval()}.${extension.eval()}`)
     // @TODO
     return {}
@@ -142,6 +184,7 @@ class Generator {
    * @param {[type]} node [description]
    */
   Nodes (node) {
+    console.log('Nodes')
     return node.eval()
   }
 
@@ -150,6 +193,7 @@ class Generator {
    * @param {[type]} node [description]
    */
   LinguisticNodes (node) {
+    console.log('LinguisticNodes')
     return node.eval()
   }
 
@@ -158,6 +202,7 @@ class Generator {
    * @param {[type]} nodeName [description]
    */
   Milestone (nodeName) {
+    console.log('Milestone')
     return new StandardMilestone(this.application, undefined, `Commit ${nodeName}`, 'fcfs', [], [])
   }
 
@@ -166,6 +211,7 @@ class Generator {
    * @param {[type]} nodeName [description]
    */
   LinguisticMilestone (nodeName) {
+    console.log('LinguisticMilestone')
     return new StandardMilestone(this.application, undefined, `Commit ${nodeName}`, 'fcfs', [], [])
   }
 
@@ -174,6 +220,7 @@ class Generator {
    * @param {[type]} node [description]
    */
   Node (node) {
+    console.log('Node')
     return node.eval()
   }
 
@@ -183,6 +230,7 @@ class Generator {
    * @param {[type]} waitsFor [description]
    */
   WaitsFor (nodeName, waitsFor) {
+    console.log('WaitsFor')
     // @TODO
   }
 
@@ -191,6 +239,7 @@ class Generator {
    * @param {[type]} node [description]
    */
   NodeBase (node) {
+    console.log('NodeBase')
     return node.eval()
   }
 
@@ -198,16 +247,16 @@ class Generator {
    * [SilentNode description]
    * @param {[type]} nodeName [description]
    */
-  SilentNode (nodeName) {
-    const name = nodeName.eval()
+  SilentNode (node) {
+    console.log('SilentNode')
+    const nodeInstance = node.eval()
 
-    if (this.nodeAliases[name]) {
-      return this.nodeAliases[name]
+    if (this.nodeAliases[nodeInstance.name]) {
+      throw new Error('Cannot modify labeled a Path root.')
     }
 
-    return this.nodeFactories[name](name, undefined, undefined, {
-      silent: true
-    })
+    // @TODO nodeInstance.silence()
+    return nodeInstance
   }
 
   /**
@@ -215,33 +264,32 @@ class Generator {
    * @param {[type]} nodeName   [description]
    * @param {[type]} aliasLabel [description]
    */
-  IdentityNode (nodeName, aliasLabel) {
-    const name = nodeName.eval()
+  IdentityNode (node, aliasLabel) {
+    console.log('IdentityNode')
+    const nodeInstance = node.eval()
     const alias = aliasLabel.eval()
 
-    const node = this.nodeFactories[name](name, undefined, undefined, {
-      silent: true
-    })
-
-    if (this.nodeAliases[alias] === undefined) {
-      this.nodeAliases[alias] = node
+    if (this.nodeAliases[alias]) {
+      throw new Error(`The ${alias} alias already exists.`)
+    } else {
+      this.nodeAliases[alias] = nodeInstance
     }
 
-    return node
+    return nodeInstance
   }
 
   /**
    * [StandardNode description]
    * @param {[type]} nodeName [description]
    */
-  StandardNode (nodeName) {
-    const name = nodeName.eval()
+  StandardNode (nodeLabel) {
+    const name = nodeLabel.eval()
 
     if (this.nodeAliases[name]) {
       return this.nodeAliases[name]
     }
 
-    return this.nodeFactories[name](name, undefined, undefined, {})
+    return this.nodeFactories[name](name, undefined, undefined, undefined)
   }
 
   /**
@@ -249,9 +297,12 @@ class Generator {
    * @param {[type]} words [description]
    */
   Concept (words) {
+    console.log('Concept')
     const result = []
     words.forEach(word => {
-      result.push(word.eval())
+      if (word !== undefined) {
+        result.push(word.eval())
+      }
     })
     return result.join(' ')
   }
@@ -261,6 +312,7 @@ class Generator {
    * @param {[type]} channel [description]
    */
   Channel (channel) {
+    console.log('Channel')
     return channel.eval()
   }
 
@@ -270,6 +322,7 @@ class Generator {
    * @param {[type]} properties  [description]
    */
   ErrorChannel (channelName, properties) {
+    console.log('ErrorChannel')
     const name = channelName.eval()
     const props = properties.eval()
     return new ErrorChannel(this.application, undefined, name, undefined, [ name ], props.retry, [])
@@ -280,6 +333,7 @@ class Generator {
    * @param {[type]} properties [description]
    */
   PlainChannel (properties) {
+    console.log('PlainChannel')
     const props = properties.eval()
     return new StandardChannel(this.application, undefined, 'Plain', undefined, [], props.retry, [])
   }
@@ -290,6 +344,7 @@ class Generator {
    * @param {[type]} properties  [description]
    */
   NamedChannel (channelName, properties) {
+    console.log('NamedChannel')
     const name = channelName.eval()
     const props = properties.eval()
     return new StandardChannel(this.application, undefined, name, undefined, [ name ], props.retry, [])
@@ -300,10 +355,13 @@ class Generator {
    * @param {[type]} properties [description]
    */
   Properties (properties) {
+    console.log('Properties')
     const result = {}
     properties.forEach(property => {
-      const propertyResult = property.eval()
-      result[propertyResult[0]] = propertyResult[1]
+      if (property !== undefined) {
+        const propertyResult = property.eval()
+        result[propertyResult[0]] = propertyResult[1]
+      }
     })
     return result
   }
@@ -314,6 +372,7 @@ class Generator {
    * @param {[type]} value [description]
    */
   Property (key, value) {
+    console.log('Property')
     return [key.eval(), value.eval()]
   }
 
@@ -322,6 +381,7 @@ class Generator {
    * @param {[type]} method [description]
    */
   HttpMethods (method) {
+    console.log('HttpMethods')
     return method.eval()
   }
 
@@ -331,7 +391,8 @@ class Generator {
    * @return {[type]}       [description]
    */
   label (label) {
-    return label.eval()
+    console.log('label')
+    return label.eval().join('')
   }
 
   /**
@@ -340,7 +401,17 @@ class Generator {
    * @return {[type]}        [description]
    */
   string (string) {
+    console.log('string')
     return string.eval()
+  }
+
+  /**
+   * [number description]
+   * @return {[type]} [description]
+   */
+  number (number) {
+    console.log('number')
+    return number.eval()
   }
 
   /**
@@ -350,17 +421,17 @@ class Generator {
    * @param  {[type]} decimal [description]
    * @return {[type]}         [description]
    */
-  number (whole, dot, decimal) {
+  fraction (whole, dot, decimal) {
+    console.log('fraction')
     const num1 = whole.eval()
-    let num2 = '0'
-
-    if (dot.eval()) {
-      num2 = '0.' + decimal.eval()
-    } else {
-      num2 = '0'
-    }
+    const num2 = '0.' + decimal.eval()
 
     return (Number)(num1) + (Number)(num2)
+  }
+
+  whole (number) {
+    console.log('whole')
+    return (Number)(number.eval())
   }
 
   /**
@@ -369,6 +440,7 @@ class Generator {
    * @return {[type]}       [description]
    */
   space (space) {
+    console.log('space')
     return space.eval()
   }
 
@@ -378,6 +450,30 @@ class Generator {
    * @return {[type]}          [description]
    */
   comment (comments) {
+    console.log('comment')
+    return comments.eval()
+  }
+
+  /**
+   * [multiLineComment description]
+   * @param  {[type]} _1       [description]
+   * @param  {[type]} comments [description]
+   * @param  {[type]} _2       [description]
+   * @return {[type]}          [description]
+   */
+  multiLineComment (comments) {
+    console.log('multiLineComment')
+    return comments.eval()
+  }
+
+  /**
+   * [singleLineComment description]
+   * @param  {[type]} _1       [description]
+   * @param  {[type]} comments [description]
+   * @return {[type]}          [description]
+   */
+  singleLineComment (_1, comments) {
+    console.log('singleLineComment')
     return comments.eval()
   }
 }
