@@ -4,7 +4,14 @@ import Semantics from './semantics'
 const fs = require('fs')
 
 class Compiler {
-  constructor (filename, grammarFilePath, semanticsPath = 'default', application) {
+  /**
+   * [constructor description]
+   * @param  {[type]} grammarFilePath [description]
+   * @param  {String} semanticsPath   [description]
+   * @param  {[type]} application     [description]
+   * @return {[type]}                 [description]
+   */
+  constructor (grammarFilePath = __dirname + '/default.ohm', semanticsPath = 'default', application) {
     this.application = application
 
     if (this.application === undefined) {
@@ -14,17 +21,29 @@ class Compiler {
     }
 
     this.semanticsPath = semanticsPath
-    this.filename = filename
     this.grammarFilePath = grammarFilePath
-
-    this.contents = fs.readFileSync(this.filename, 'utf8')
   }
 
-  async compile () {
+  /**
+   * [compileFromFile description]
+   * @param  {[type]} filename [description]
+   * @return {[type]}          [description]
+   */
+  async compileFromFile(filename) {
+    this.filename = filename
+    return this.compile(fs.readFileSync(this.filename, 'utf8'))
+  }
+
+  /**
+   * [compile description]
+   * @param  {[type]} contents [description]
+   * @return {[type]}          [description]
+   */
+  async compile (contents) {
     this.semantics = (await import(/* webpackInclude: /.+-semantics\.js$/ */ `./${this.semanticsPath}-semantics.js`)).default
     const semantics = new Semantics(this.semantics, this.grammarFilePath)
     const generator = semantics.getGenerator(this.application)
-    const lines = this.contents.split('\n')
+    const lines = contents.split('\n')
 
     lines.forEach(line => {
       const matches = semantics.getMatches(line)

@@ -10,7 +10,7 @@ FlowNote is a programming language designed to help reason about and represent f
 
 ### Example
 
-```
+```javascript
 import {
   Application,
   Flow,
@@ -155,7 +155,7 @@ FlowNote is designed to bring the linguistic part of our brains to help reason a
 
 ... you can use the following code:
 
-```
+```javascript
 // Allow access to all Nodes, Flows, and named Instances from customNodes.flow
 import 'custom.flow'
 
@@ -190,7 +190,29 @@ clickBranch -> notifyRoom ... move
 
 In nine lines of code, we can orchestrate multiple functions together with retry functionality, error handling, sane transactional persistence, and expose them for usage very easily. As a Request moves through Nodes and Channels and Milestones and its values are `set`, the output stream of the Application will emit JSONs of all Event Progression.
 
-`npm run compile` will demonstrate an example of compiling [test.flow](compiler/test.flow) to an rehydratable application JSON.
+To compile FlowNote files, you can do the following:
+
+##### As Command
+
+`./compile <path to .flow file>`
+
+##### As Pipe
+
+`cat <path to .flow file> | ./compile`
+
+##### As Code
+
+```javascript
+import { Compiler } from 'flownote'
+
+const complier = new Compiler()
+
+const contents = 'node Test = Action1,Action2,Action3' // Actual FlowNote code
+const application1 = await compiler.compile(contents)
+
+const filepath = '~/test.flow' // Path to the .flow file 
+const application2 = await compiler.compileFromFile(filepath)
+```
 
 #### Behavior Driven-Design
 

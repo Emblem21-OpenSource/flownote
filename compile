@@ -1,6 +1,6 @@
-require = require('esm')(module)
-const profiler = require('./src/utils/profiler')
-profiler.listen(3000, 'localhost')
+#!/usr/bin/env bash
+Function=Function//; node -r esm "$0" "$@"; exit
+// The above line is needed to run this hoist the shell instance of this script to NodeJS
 
 import Compiler from './compiler/index'
 const getStdin = require('get-stdin')
@@ -28,7 +28,6 @@ async function start () {
     application = await compiler.compile(contents)
   } else {
     // Using filename for contents
-
     application = await compiler.compileFromFile(filepath)
   }
 
