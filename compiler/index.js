@@ -4,26 +4,24 @@ import Semantics from './semantics'
 const fs = require('fs')
 
 class Compiler {
-  constructor (filename, grammarFilePath, semanticsPath, application) {
+  constructor (filename, grammarFilePath, semanticsPath = 'default', application) {
     this.application = application
 
     if (this.application === undefined) {
-      this.application = new Application(undefined, 'New App', {}, undefined, undefined, [ /* actions */ ], undefined, undefined, undefined)
+      this.application = new Application(undefined, 'New App', {}, undefined, undefined, [
+        // @TODO actions
+      ], undefined, undefined, undefined)
     }
 
-    this.semantics = require(`../${semanticsPath}`)
+    this.semanticsPath = semanticsPath
     this.filename = filename
     this.grammarFilePath = grammarFilePath
 
     this.contents = fs.readFileSync(this.filename, 'utf8')
   }
 
-  /**
-   * Returns a valid FlowNote structure
-   * @param  {String} content
-   * @return {Flow}
-   */
-  compile () {
+  async compile () {
+    this.semantics = (await import(/* webpackInclude: /.+-semantics\.js$/ */ `./${this.semanticsPath}-semantics.js`)).default
     const semantics = new Semantics(this.semantics, this.grammarFilePath)
     const generator = semantics.getGenerator(this.application)
     const lines = this.contents.split('\n')

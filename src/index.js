@@ -1,13 +1,29 @@
-exports.Action = require('./action.js')
-exports.Application = require('./application.js')
-exports.Channel = require('./channel.js')
-exports.Event = require('./event.js')
-exports.Flow = require('./flow.js')
-exports.Milestone = require('./milestone.js')
-exports.Node = require('./node.js')
-exports.Request = require('./request.js')
-exports.Spider = require('./spider.js')
-exports.StandardChannel = require('./channels/standardChannel.js')
-exports.StandardNode = require('./nodes/standardNode.js')
-exports.ErrorChannel = require('./channels/errorChannel.js')
-exports.Compiler = require('../compiler/index.js')
+import Action from './action.js'
+import Application from './application.js'
+import Channel from './channel.js'
+import Event from './event.js'
+import Flow from './flow.js'
+import Milestone from './milestone.js'
+import Node from './node.js'
+import Request from './request.js'
+import Spider from './spider.js'
+import StandardChannel from './channels/standardChannel.js'
+import StandardNode from './nodes/standardNode.js'
+import StandardMilestone from './nodes/standardMilestone.js'
+import ErrorChannel from './channels/errorChannel.js'
+import Compiler from '../compiler/index.js'
+
+exports.Action = Action
+exports.Application = Application
+exports.Channel = Channel
+exports.Event = Event
+exports.Flow = Flow
+exports.Milestone = Milestone
+exports.StandardMilestone = StandardMilestone
+exports.Node = Node
+exports.Request = Request
+exports.Spider = Spider
+exports.StandardChannel = StandardChannel
+exports.StandardNode = StandardNode
+exports.ErrorChannel = ErrorChannel
+exports.Compiler = Compiler

@@ -10,7 +10,7 @@ FlowNote is a programming language designed to help reason about and represent f
 
 ### Example
 
-```javascript
+```
 import {
   Application,
   Flow,
@@ -147,7 +147,7 @@ Applications initiate requests into Flows with the `request(httpMethod, httpRout
 
 FlowNote can be ran in the browser as well! Go [here](https://htmlpreview.github.io/?https://github.com/Emblem21-OpenSource/flownote/blob/master/dist/index.html) and checkout the console and network tabs! If you'd like to test out the browser builds locally, run `npm run browser-test` and open `http://localhost:1000`.
 
-### Domain Specific Language (Coming soon!)
+### Domain Specific Language
 
 FlowNote is designed to bring the linguistic part of our brains to help reason about and design flow-based programming tasks.  As a result, it has grammar. It's currently experimental, so check back later.  To generate the following Flow:
 
@@ -155,7 +155,7 @@ FlowNote is designed to bring the linguistic part of our brains to help reason a
 
 ... you can use the following code:
 
-```java
+```
 // Allow access to all Nodes, Flows, and named Instances from customNodes.flow
 import 'custom.flow'
 
@@ -190,7 +190,11 @@ clickBranch -> notifyRoom ... move
 
 In nine lines of code, we can orchestrate multiple functions together with retry functionality, error handling, sane transactional persistence, and expose them for usage very easily. As a Request moves through Nodes and Channels and Milestones and its values are `set`, the output stream of the Application will emit JSONs of all Event Progression.
 
-Additionally, FlowNote allows for Behavior Driven-Design grammar as well to allow non-developer conceptualization of how an app should world:
+`npm run compile` will demonstrate an example of compiling [test.flow](compiler/test.flow) to an rehydratable application JSON.
+
+#### Behavior Driven-Design
+
+Additionally, FlowNote allows for Behavior Driven-Design grammar as well to allow non-developer conceptualization of how an app should world. This is an example of English BDD:
 
 ```
 GetClick Node is ExtractClickData and ExtractPlayerId
@@ -205,6 +209,8 @@ ClickBranch errors with BoundaryError to DisplayBoundaryError
 ClickBranch connects to NotifyRoom but waits for Move
 ```
 
+Right now, this functionality does not work, but it's coming soon!
+
 ## _Future_
 
 * Allow alternative Event Queues to be utilized.
@@ -214,7 +220,8 @@ ClickBranch connects to NotifyRoom but waits for Move
 * Allow HTTP handler to throw 404s.
 * Allow HTTP POST requests to convert their body into parameters.
 * Improve performance by dealing with the limits of setImmediate.
-* Begin testing the lexer and parser for simplified FlowNote notation.
+* Allow the compiler to take arguments and piped input
+* Create the English BDD grammar
 * Build basic library of common Actions that integrate into popular services.
 * Provide robust documentation designed for onboarding.
 * Integrate announcement of line coverage for tests
