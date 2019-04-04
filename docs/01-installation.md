@@ -2,7 +2,7 @@
 
 ## Into a NodeJS Project
 
-FlowNote can be added to any project with this simple command, based upon your package manage:
+FlowNote can be added to any project with this simple command, based upon your package manager:
 
 ```shell
 npm install flownote --production --save

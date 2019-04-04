@@ -34,7 +34,7 @@ FlowNote uses [Clinic](https://clinicjs.org/) to perform profiling. You can run 
 
 ### Custom Streaming
 
-By default, Applications receive input from  `stdin` and emit all Events progression to `stdout` and `stderr` accordingly.  Custom streams can passed into the Application's constructor. Input data events are passed to the callback set with `setOnInput()`. When the input strean closes, the callback passed into `setOnShutdown()` will fire. You have to manually activate input stream listening with a call to `listen()`. To stop taking input stream events, use `unlisten()`
+By default, Applications receive input from  `stdin` and emits all progression Events to `stdout` and `stderr` accordingly.  Custom streams can passed into the Application's constructor. Input data events are passed to the callback set with `setOnInput()`. When the input strean closes, the callback passed into `setOnShutdown()` will fire. You have to manually activate input stream listening with a call to `listen()`. To stop taking input stream events, use `unlisten()`
 
 ### HTTP Server Integration
 
