@@ -4,11 +4,11 @@
 
 FlowNote can be added to any project with this simple command, based upon your package manager:
 
-```shell
+```bash
 npm install flownote --production --save
 ```
 
-```shell
+```bash
 yarn add flownote
 ```
 
