@@ -147,6 +147,26 @@ class Request {
     this.accumulatedActions.push(action)
     return this
   }
+
+  /**
+   * [rollbackChanges description]
+   * @param  {[type]} stepId [description]
+   * @return {[type]}        [description]
+   */
+  rollbackChanges (stepId) {
+    const len = this.changes.length - 1
+    let lastIndex
+
+    for (var i = len; i >= 0; i--) {
+      if (this.changes[i].stepId === stepId) {
+        lastIndex = i
+      }
+    }
+
+    if (lastIndex !== undefined) {
+      this.changes = this.changes.slice(0, lastIndex)
+    }
+  }
 }
 
 module.exports = Request

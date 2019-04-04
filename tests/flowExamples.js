@@ -163,7 +163,7 @@ test('Basic math flow with retries error', async t => {
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, [])
   const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
-  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], 3, [])
+  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], 3 /* retry count */, [])
   const throwError = new StandardNode(app, undefined, 'Throw Error', [], [], [ app.getAction('throwError') ])
   const errorChannel = new ErrorChannel(app, undefined, 'Error Channel', undefined, [], undefined, [])
   const setXYToOne = new StandardNode(app, undefined, 'Set X and Y to One', [], [], [ app.getAction('setXYToOne') ])
@@ -186,7 +186,7 @@ test('Basic math flow with retries error', async t => {
     y: 10
   })
 
-  t.is(result.e, 3)
+  t.is(result.e, 1)
   t.is(result.x, 1)
   t.is(result.y, 1)
 })

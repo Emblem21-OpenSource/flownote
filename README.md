@@ -242,7 +242,6 @@ Right now, this functionality does not work, but it's coming soon!
 * Allow HTTP handler to throw 404s.
 * Allow HTTP POST requests to convert their body into parameters.
 * Improve performance by dealing with the limits of setImmediate.
-* Allow the compiler to take arguments and piped input
 * Create the English BDD grammar
 * Build basic library of common Actions that integrate into popular services.
 * Provide robust documentation designed for onboarding.

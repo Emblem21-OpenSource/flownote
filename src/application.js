@@ -295,6 +295,11 @@ class Application extends CommonClass {
   dispatch (type, request, flow, from, retries = 0, error) {
     this.log.debug(`Dispatch starts from ${from.name} with type ${type}`)
 
+    if (type === 'RetryChannel') {
+      // Dealing with a retry, so rollback the request state
+      request.rollbackChanges(from.to.id)
+    }
+
     if (from.to) {
       if (from.to instanceof Array) {
         // Dealing with a Node or Milestone
@@ -324,7 +329,7 @@ class Application extends CommonClass {
           this.emit('Flow.end', flow, request, error)
         } else {
           // Dealing with a Channel
-          this.log.debug('... and leads to', from.to.name)
+          this.log.debug(`... and leads to ${from.to.name}`)
           const event = new Event(this, undefined, type, request, from.to, flow, retries)
           this.eventQueue.push(event)
         }
@@ -334,6 +339,7 @@ class Application extends CommonClass {
         // Throw an error if an Error channel was not found
         this.emit('Flow.end', flow, request, error)
       } else {
+        // Only end up here if a node without a channel dispatches
         this.log.debug(`... and leads to ${from.to.name}`)
         const event = new Event(this, undefined, type, request, from.to, flow, retries)
         this.eventQueue.push(event)

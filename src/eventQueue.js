@@ -103,7 +103,7 @@ class EventQueue extends CommonClass {
               // The step has retry instructions
               if (event.retries < retryCount - 1) {
                 this.log.debug('Retrying...')
-                this.application.dispatch(event.type, event.request, event.flow, lastStep || event.from, event.retries + 1)
+                this.application.dispatch('RetryChannel', event.request, event.flow, lastStep || event.from, event.retries + 1)
               } else {
                 // No more retries, bail
                 this.log.debug('Dispatching error...', e.name)
