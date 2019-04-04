@@ -70,8 +70,6 @@ To compile FlowNote files, you can do the following:
 
 `cat <path to .flow file> | ./compile`
 
-## Examples
-
 ##### Within an NodeJS Project from a string
 
 ```javascript
