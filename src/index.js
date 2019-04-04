@@ -8,6 +8,7 @@ import Node from './node.js'
 import Request from './request.js'
 import Spider from './spider.js'
 import StandardChannel from './channels/standardChannel.js'
+import RetryChannel from './channels/retryChannel.js'
 import StandardNode from './nodes/standardNode.js'
 import StandardMilestone from './nodes/standardMilestone.js'
 import ErrorChannel from './channels/errorChannel.js'
@@ -24,6 +25,7 @@ exports.Node = Node
 exports.Request = Request
 exports.Spider = Spider
 exports.StandardChannel = StandardChannel
+exports.RetryChannel = RetryChannel
 exports.StandardNode = StandardNode
 exports.ErrorChannel = ErrorChannel
 exports.Compiler = Compiler

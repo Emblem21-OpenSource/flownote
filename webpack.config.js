@@ -16,7 +16,8 @@ module.exports = (env, argv) => ({
   output: {
     path: dirname + '/dist',
     chunkFilename: 'chunks/[name].js',
-    filename: '[name].js'
+    filename: '[name].js',
+    library: 'FlowNote'
   },
   module: {
     rules: [
