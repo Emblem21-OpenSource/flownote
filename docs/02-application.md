@@ -8,7 +8,7 @@ The Event Queue receives Events from Nodes, Milestones, and Channels and properl
 
 ## Examples
 
-To see more isolated examples, check out the [flowExamples.js](tests/flowExamples.js) test.
+To see more isolated examples, check out the [flowExamples.js](../tests/flowExamples.js) test.
 
 ##### Documentation
 
