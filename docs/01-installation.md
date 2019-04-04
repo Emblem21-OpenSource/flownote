@@ -142,15 +142,15 @@ const compiler = new FlowNote.Compiler(/* args */)
 ##### Documentation
 
 ( 
-[Installation](01-installation.md) | 
-[Application](02-application.md) | 
-[Flow](03-flow.md) | 
-[Nodes](04-nodes.md) | 
-[Channels](05-channels.md) | 
-[Use Cases](06-use-cases.md) | 
-[Concepts](07-language.md) | 
-[Language](08-language.md) | 
-[Contribution Overview](09-contribution.md) | 
-[Roadmap](10-roadmap.md) | 
-[Known Problems](11-known-problems.md)
+[Installation](docs/01-installation.md) | 
+[Application](docs/02-application.md) | 
+[Flow](docs/03-flow.md) | 
+[Nodes](docs/04-nodes.md) | 
+[Channels](docs/05-channels.md) | 
+[Features](docs/06-features.md) | 
+[Concepts](docs/07-language.md) | 
+[Language](docs/08-language.md) | 
+[Contribution Overview](docs/09-contribution.md) | 
+[Roadmap](docs/10-roadmap.md) | 
+[Known Problems](docs/11-known-problems.md)
 )

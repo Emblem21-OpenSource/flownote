@@ -46,7 +46,7 @@ FlowNote can be ran in the browser as well! Go [here](https://htmlpreview.github
 
 ##### Documentation
 
-(
+( 
 [Installation](01-installation.md) | 
 [Application](02-application.md) | 
 [Flow](03-flow.md) | 
