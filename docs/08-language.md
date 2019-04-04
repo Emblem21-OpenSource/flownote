@@ -2,9 +2,9 @@
 
 FlowNote is designed to bring the linguistic part of our brains to help reason about and design flow-based programming tasks.  As a result, it has grammar. It's currently experimental, so check back later.  To generate the following Flow:
 
-![](docs/images/flowExample.png)
+![](images/flowExample.png)
 
-... you can use the following code:
+This graph can be represented via the following FlowNote code:
 
 ```java
 // Allow access to all Nodes, Flows, and named Instances from customNodes.flow
