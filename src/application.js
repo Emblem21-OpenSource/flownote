@@ -57,9 +57,26 @@ class Application extends CommonClass {
     return async function (req, res) {
       const parts = req.url.split('?')
       let result
+      // Assume GET or DELETE is the HTTP method, so extract the params from the URL
+      let params = parts[1]
+
+      if (req.method === 'POST' || req.method === 'PUT') {
+        // Extract the params from the body of POST/PUT
+        params = JSON.parse(await new Promise(resolve => {
+          if (req.method === 'POST') {
+            let body = ''
+            req.on('data', chunk => {
+              body += chunk.toString() // convert Buffer to string
+            })
+            req.on('end', () => {
+              resolve(body)
+            })
+          }
+        }))
+      }
 
       try {
-        result = await application.request(req.method, parts[0], parts[1])
+        result = await application.request(req.method, parts[0], params)
         res.writeHead(200, { 'Content-Type': 'text/plain' })
       } catch (e) {
         result = {

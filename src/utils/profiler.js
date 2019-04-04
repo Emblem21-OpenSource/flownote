@@ -91,6 +91,7 @@ setTimeout(async () => {
 */
 
 // Create an HTTP server
+// const httpServer = http.createServer(app.httpRequestHandler())
 const httpServer = http.createServer(async (req, res) => {
   const result = await app.request('GET', '/testFlow', {
     x: 7,
