@@ -18,6 +18,7 @@
 * Add Google Cloud integration
 * Add NodeRED integration
 * Add Apache NiFi integration
+* Fix the pull request instructions and make `npm version` sane.
 
 ##### Documentation
 

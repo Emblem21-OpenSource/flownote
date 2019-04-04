@@ -21,7 +21,12 @@
     "piping",
     "pipes",
     "stream",
-    "streams"
+    "streams",
+    "event driven",
+    "event-driven",
+    "event oriented",
+    "event-oriented",
+    "eoa"
   ],
   "scripts": {
     "test": "ava",
