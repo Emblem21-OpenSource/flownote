@@ -12,6 +12,12 @@
 * Provide robust documentation designed for onboarding.
 * Integrate announcement of line coverage for tests
 * Setup Dockerfile
+* Add Unity SDK integration
+* Add Unreal SDK integration
+* Add AWS integration
+* Add Google Cloud integration
+* Add NodeRED integration
+* Add Apache NiFi integration
 
 ##### Documentation
 
