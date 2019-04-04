@@ -143,7 +143,7 @@ const compiler = new FlowNote.Compiler(/* args */)
 
 ( 
 Installation | 
-[Features](06-features.md) | 
+[Features](07-features.md) | 
 [Application](02-application.md) | 
 [Flow](03-flow.md) | 
 [Nodes](04-nodes.md) | 
