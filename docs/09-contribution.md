@@ -1,8 +1,14 @@
 # Contribution Guidelines
 
+## Community
+
+[![Chat us up on Gitter](https://badges.gitter.im/flownote/community.svg)](https://gitter.im/flownote/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+## Pull Requests
+
 When you're ready to submit pull requests, make sure you create a new branch off of the most recent tag (`git checkout -b <nameOfYourBranch> <version>`), modify your code, run `npm version patch`, then push the commit.
 
-## _Porting_
+## Porting
 
 For those interested in porting FlowNote to another language, here are the dependencies that are optional:
 
