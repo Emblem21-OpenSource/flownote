@@ -6,7 +6,7 @@ FlowNote is designed to bring the linguistic part of our brains to help reason a
 
 ... you can use the following code:
 
-```javascript
+```java
 // Allow access to all Nodes, Flows, and named Instances from customNodes.flow
 import 'custom.flow'
 
@@ -45,7 +45,7 @@ In nine lines of code, we can orchestrate multiple functions together with retry
 
 Additionally, FlowNote allows for Behavior Driven-Design grammar as well to allow non-developer conceptualization of how an app should world. This is an example of English BDD:
 
-```
+```java
 GetClick Node is ExtractClickData and ExtractPlayerId
 ExtractXY Node is GetXYCoordsFromClickData
 MovePlayer Node is GetPlayerById, DetectPlayerMovementEvents, MovePlayer and DispatchPlayerMovementEvents
@@ -74,7 +74,7 @@ To compile FlowNote files, you can do the following:
 
 ##### Within an NodeJS Project from a string
 
-```
+```javascript
 import { Compiler } from 'flownote'
 
 const complier = new Compiler()
@@ -85,7 +85,7 @@ const application = await compiler.compile(contents)
 
 ##### Within a NodeJS Project from a file
 
-```
+```javascript
 import { Compiler } from 'flownote'
 
 const complier = new Compiler()
@@ -96,7 +96,7 @@ const application = await compiler.compileFromFile(filepath)
 
 ##### Within an Browser Project
 
-```
+```javascript
 var complier = new FlowNote.Compiler()
 
 var contents = 'node Test = Action1,Action2,Action3'
@@ -108,7 +108,7 @@ var application = compiler.compile(contents).then(function (application) {
 
 ##### Within a ReactJS Project (Coming soon!)
 
-```
+```javascript
 import { Compiler } from 'flownote'
 
 const complier = new Compiler()
@@ -121,13 +121,13 @@ const application = await compiler.compile(filepath)
 
 ( 
 [Installation](01-installation.md) | 
+[Features](07-features.md) | 
 [Application](02-application.md) | 
 [Flow](03-flow.md) | 
 [Nodes](04-nodes.md) | 
 [Channels](05-channels.md) | 
 [Use Cases](06-use-cases.md) | 
-[Features](07-features.md) | 
-[Language](08-language.md) | 
+Language | 
 [Contribution Overview](09-contribution.md) | 
 [Roadmap](10-roadmap.md) | 
 [Known Problems](11-known-problems.md)
