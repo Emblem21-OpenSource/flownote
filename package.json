@@ -1,7 +1,7 @@
 {
   "name": "flownote",
   "version": "1.0.0-alpha.7",
-  "description": "Language for flow-based programming",
+  "description": "FlowNote is an engine to create, organize, inspect, visualize, and hook into event-oriented applications with a language that makes reasoning about flow-based paradigms easy.",
   "main": "index.js",
   "keywords": [
     "flow-based",
@@ -44,7 +44,7 @@
     "reinstall": "rm package-lock.json && rm yarn.lock && rm -fr node_modules && npm install && yarn install"
   },
   "bin": {
-    "compile": "./compile.js"
+    "flownote-compiler": "./compile"
   },
   "license": "MIT",
   "repository": "Emblem21-OpenSource/flownote",

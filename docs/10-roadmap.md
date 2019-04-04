@@ -19,6 +19,9 @@
 * Add NodeRED integration
 * Add Apache NiFi integration
 * Fix the pull request instructions and make `npm version` sane.
+* Export applications to XML
+* Come up with a visual editor to connect graphs
+* Come up with a visual IDE
 
 ##### Documentation
 

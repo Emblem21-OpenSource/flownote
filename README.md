@@ -1,6 +1,6 @@
 ![FlowNote](docs/images/logo.png)
 
-FlowNote is an engine to create, organize, inspect, visualize, and hook into event-oriented applications with a language that makes reasoning about flow-based paradigms easily.  
+FlowNote is an engine to create, organize, inspect, visualize, and hook into event-oriented applications with a language that makes reasoning about flow-based paradigms easy.  
 
 [![Check out or community on Gitter!](https://badges.gitter.im/flownote/community.svg)](https://gitter.im/flownote/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
