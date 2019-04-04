@@ -1,27 +1,8 @@
 # Roadmap
 
-* Allow alternative Event Queues to be utilized.
-* Allow Event retries to have a programmatic number of attempts.
-* Allow Event retries to have programmatic delays for throttling compliance.
-* Allow for endpoints and Requests to specify what data they return. (State, variable history, and flow navigation)
-* Allow HTTP handler to throw 404s.
-* Allow HTTP POST requests to convert their body into parameters.
-* Improve performance by dealing with the limits of setImmediate.
-* Create the English BDD grammar
-* Build basic library of common Actions that integrate into popular services.
-* Provide robust documentation designed for onboarding.
-* Integrate announcement of line coverage for tests
-* Setup Dockerfile
-* Add Unity SDK integration
-* Add Unreal SDK integration
-* Add AWS integration
-* Add Google Cloud integration
-* Add NodeRED integration
-* Add Apache NiFi integration
-* Fix the pull request instructions and make `npm version` sane.
-* Export applications to XML
-* Come up with a visual editor to connect graphs
-* Come up with a visual IDE
+* [Beta Preparation](https://github.com/Emblem21-OpenSource/flownote/projects/1) are all of the features that are required to help bring FlowNote out of Alpha and into Beta. This list is expected to grow rapidly.
+* [Stable Preparation](https://github.com/Emblem21-OpenSource/flownote/projects/2) are all of the features that are required to help bring FlowNote out of Beta and into a Stable release cycle. This list is expected to grow rapidly.
+* [Feature Requests](https://github.com/Emblem21-OpenSource/flownote/projects/3) are all of the optional/backlog feature requests that are pending development.
 
 ##### Documentation
 

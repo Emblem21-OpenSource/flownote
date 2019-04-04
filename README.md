@@ -4,7 +4,8 @@ FlowNote is an engine to create, organize, inspect, visualize, and hook into eve
 
 [![Check out or community on Gitter!](https://badges.gitter.im/flownote/community.svg)](https://gitter.im/flownote/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-##### Documetation
+## Documetation
+
 * [Installation](docs/01-installation.md)
 * [Features](docs/06-features.md)
 * [Application](docs/02-application.md)
