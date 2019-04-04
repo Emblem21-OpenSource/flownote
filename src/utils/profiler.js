@@ -101,4 +101,4 @@ const httpServer = http.createServer(async (req, res) => {
   res.end(JSON.stringify(result))
 })
 
-module.exports = httpServer
+export { httpServer as default }

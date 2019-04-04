@@ -51,11 +51,30 @@ class Application extends CommonClass {
    * @param  {[type]} res [description]
    * @return {[type]}     [description]
    */
-  async httpRequestHandler (req, res) {
-    const parts = req.url.split('?')
-    const result = await this.request(req.method, parts[0], parts[1])
-    res.writeHead(200, { 'Content-Type': 'text/plain' })
-    res.end(JSON.stringify(result))
+  httpRequestHandler () {
+    const application = this
+
+    return async function (req, res) {
+      const parts = req.url.split('?')
+      let result
+
+      try {
+        result = await application.request(req.method, parts[0], parts[1])
+        res.writeHead(200, { 'Content-Type': 'text/plain' })
+      } catch (e) {
+        result = {
+          error: e.message
+        }
+
+        if (e instanceof RangeError) { // @TODO I'll probably need a custom error for this
+          res.writeHead(404, { 'Content-Type': 'text/plain' })
+        } else {
+          res.writeHead(500, { 'Content-Type': 'text/plain' })
+        }
+      }
+
+      res.end(JSON.stringify(result))
+    }
   }
 
   /**
@@ -544,10 +563,14 @@ class Application extends CommonClass {
    * @param  {[type]} params [description]
    * @return {[type]}        [description]
    */
-  async request (method, path, params) {
+  async request (method, path, params = {}) {
     this.log.info(`Requesting ${method} ${path} with ${params}...`)
 
     const flow = this.getFlowByHttp(method, path)
+
+    if (!flow) {
+      throw new RangeError(`${method} ${path} is not a valid endpoint.`)
+    }
 
     if (typeof params === 'string') {
       params = querystring.parse(params)
