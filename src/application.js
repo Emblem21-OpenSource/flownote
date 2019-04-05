@@ -2,7 +2,7 @@ import Flow from './flow'
 import Event from './event'
 
 const querystring = require('querystring')
-const IdGenerator = require('./utils/IdGenerator')
+const IdGenerator = require('./utils/idGenerator')
 const EventQueue = require('./eventQueue')
 const Action = require('./action')
 // const Delegate = require('./delegate')

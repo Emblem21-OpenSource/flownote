@@ -45,7 +45,7 @@ test('Node.asFlattened', t => {
   t.regex(flattened, /,"Double X",\["6"\],\["7"\],\["8"\]/)
   t.regex(flattened, /","Plain",\[\],\[\]/)
   t.regex(flattened, /},"test",{/)
-  t.regex(flattened, /"data => {\\r\\n  data\.x \*= 2\\r\\n  return data\\r\\n}"\]/)
+  t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"\]/)
 })
 
 test('Node.asFlattened (Circular)', t => {
@@ -61,7 +61,7 @@ test('Node.asFlattened (Circular)', t => {
   t.regex(flattened, /,"Double X",\["6"\],\["7"\],\["8"\]/)
   t.regex(flattened, /","Plain",/)
   t.regex(flattened, /},"test",{/)
-  t.regex(flattened, /"data => {\\r\\n  data\.x \*= 2\\r\\n  return data\\r\\n}"\]/)
+  t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"\]/)
 })
 
 test('Node.loadFlattened', t => {

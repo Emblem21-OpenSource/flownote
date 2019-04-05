@@ -88,7 +88,7 @@ test('Flow.asFlattened', t => {
   t.regex(flattened, /,"Double X",\["13"\],\["14"\],\["15"\]/)
   t.regex(flattened, /","Plain",/)
   t.regex(flattened, /},"test",{/)
-  t.regex(flattened, /"data => {\\r\\n  data\.x \*= 2\\r\\n  return data\\r\\n}"/)
+  t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"/)
   t.regex(flattened, /,"GET","\/testFlow",\[\]/)
 })
 
@@ -111,7 +111,7 @@ test('Flow.asFlattened (Circular)', t => {
   t.regex(flattened, /,"Double X",\["13"\],\["14"\],\["15"\]/)
   t.regex(flattened, /","Plain",/)
   t.regex(flattened, /},"test",{/)
-  t.regex(flattened, /"data => {\\r\\n  data\.x \*= 2\\r\\n  return data\\r\\n}"/)
+  t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"/)
   t.regex(flattened, /,"GET","\/testFlow",\[\]/)
 })
 

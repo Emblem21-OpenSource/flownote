@@ -60,7 +60,7 @@ test('Milestone.asFlattened', t => {
   t.regex(flattened, /,"Double X",/)
   t.regex(flattened, /","Plain",/)
   t.regex(flattened, /,"test",/)
-  t.regex(flattened, /"data => {\\r\\n  data\.x \*= 2\\r\\n  return data\\r\\n}"/)
+  t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"/)
 })
 
 test('Milestone.asFlattened (Circular)', t => {
@@ -81,7 +81,7 @@ test('Milestone.asFlattened (Circular)', t => {
 
   t.regex(flattened, /,"Double X",/)
   t.regex(flattened, /","Plain",/)
-  t.regex(flattened, /"data => {\\r\\n  data\.x \*= 2\\r\\n  return data\\r\\n}"/)
+  t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"/)
 })
 
 test('Milestone.loadFlattened', t => {
