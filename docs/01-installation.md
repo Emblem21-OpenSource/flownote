@@ -9,7 +9,7 @@ npm install flownote --production --save
 ```
 
 ```bash
-yarn add flownote
+yarn add flownote --production
 ```
 
 Here's an example of how it would be used in a standard NodeJS project:
