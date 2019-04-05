@@ -6,7 +6,7 @@ const Request = require('../src/request')
 
 const appName = 'Test'
 
-const flow = { id: 'flowId' }
+const flow = { id: 'flowId', config: {} }
 const node = { id: 'nodeId' }
 
 const doubleX = data => {

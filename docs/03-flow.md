@@ -2,6 +2,12 @@
 
 Flows contain Nodes and Milestones that are connected together via Channels. Flows can also connect to Flows to maximize reuse of business logic.
 
+## Configuring
+
+* `showState` will show the consolidated state of all transformations that applied to the Request when `request.asResult` is called.
+* `showTrace` will show all transitions between Nodes, Milestones, and Channels the Request made when `request.asResult` is called.
+* `showChanges` will show all changes made to the Request when `request.asResult` is called.
+
 ## Examples
 
 Coming soon!

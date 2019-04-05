@@ -15,7 +15,7 @@ class Request {
    * @param  {[type]} onFlowFailure [description]
    * @return {[type]}               [description]
    */
-  constructor (application, initialValue = {}, flow, step, options) {
+  constructor (application, initialValue = {}, flow, step, config = {}) {
     const entries = Object.entries(initialValue)
 
     this.application = application
@@ -31,6 +31,12 @@ class Request {
         value
       })
     }
+
+    this.config = Object.assign(config, {
+      showState: application.config.showState || flow.config.showState || config.showState || true,
+      showChanges: application.config.showChanges || flow.config.showChanges || config.showChanges || false,
+      showTrace: application.config.showTrace || flow.config.showTrace || config.showTrace || false
+    })
 
     this.onCyclicWarning = noop
     this.onCyclicError = noop
@@ -111,6 +117,28 @@ class Request {
 
     for (var i = 0, len = this.changes.length; i < len; i++) {
       result[this.changes[i].key] = this.changes[i].value
+    }
+
+    return result
+  }
+
+  /**
+   * [asResult description]
+   * @return {[type]} [description]
+   */
+  asResult () {
+    const result = {}
+
+    if (this.config.showState) {
+      result.state = this.getState()
+    }
+
+    if (this.config.showChanges) {
+      result.changes = this.changes
+    }
+
+    if (this.config.showTrace) {
+      result.trace = this.steps
     }
 
     return result

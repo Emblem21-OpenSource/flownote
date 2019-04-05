@@ -38,7 +38,7 @@ By default, Applications receive input from  `stdin` and emits all progression E
 
 ### HTTP Server Integration
 
-Applications initiate requests into Flows with the `request(httpMethod, httpRoute, parameters)` method. which will pass a request through the corresponding Flow. To simplify usage, Application instances can pass their `httpRequestHandler` method into any `http.createServer()` method and HTTP requests will map to Flows according to their method and route definitions.  HTTP GET queries are converted into parameters automatically.
+Applications initiate requests into Flows with the `request(httpMethod, httpRoute, parameters)` method. which will pass a request through the corresponding Flow. To simplify usage, HTTP frameworks can simply call `http.createServer(app/httpRequestHandler())` and HTTP requests will map to Flows according to their method and route definitions.  HTTP GET/DELETE queries and POST/PUT bodies are converted into parameters automatically. If a Flow is not found, a 404 will be returned. Any errors will return a 500. Otherwise, a 200 will be returned.
 
 ### Browser-Friendly
 

@@ -34,5 +34,5 @@ test('EventQueue.push and EventQueue.process', async t => {
     x: 7
   })
 
-  t.is(result.x, 28)
+  t.is(result.state.x, 28)
 })

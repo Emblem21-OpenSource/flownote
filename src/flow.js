@@ -26,7 +26,7 @@ class Flow extends CommonClass {
       this.fromJSON({
         id: id || this.application.getUniqueId(),
         name: name || 'Unnamed',
-        config: Object.assign({}, config || {}),
+        config: Object.assign(config || {}, {}),
         to,
         endpointMethod: endpointMethod || 'GET',
         endpointRoute: endpointRoute || '/' + name || 'Unnamed',
@@ -123,18 +123,6 @@ class Flow extends CommonClass {
   }
 
   /**
-   * [registerRequest description]
-   * @param  {[type]} node [description]
-   * @param  {[type]} data [description]
-   * @return {[type]}      [description]
-   */
-  registerRequest (node, data) {
-    const request = new Request(this.application, undefined, data, this, node)
-    this.application.activeRequests.set(request.id, request)
-    return request
-  }
-
-  /**
    * [request description]
    * @param  {[type]} params [description]
    * @return {[type]}        [description]
@@ -154,7 +142,7 @@ class Flow extends CommonClass {
         if (resultRequest === request) {
           this.application.off(listener)
           this.log.debug(`Request ${request.id} complete.`)
-          resolve(resultRequest.getState())
+          resolve(resultRequest.asResult())
         }
       })
 

@@ -94,8 +94,56 @@ test('Basic math flow', async t => {
     y: 10
   })
 
-  t.is(result.x, 7)
-  t.is(result.y, -3)
+  t.is(result.state.x, 7)
+  t.is(result.state.y, -3)
+})
+
+test('Basic math flow showing result state, changes, and trace', async t => {
+  const app = createApp()
+  const flow = new Flow(app, undefined, 'Test Flow', {
+    showTrace: true,
+    showChanges: true,
+    showState: true
+  }, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
+  app.setPublicFlow(flow)
+
+  const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
+  const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
+  const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
+  const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
+  const halveXNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('halveX') ])
+  const channelC = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
+  const subtractXFromYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('subtractXFromY') ])
+
+  flow.connect(doubleXNode)
+  doubleXNode.connect(channelA)
+  channelA.connect(addXAndYNode)
+  addXAndYNode.connect(channelB)
+  channelB.connect(halveXNode)
+  halveXNode.connect(channelC)
+  channelC.connect(subtractXFromYNode)
+
+  const result = await app.request('GET', '/testFlow', {
+    x: 2,
+    y: 10
+  })
+
+  t.is(result.state.x, 7)
+  t.is(result.state.y, -3)
+  t.is(result.changes.length, 6)
+  t.is(result.changes[0].key, 'x')
+  t.is(result.changes[0].value, 2)
+  t.is(result.changes[1].key, 'y')
+  t.is(result.changes[1].value, 10)
+  t.is(result.changes[2].key, 'x')
+  t.is(result.changes[2].value, 4)
+  t.is(result.changes[3].key, 'x')
+  t.is(result.changes[3].value, 14)
+  t.is(result.changes[4].key, 'x')
+  t.is(result.changes[4].value, 7)
+  t.is(result.changes[5].key, 'y')
+  t.is(result.changes[5].value, -3)
+  t.is(result.trace.length, 6)
 })
 
 test('Basic math flow with unreachable error', async t => {
@@ -124,8 +172,8 @@ test('Basic math flow with unreachable error', async t => {
     y: 10
   })
 
-  t.is(result.x, 7)
-  t.is(result.y, 10)
+  t.is(result.state.x, 7)
+  t.is(result.state.y, 10)
 })
 
 test('Basic math flow with reachable error', async t => {
@@ -159,9 +207,9 @@ test('Basic math flow with reachable error', async t => {
     y: 10
   })
 
-  t.is(result.e, 1)
-  t.is(result.x, 1)
-  t.is(result.y, 1)
+  t.is(result.state.e, 1)
+  t.is(result.state.x, 1)
+  t.is(result.state.y, 1)
 })
 
 test('Basic math flow with retries error', async t => {
@@ -195,9 +243,9 @@ test('Basic math flow with retries error', async t => {
     y: 10
   })
 
-  t.is(result.e, 1)
-  t.is(result.x, 1)
-  t.is(result.y, 1)
+  t.is(result.state.e, 1)
+  t.is(result.state.x, 1)
+  t.is(result.state.y, 1)
 })
 
 test('Basic math flow with custom retries error', async t => {
@@ -231,10 +279,10 @@ test('Basic math flow with custom retries error', async t => {
     y: 10
   })
 
-  t.is(result.retried, 1)
-  t.is(result.e, 1)
-  t.is(result.x, 1)
-  t.is(result.y, 1)
+  t.is(result.state.retried, 1)
+  t.is(result.state.e, 1)
+  t.is(result.state.x, 1)
+  t.is(result.state.y, 1)
 })
 
 test('Basic math flow with custom retries error with a 1 second delay', async t => {
@@ -268,10 +316,10 @@ test('Basic math flow with custom retries error with a 1 second delay', async t 
     y: 10
   })
 
-  t.is(result.retried, 1)
-  t.is(result.e, 1)
-  t.is(result.x, 1)
-  t.is(result.y, 1)
+  t.is(result.state.retried, 1)
+  t.is(result.state.e, 1)
+  t.is(result.state.x, 1)
+  t.is(result.state.y, 1)
 })
 
 test('Self-referential flow to trigger cyclical error', async t => {
@@ -334,6 +382,6 @@ test.skip('Flow with waitFor', async t => {
     y: 10
   })
 
-  t.is(result.x, 7)
-  t.is(result.y, 100)
+  t.is(result.state.x, 7)
+  t.is(result.state.y, 100)
 })

@@ -114,9 +114,9 @@ class Generator {
 
     list.forEach(actionLabel => {
       if (actionLabel !== undefined) {
-        const action = this.application.requireAction(actionLabel, function () {
+        const action = this.application.requireAction(actionLabel, new Function(`return function ${actionLabel} () {
           // @TODO Fill out this stub
-        })
+        }`)())
         result.push(action)
       }
     })

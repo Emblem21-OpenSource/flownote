@@ -597,7 +597,7 @@ class Application extends CommonClass {
 
     this.emit('Request.start', this, params)
 
-    const request = new Request(this, params, flow, flow.to)
+    const request = new Request(this, params, flow, flow.to, undefined)
 
     const result = await flow.request(params, request)
 
