@@ -1,0 +1,99 @@
+#/bin/bash
+
+APP_NAME=flownote
+
+case $1 in
+        test)
+                npm test
+                ;;
+        test-watch)
+                npm test-watch
+                ;;
+        test-coverage)
+                npm test-coverage
+                ;;
+        profile)
+                npm profiler
+                ;;
+        profile-explorer)
+                npm profiler-explorer
+                ;;
+        build-browser)
+                npm browser-build
+                ;;
+        build-browser-watch)
+                npm browser-test
+                ;;
+        reinstall)
+                npm reinstall
+                ;;
+        compile)
+                ./compile ${@:2}
+                ;;
+        build-docker)
+                docker build -t $APP_NAME --rm=true .
+                ;;
+        start-docker)
+                docker run -d --name $APP_NAME -p 80:80 -p 443:443 --env-file .env $APP_NAME
+                ;;
+        stop-docker)
+                docker stop $APP_NAME
+                ;;
+        remove-docker)
+                docker rm $APP_NAME
+                ;;
+        restart-docker)
+                docker restart $APP_NAME
+                ;;
+        logs)
+                docker logs -f $APP_NAME
+                ;;
+        cli-docker)
+                docker exec -it $APP_NAME bash
+                ;;
+        clean-rebuild-docker)
+                docker build --no-cache=true --rm=true -t $APP_NAME .
+                ;;
+        purge-docker)
+                docker stop $APP_NAME
+                docker rm $APP_NAME
+                docker rmi $APP_NAME
+                ;;
+        purge-docker-containers)
+                docker stop $(docker ps -a -q)
+                docker rm $(docker ps -a -q)
+                ;;
+        purge-all-docker)
+                docker stop $(docker ps -a -q)
+                docker rm $(docker ps -a -q)
+                docker rmi $(docker images -a -q)
+                ;;
+        *)
+                printf "\e[38;5;166mUsage: \e[38;5;72m$0 \e[38;5;106m{an option below}\n"
+                printf "\n"
+                printf "\e[38;5;201mDevelopment Options \e[38;5;47m(\e[38;5;251mrequires a NodeJS environment\e[38;5;47m)\n"
+                printf "  \e[38;5;123mtest                      \e[38;5;178mRuns the test suite.\n"
+                printf "  \e[38;5;123mtest-watch                \e[38;5;178mRuns the test suite every time code changes.\n"
+                printf "  \e[38;5;123mtest-coverage             \e[38;5;178mRuns the test suite  and generates a code coverage report.\n"
+                printf "  \e[38;5;123mprofile                   \e[38;5;178mRuns a profiler and generates a performance report.\n"
+                printf "  \e[38;5;123mprofile-explorer          \e[38;5;178mRuns a profiler and generates a very detailed performance report.\n"
+                printf "  \e[38;5;123mbuild-browser             \e[38;5;178mBuilds $APP_NAME for the browser.\n"
+                printf "  \e[38;5;123mbuild-browser-watch       \e[38;5;178mBuilds $APP_NAME for the browser every time code changes.\n"
+                printf "  \e[38;5;123mcompile                   \e[38;5;178mCompiles a $APP_NAME file into a JSON application.\n"
+                printf "  \e[38;5;123mreinstall                 \e[38;5;178mReinstalls all dependencies for $APP_NAME.\n"
+                printf "\n"
+                printf "\e[38;5;201mDocker Options \e[38;5;47m(\e[38;5;251mrequires Docker\e[38;5;47m)\n"
+                printf "  \e[38;5;123mbuild-docker              \e[38;5;178mBuilds a production-ready $APP_NAME Docker image.\n"
+                printf "  \e[38;5;123mstart-docker              \e[38;5;178mStarts the $APP_NAME Docker process.\n"
+                printf "  \e[38;5;123mstop-docker               \e[38;5;178mStops the $APP_NAME Docker process.\n"
+                printf "  \e[38;5;123mremove-docker             \e[38;5;178mRemoes the $APP_NAME Docker process.\n"
+                printf "  \e[38;5;123mrestart-docker            \e[38;5;178mRestarts the $APP_NAME Docker process.\n"
+                printf "  \e[38;5;123mlogs-docker               \e[38;5;178mFollows the logs for the $APP_NAME Docker process.\n"
+                printf "  \e[38;5;123mcli-docker                \e[38;5;178mStarts the CLI for the $APP_NAME Docker process.\n"
+                printf "  \e[38;5;123mclean-rebuild-docker      \e[38;5;178mRebuilds the $APP_NAME Docker image and bypasses the cache.\n"
+                printf "  \e[38;5;123mpurge-docker              \e[38;5;178mDeletes the $APP_NAME Docker process and image.\n"
+                printf "  \e[38;5;123mpurge-docker-containers   \e[38;5;178mDeletes all Docker conatiners.  BE CAREFUL!\n"
+                printf "  \e[38;5;123mpurge-all-docker          \e[38;5;178mDeletes all images and containers.  BE CAREFUL!\n"
+                echo ""
+                ;;
+esac
