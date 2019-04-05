@@ -100,6 +100,16 @@ class EventQueue extends CommonClass {
                 }
               }
 
+              if (typeof retryCount === 'string') {
+                // Retry is an Action, not a number
+                const action = this.application.getAction(retryCount)
+                if (!action) {
+                  throw new Error(`${retryCount} isn't a rety action for ${event.from.name} node`)
+                }
+
+                retryCount = await action.execute(actionContext)
+              }
+
               // The step has retry instructions
               if (event.retries < retryCount - 1) {
                 this.log.debug('Retrying...')

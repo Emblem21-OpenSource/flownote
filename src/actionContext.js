@@ -48,9 +48,15 @@ class ActionContext {
    * @param  {[type]} key [description]
    * @return {[type]}     [description]
    */
-  get (key) {
+  get (key, defaultValue) {
     const { request } = instances.get(this)
-    return request.getState()[key]
+    var result = request.getState()[key]
+
+    if (result === undefined) {
+      return defaultValue
+    } else {
+      return request.getState()[key]
+    }
   }
 
   /**

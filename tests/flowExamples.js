@@ -33,6 +33,10 @@ function createApp () {
     this.set('e', this.get('e') + 1)
     throw new Error('We break here')
   })
+  const retryOnce = new Action(app, undefined, 'retryOnce', function retryOnce () {
+    this.set('retried', this.get('retried', 0) + 1)
+    return this.get('retried')
+  })
   const setXYToOne = new Action(app, undefined, 'setXYToOne', function setXYToOne () {
     this.set('x', 1)
     this.set('y', 1)
@@ -53,6 +57,7 @@ function createApp () {
   app.registerAction(subtractXFromYAction.name, subtractXFromYAction)
   app.registerAction(setXYToOne.name, setXYToOne)
   app.registerAction(throwError.name, throwError)
+  app.registerAction(retryOnce.name, retryOnce)
   app.registerAction(delayTwentyMilliseconds.name, delayTwentyMilliseconds)
   app.registerAction(waitForDelay.name, waitForDelay)
 
@@ -186,6 +191,43 @@ test('Basic math flow with retries error', async t => {
     y: 10
   })
 
+  t.is(result.e, 1)
+  t.is(result.x, 1)
+  t.is(result.y, 1)
+})
+
+test('Basic math flow with custom retries error', async t => {
+  const app = createApp()
+  const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
+  app.setPublicFlow(flow)
+
+  const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
+  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, [])
+  const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
+  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], 'retryOnce' /* retry count */, [])
+  const throwError = new StandardNode(app, undefined, 'Throw Error', [], [], [ app.getAction('throwError') ])
+  const errorChannel = new ErrorChannel(app, undefined, 'Error Channel', undefined, [], undefined, [])
+  const setXYToOne = new StandardNode(app, undefined, 'Set X and Y to One', [], [], [ app.getAction('setXYToOne') ])
+  const channelC = new StandardChannel(app, undefined, 'Channel C', undefined, [], undefined, [])
+  const subtractXFromYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('subtractXFromY') ])
+
+  flow.connect(doubleXNode)
+  doubleXNode.connect(channelA)
+  channelA.connect(addXAndYNode)
+  addXAndYNode.connect(channelB)
+  channelB.connect(throwError)
+  throwError.connect(channelC)
+  throwError.connect(errorChannel)
+  channelC.connect(subtractXFromYNode)
+  errorChannel.connect(setXYToOne)
+
+  const result = await app.request('GET', '/testFlow', {
+    e: 0,
+    x: 2,
+    y: 10
+  })
+
+  t.is(result.retried, 1)
   t.is(result.e, 1)
   t.is(result.x, 1)
   t.is(result.y, 1)
