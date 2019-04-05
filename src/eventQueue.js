@@ -1,12 +1,16 @@
 import Event from './event'
 import Spider from './spider'
 import ActionContext from './actionContext'
+import MemoryQueue from './queues/memoryQueue'
 
 const CommonClass = require('./utils/commonClass')
 const Log = require('./utils/log')
-// const numCPUs = require('os').cpus().length
 
-const pendingEventsMap = new WeakMap()
+const queueTypes = new Map()
+
+queueTypes.set('memory', MemoryQueue)
+
+// const numCPUs = require('os').cpus().length
 
 /**
  * Every Application instance has its own EventQueue.
@@ -16,12 +20,13 @@ class EventQueue extends CommonClass {
    * [constructor description]
    * @return {[type]} [description]
    */
-  constructor (application, pendingEvents) {
+  constructor (application, queue) {
     super()
     this.application = application
-    if (pendingEvents !== undefined) {
+
+    if (queue !== undefined) {
       this.fromJSON({
-        pendingEvents: pendingEvents || []
+        queue: queue
       })
     }
   }
@@ -36,7 +41,7 @@ class EventQueue extends CommonClass {
    */
   push (event, enqueue = true) {
     this.log.debug('Pushing event to queue...')
-    pendingEventsMap.get(this.application).push(event)
+    this.queue.push(event)
 
     if (enqueue) {
       this.log.debug('Scheduling event queue processing...')
@@ -61,97 +66,102 @@ class EventQueue extends CommonClass {
    */
   async process () {
     this.log.debug('Processing event queue...')
-    const pendingEvents = pendingEventsMap.get(this.application)
+    const remaining = this.queue.count()
+    if (remaining > 0) {
+      this.log.debug(`Event queue has ${remaining} events remaining...`)
+      const event = this.queue.pop()
 
-    if (pendingEvents) {
-      if (pendingEvents.length > 0) {
-        this.log.debug(`Event queue has ${pendingEvents.length} events remaining...`)
-        const event = pendingEvents.shift()
+      if (event && event instanceof Event) {
+        this.log.debug(`Processing event ${event.type} -> with target: ${event.from.name}`)
 
-        if (event && event instanceof Event) {
-          this.log.debug(`Processing event ${event.type} -> with target: ${event.from.name}`)
+        if (event.from && event.from.process) {
+          this.log.debug(`Preparing Action Context from ${event.from.name}`)
+          const actionContext = new ActionContext(this.application, event.flow, event.from, event.request)
+          this.log.debug('Processing event step...')
 
-          if (event.from && event.from.process) {
-            this.log.debug(`Preparing Action Context from ${event.from.name}`)
-            const actionContext = new ActionContext(this.application, event.flow, event.from, event.request)
-            this.log.debug('Processing event step...')
+          try {
+            await event.from.process(event, actionContext)
+            event.request.addStep(this.application, event.flow, event.from)
+          } catch (e) {
+            this.log.debug('Caught error...')
+            // An error has occured, go get the last step
+            let retryCount = event.from.retry || 0
+            let retryDelay = event.from.retryDelay || 0
+            let lastStep
 
-            try {
-              await event.from.process(event, actionContext)
-              event.request.addStep(this.application, event.flow, event.from)
-            } catch (e) {
-              this.log.debug('Caught error...')
-              // An error has occured, go get the last step
-              let retryCount = event.from.retry || 0
-              let retryDelay = event.from.retryDelay || 0
-              let lastStep
+            if (event.from.accepts === undefined) {
+              // Dealing with a step, not a channel
+              const previousStep = event.request.steps[event.request.steps.length - 1]
 
-              if (event.from.accepts === undefined) {
-                // Dealing with a step, not a channel
-                const previousStep = event.request.steps[event.request.steps.length - 1]
-
-                if (previousStep && this.application.id === previousStep.appId) {
-                  const lastFlow = new Spider().search(this.application, previousStep.flowId)
-                  if (lastFlow) {
-                    lastStep = new Spider().search(lastFlow, previousStep.stepId)
-                    if (lastStep && lastStep.retry) {
-                      retryCount = lastStep.retry
-                      retryDelay = lastStep.retryDelay
-                    }
+              if (previousStep && this.application.id === previousStep.appId) {
+                const lastFlow = new Spider().search(this.application, previousStep.flowId)
+                if (lastFlow) {
+                  lastStep = new Spider().search(lastFlow, previousStep.stepId)
+                  if (lastStep && lastStep.retry) {
+                    retryCount = lastStep.retry
+                    retryDelay = lastStep.retryDelay
                   }
                 }
               }
-
-              if (typeof retryCount === 'string') {
-                // Retry is an Action, not a number
-                const action = this.application.getAction(retryCount)
-                if (!action) {
-                  throw new Error(`${retryCount} isn't a retry action for ${event.from.name} node`)
-                }
-
-                retryCount = await action.execute(actionContext)
-              }
-
-              if (typeof retryDelay === 'string') {
-                // Retry is an Action, not a number
-                const action = this.application.getAction(retryDelay)
-                if (!action) {
-                  throw new Error(`${retryDelay} isn't a rety action for ${event.from.name} node`)
-                }
-
-                retryDelay = await action.execute(actionContext)
-              }
-
-              // The step has retry instructions
-              if (event.retries <= retryCount - 1) {
-                if (retryDelay > 0) {
-                  // @TODO This is probably pretty naive
-                  setTimeout(() => {
-                    this.log.debug('Retrying...')
-                    this.application.dispatch('RetryChannel', event.request, event.flow, lastStep || event.from, event.retries + 1)
-                  }, retryDelay)
-                } else {
-                  this.log.debug('Retrying...')
-                  this.application.dispatch('RetryChannel', event.request, event.flow, lastStep || event.from, event.retries + 1)
-                }
-              } else {
-                // No more retries, bail
-                this.log.debug('Dispatching error...', e.name)
-                this.application.dispatch(e.name, event.request, event.flow, event.from, event.retries, e)
-              }
             }
 
-            return event.request
-          } else {
-            throw new Error('Event.from does not have a process() method.')
+            if (typeof retryCount === 'string') {
+              // Retry is an Action, not a number
+              const action = this.application.getAction(retryCount)
+              if (!action) {
+                throw new Error(`${retryCount} isn't a retry action for ${event.from.name} node`)
+              }
+
+              retryCount = await action.execute(actionContext)
+            }
+
+            if (typeof retryDelay === 'string') {
+              // Retry is an Action, not a number
+              const action = this.application.getAction(retryDelay)
+              if (!action) {
+                throw new Error(`${retryDelay} isn't a rety action for ${event.from.name} node`)
+              }
+
+              retryDelay = await action.execute(actionContext)
+            }
+
+            // The step has retry instructions
+            if (event.retries <= retryCount - 1) {
+              if (retryDelay > 0) {
+                // @TODO This is probably pretty naive
+                setTimeout(() => {
+                  this.log.debug('Retrying...')
+                  this.application.dispatch('RetryChannel', event.request, event.flow, lastStep || event.from, event.retries + 1)
+                }, retryDelay)
+              } else {
+                this.log.debug('Retrying...')
+                this.application.dispatch('RetryChannel', event.request, event.flow, lastStep || event.from, event.retries + 1)
+              }
+            } else {
+              // No more retries, bail
+              this.log.debug('Dispatching error...', e.name)
+              this.application.dispatch(e.name, event.request, event.flow, event.from, event.retries, e)
+            }
           }
+
+          return event.request
         } else {
-          throw new Error('Event in Event Queue is not an Event class.')
+          throw new Error('Event.from does not have a process() method.')
         }
+      } else {
+        throw new Error('Event in Event Queue is not an Event class.')
       }
-    } else {
-      throw new Error('Event Queue does not have a bound application.')
     }
+  }
+
+  /**
+   * [registerQueueTypes description]
+   * @param  {[type]} name      [description]
+   * @param  {[type]} queueType [description]
+   * @return {[type]}           [description]
+   */
+  registerQueueTypes (name, queueType) {
+    queueTypes.set(name, queueType)
   }
 
   /**
@@ -160,7 +170,7 @@ class EventQueue extends CommonClass {
    */
   toJSON () {
     return {
-      pendingEvents: pendingEventsMap.get(this.application).entries()
+      queue: this.queue
     }
   }
 
@@ -182,7 +192,15 @@ class EventQueue extends CommonClass {
 
     this.log = new Log(this.application.id, 'EventQueue', this.application.name, this.application.config.logLevel, this.application.outputPipe, this.application.errorPipe)
 
-    pendingEventsMap.set(this.application, result.pendingEvents)
+    const QueueType = queueTypes.get(result.queue.type)
+
+    if (!QueueType) {
+      throw new Error(`Unknown queue type ${result.queueType}`)
+    }
+
+    this.queue = new QueueType(this.application, result.queue.pendingEvents)
+
+    return this
   }
 }
 

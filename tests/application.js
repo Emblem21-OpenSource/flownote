@@ -112,6 +112,7 @@ test('Application.loadFlattened', t => {
   node1.connect(channel)
   channel.connect(node2)
   const flattened = app.asFlattened()
+
   const restoredApp = new Application().loadFlattened(flattened)
 
   t.is(typeof restoredApp.id, 'string')

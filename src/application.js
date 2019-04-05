@@ -23,7 +23,7 @@ class Application extends CommonClass {
    * @param  {[type]} flows      [description]
    * @return {[type]}            [description]
    */
-  constructor (id, name, config, publicFlow, flows, actions, inputPipe, outputPipe, errorPipe) {
+  constructor (id, name, config, publicFlow, flows, actions, inputPipe, outputPipe, errorPipe, eventQueue) {
     super()
 
     this.inputPipe = inputPipe || process.stdin
@@ -39,7 +39,13 @@ class Application extends CommonClass {
       }, config || {}),
       publicFlow: publicFlow || undefined,
       flows: flows || [],
-      actions: actions || new Map()
+      actions: actions || new Map(),
+      eventQueue: eventQueue || {
+        queue: {
+          type: 'memory',
+          pendingEvents: []
+        }
+      }
     })
 
     this.log.info('FlowNote running...')
@@ -244,6 +250,16 @@ class Application extends CommonClass {
   }
 
   /**
+   * [registerQueueType description]
+   * @param  {[type]} name      [description]
+   * @param  {[type]} queueType [description]
+   * @return {[type]}           [description]
+   */
+  registerQueueType (name, queueType) {
+    this.EventQueue.registerQueueType(name, queueType)
+  }
+
+  /**
    * [fromJSON description]
    * @param  {[type]} flattened [description]
    * @return {[type]}      [description]
@@ -269,7 +285,6 @@ class Application extends CommonClass {
     this.flows = []
     this.actions = new Map()
     this.activeRequests = new Map()
-    this.eventQueue = new EventQueue(this, result.eventQueue || [])
     this.listeners = []
     this.onEvent = noop
     this.onInput = noop
@@ -278,9 +293,16 @@ class Application extends CommonClass {
     this.nodeAliases = new Map()
     // this.delegate = new Delegate(this)
 
+    if (result.eventQueue instanceof EventQueue) {
+      this.eventQueue = result.eventQueue
+      this.eventQueue.application = this
+    } else if (result.eventQueue instanceof Object) {
+      this.eventQueue = new EventQueue(this).fromJSON(result.eventQueue)
+    }
+
     if (result.publicFlow instanceof Flow) {
       this.publicFlow = result.publicFlow
-      result.publicFlow.application = this
+      this.publicFlow.application = this
     } else if (result.publicFlow instanceof Object) {
       this.publicFlow = new Flow(this).fromJSON(result.publicFlow)
     }

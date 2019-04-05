@@ -1,4 +1,7 @@
-const {parse, stringify} = require('flatted/cjs')
+const {
+  parse,
+  stringify
+} = require('flatted/cjs')
 
 class CommonClass {
   /**
