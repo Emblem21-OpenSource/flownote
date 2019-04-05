@@ -139,6 +139,10 @@ const spider = new FlowNote.Spider(/* args */)
 const compiler = new FlowNote.Compiler(/* args */)
 ```
 
+## As a Docker Image
+
+Coming soon!
+
 ##### Documentation
 
 ( 

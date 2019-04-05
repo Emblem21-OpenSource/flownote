@@ -64,11 +64,11 @@ To compile FlowNote files, you can do the following:
 
 ##### As Command
 
-`./compile <path to .flow file>`
+`./flownote compile <path to .flow file>`
 
 ##### As Pipe
 
-`cat <path to .flow file> | ./compile`
+`cat <path to .flow file> | ./flownote compile`
 
 ##### Within an NodeJS Project from a string
 
