@@ -54,11 +54,11 @@ const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testF
 app.setPublicFlow(flow)
 
 const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
-const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
 const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
-const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
 const halveXNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('halveX') ])
-const channelC = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+const channelC = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
 const subtractXFromYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('subtractXFromY') ])
 
 flow.connect(doubleXNode)

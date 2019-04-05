@@ -17,7 +17,7 @@ class Channel extends CommonClass {
    * @param  {[type]} actions [description]
    * @return {[type]}         [description]
    */
-  constructor (application, id, name, to, accepts, retry, actions) {
+  constructor (application, id, name, to, accepts, retry, retryDelay, actions) {
     super()
     this.application = application
     if (name !== undefined) {
@@ -27,6 +27,7 @@ class Channel extends CommonClass {
         to: to || undefined,
         accepts: accepts || [],
         retry: retry || undefined,
+        retryDelay: retryDelay || 0,
         actions: actions || []
       })
     }
@@ -43,6 +44,7 @@ class Channel extends CommonClass {
       to: this.to,
       accepts: this.accepts,
       retry: this.retry,
+      retryDelay: this.retryDelay,
       actions: this.actions
     }
   }
@@ -82,6 +84,7 @@ class Channel extends CommonClass {
     }
 
     this.retry = result.retry
+    this.retryDelay = result.retryDelay
 
     this.accepts = []
     this.actions = []

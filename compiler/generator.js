@@ -325,7 +325,7 @@ class Generator {
     console.log('ErrorChannel')
     const name = channelName.eval()
     const props = properties.eval()
-    return new ErrorChannel(this.application, undefined, name, undefined, [ name ], props.retry, [])
+    return new ErrorChannel(this.application, undefined, name, undefined, [ name ], props.retry, props.retryDelay, [])
   }
 
   /**
@@ -335,7 +335,7 @@ class Generator {
   PlainChannel (properties) {
     console.log('PlainChannel')
     const props = properties.eval()
-    return new StandardChannel(this.application, undefined, 'Plain', undefined, [], props.retry, [])
+    return new StandardChannel(this.application, undefined, 'Plain', undefined, [], props.retry, props.retryDelay, [])
   }
 
   /**
@@ -347,7 +347,7 @@ class Generator {
     console.log('NamedChannel')
     const name = channelName.eval()
     const props = properties.eval()
-    return new StandardChannel(this.application, undefined, name, undefined, [ name ], props.retry, [])
+    return new StandardChannel(this.application, undefined, name, undefined, [ name ], props.retry, props.retryDelay, [])
   }
 
   /**

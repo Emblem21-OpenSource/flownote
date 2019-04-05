@@ -29,7 +29,7 @@ test('Define Application', t => {
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
 
   flow.connect(node1)
   node1.connect(channel)
@@ -59,7 +59,7 @@ test('Application.asFlattened', t => {
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
 
   flow.connect(node1)
   node1.connect(channel)
@@ -82,7 +82,7 @@ test('Application.asFlattened (Circular)', t => {
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
 
   flow.connect(node1)
   node1.connect(channel)
@@ -106,7 +106,7 @@ test('Application.loadFlattened', t => {
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
 
   flow.connect(node1)
   node1.connect(channel)
@@ -138,7 +138,7 @@ test('Application.loadFlattened (Circular)', t => {
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
 
   flow.connect(node1)
   node1.connect(channel)
@@ -168,7 +168,7 @@ test('Application.connect', t => {
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
 
   flow.connect(node1)
   node1.connect(channel)

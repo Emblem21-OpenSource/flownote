@@ -35,7 +35,10 @@ function createApp () {
   })
   const retryOnce = new Action(app, undefined, 'retryOnce', function retryOnce () {
     this.set('retried', this.get('retried', 0) + 1)
-    return this.get('retried')
+    return 1
+  })
+  const getOneSecondRetryDelay = new Action(app, undefined, 'getOneSecondRetryDelay', function retryOnce () {
+    return 1000
   })
   const setXYToOne = new Action(app, undefined, 'setXYToOne', function setXYToOne () {
     this.set('x', 1)
@@ -58,6 +61,7 @@ function createApp () {
   app.registerAction(setXYToOne.name, setXYToOne)
   app.registerAction(throwError.name, throwError)
   app.registerAction(retryOnce.name, retryOnce)
+  app.registerAction(getOneSecondRetryDelay.name, getOneSecondRetryDelay)
   app.registerAction(delayTwentyMilliseconds.name, delayTwentyMilliseconds)
   app.registerAction(waitForDelay.name, waitForDelay)
 
@@ -70,11 +74,11 @@ test('Basic math flow', async t => {
   app.setPublicFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
-  const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+  const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
-  const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+  const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const halveXNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('halveX') ])
-  const channelC = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+  const channelC = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const subtractXFromYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('subtractXFromY') ])
 
   flow.connect(doubleXNode)
@@ -100,11 +104,11 @@ test('Basic math flow with unreachable error', async t => {
   app.setPublicFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
-  const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+  const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
-  const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+  const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const halveXNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('halveX') ])
-  const errorChannel = new ErrorChannel(app, undefined, 'Error', undefined, [], undefined, [])
+  const errorChannel = new ErrorChannel(app, undefined, 'Error', undefined, [], undefined, undefined, [])
   const subtractXFromYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('subtractXFromY') ])
 
   flow.connect(doubleXNode)
@@ -130,13 +134,13 @@ test('Basic math flow with reachable error', async t => {
   app.setPublicFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
-  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, [])
+  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
   const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
-  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], undefined, [])
+  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], undefined, undefined, [])
   const throwError = new StandardNode(app, undefined, 'Throw Error', [], [], [ app.getAction('throwError') ])
-  const errorChannel = new ErrorChannel(app, undefined, 'Error Channel', undefined, [], undefined, [])
+  const errorChannel = new ErrorChannel(app, undefined, 'Error Channel', undefined, [], undefined, undefined, [])
   const setXYToOne = new StandardNode(app, undefined, 'Set X and Y to One', [], [], [ app.getAction('setXYToOne') ])
-  const channelC = new StandardChannel(app, undefined, 'Channel C', undefined, [], undefined, [])
+  const channelC = new StandardChannel(app, undefined, 'Channel C', undefined, [], undefined, undefined, [])
   const subtractXFromYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('subtractXFromY') ])
 
   flow.connect(doubleXNode)
@@ -166,13 +170,13 @@ test('Basic math flow with retries error', async t => {
   app.setPublicFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
-  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, [])
+  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
   const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
-  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], 3 /* retry count */, [])
+  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], 3 /* retry count */, undefined, [])
   const throwError = new StandardNode(app, undefined, 'Throw Error', [], [], [ app.getAction('throwError') ])
-  const errorChannel = new ErrorChannel(app, undefined, 'Error Channel', undefined, [], undefined, [])
+  const errorChannel = new ErrorChannel(app, undefined, 'Error Channel', undefined, [], undefined, undefined, [])
   const setXYToOne = new StandardNode(app, undefined, 'Set X and Y to One', [], [], [ app.getAction('setXYToOne') ])
-  const channelC = new StandardChannel(app, undefined, 'Channel C', undefined, [], undefined, [])
+  const channelC = new StandardChannel(app, undefined, 'Channel C', undefined, [], undefined, undefined, [])
   const subtractXFromYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('subtractXFromY') ])
 
   flow.connect(doubleXNode)
@@ -202,13 +206,50 @@ test('Basic math flow with custom retries error', async t => {
   app.setPublicFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
-  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, [])
+  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
   const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
-  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], 'retryOnce' /* retry count */, [])
+  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], 'retryOnce', undefined, [])
   const throwError = new StandardNode(app, undefined, 'Throw Error', [], [], [ app.getAction('throwError') ])
-  const errorChannel = new ErrorChannel(app, undefined, 'Error Channel', undefined, [], undefined, [])
+  const errorChannel = new ErrorChannel(app, undefined, 'Error Channel', undefined, [], undefined, undefined, [])
   const setXYToOne = new StandardNode(app, undefined, 'Set X and Y to One', [], [], [ app.getAction('setXYToOne') ])
-  const channelC = new StandardChannel(app, undefined, 'Channel C', undefined, [], undefined, [])
+  const channelC = new StandardChannel(app, undefined, 'Channel C', undefined, [], undefined, undefined, [])
+  const subtractXFromYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('subtractXFromY') ])
+
+  flow.connect(doubleXNode)
+  doubleXNode.connect(channelA)
+  channelA.connect(addXAndYNode)
+  addXAndYNode.connect(channelB)
+  channelB.connect(throwError)
+  throwError.connect(channelC)
+  throwError.connect(errorChannel)
+  channelC.connect(subtractXFromYNode)
+  errorChannel.connect(setXYToOne)
+
+  const result = await app.request('GET', '/testFlow', {
+    e: 0,
+    x: 2,
+    y: 10
+  })
+
+  t.is(result.retried, 1)
+  t.is(result.e, 1)
+  t.is(result.x, 1)
+  t.is(result.y, 1)
+})
+
+test('Basic math flow with custom retries error with a 1 second delay', async t => {
+  const app = createApp()
+  const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
+  app.setPublicFlow(flow)
+
+  const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
+  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
+  const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
+  const channelB = new StandardChannel(app, undefined, 'Channel B', undefined, [], 'retryOnce', 'getOneSecondRetryDelay', [])
+  const throwError = new StandardNode(app, undefined, 'Throw Error', [], [], [ app.getAction('throwError') ])
+  const errorChannel = new ErrorChannel(app, undefined, 'Error Channel', undefined, [], undefined, undefined, [])
+  const setXYToOne = new StandardNode(app, undefined, 'Set X and Y to One', [], [], [ app.getAction('setXYToOne') ])
+  const channelC = new StandardChannel(app, undefined, 'Channel C', undefined, [], undefined, undefined, [])
   const subtractXFromYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('subtractXFromY') ])
 
   flow.connect(doubleXNode)
@@ -239,7 +280,7 @@ test('Self-referential flow to trigger cyclical error', async t => {
   app.setPublicFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
-  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, [])
+  const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
 
   flow.connect(doubleXNode)
   doubleXNode.connect(channelA)
@@ -267,12 +308,12 @@ test.skip('Flow with waitFor', async t => {
   app.setPublicFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
-  const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+  const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
-  const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+  const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const halveXNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('halveX') ])
-  const channelC = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
-  const channelD = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, [])
+  const channelC = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
+  const channelD = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const delay = new StandardNode(app, undefined, 'delayTwentyMilliseconds', [], [], [ app.getAction('delayTwentyMilliseconds') ])
   const wait = new StandardNode(app, undefined, 'waitForDelay', [], [], [ app.getAction('waitForDelay') ])
 

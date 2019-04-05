@@ -83,6 +83,7 @@ class EventQueue extends CommonClass {
               this.log.debug('Caught error...')
               // An error has occured, go get the last step
               let retryCount = event.from.retry || 0
+              let retryDelay = event.from.retryDelay || 0
               let lastStep
 
               if (event.from.accepts === undefined) {
@@ -95,6 +96,7 @@ class EventQueue extends CommonClass {
                     lastStep = new Spider().search(lastFlow, previousStep.stepId)
                     if (lastStep && lastStep.retry) {
                       retryCount = lastStep.retry
+                      retryDelay = lastStep.retryDelay
                     }
                   }
                 }
@@ -104,16 +106,34 @@ class EventQueue extends CommonClass {
                 // Retry is an Action, not a number
                 const action = this.application.getAction(retryCount)
                 if (!action) {
-                  throw new Error(`${retryCount} isn't a rety action for ${event.from.name} node`)
+                  throw new Error(`${retryCount} isn't a retry action for ${event.from.name} node`)
                 }
 
                 retryCount = await action.execute(actionContext)
               }
 
+              if (typeof retryDelay === 'string') {
+                // Retry is an Action, not a number
+                const action = this.application.getAction(retryDelay)
+                if (!action) {
+                  throw new Error(`${retryDelay} isn't a rety action for ${event.from.name} node`)
+                }
+
+                retryDelay = await action.execute(actionContext)
+              }
+
               // The step has retry instructions
-              if (event.retries < retryCount - 1) {
-                this.log.debug('Retrying...')
-                this.application.dispatch('RetryChannel', event.request, event.flow, lastStep || event.from, event.retries + 1)
+              if (event.retries <= retryCount - 1) {
+                if (retryDelay > 0) {
+                  // @TODO This is probably pretty naive
+                  setTimeout(() => {
+                    this.log.debug('Retrying...')
+                    this.application.dispatch('RetryChannel', event.request, event.flow, lastStep || event.from, event.retries + 1)
+                  }, retryDelay)
+                } else {
+                  this.log.debug('Retrying...')
+                  this.application.dispatch('RetryChannel', event.request, event.flow, lastStep || event.from, event.retries + 1)
+                }
               } else {
                 // No more retries, bail
                 this.log.debug('Dispatching error...', e.name)

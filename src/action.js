@@ -63,7 +63,7 @@ class Action extends CommonClass {
    * @return {[type]}               [description]
    */
   async execute (actionContext) {
-    await this.method.call(actionContext)
+    return this.method.call(actionContext)
   }
 }
 

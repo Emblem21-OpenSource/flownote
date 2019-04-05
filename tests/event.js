@@ -26,7 +26,7 @@ test('Define Event', t => {
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   flow.connect(node1)
@@ -50,7 +50,7 @@ test('Event.asFlattened', t => {
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   flow.connect(node1)
@@ -73,7 +73,7 @@ test('Event.asFlattened (Circular)', t => {
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
 
   flow.connect(node1)
   node1.connect(channel)
@@ -95,7 +95,7 @@ test('Event.loadFlattened', t => {
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   flow.connect(node1)
@@ -122,7 +122,7 @@ test('Event.loadFlattened (Circular)', t => {
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
 
   flow.connect(node1)
   node1.connect(channel)
@@ -148,7 +148,7 @@ test('Event.attachRequest', t => {
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   flow.connect(node1)

@@ -17,7 +17,7 @@ const doubleX = data => {
 
 test('Define Channel', t => {
   const app = new Application(undefined, appName)
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -35,7 +35,7 @@ test('Define Channel', t => {
 
 test('Channel.asFlattened', t => {
   const app = new Application(undefined, appName)
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -52,7 +52,7 @@ test('Channel.asFlattened', t => {
 
 test('Channel.asFlattened (Circular)', t => {
   const app = new Application(undefined, appName)
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -71,7 +71,7 @@ test('Channel.loadFlattened', t => {
   const flow = new Flow(app, undefined, 'Flow')
   app.setPublicFlow(flow)
 
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
@@ -105,7 +105,7 @@ test('Channel.loadFlattened (Circular)', t => {
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
 
   flow.connect(node1)
@@ -132,7 +132,7 @@ test('Channel.addAction with Action', t => {
   const flow = new Flow(app, undefined, 'Flow')
   app.setPublicFlow(flow)
 
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action)
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -150,7 +150,7 @@ test('Channel.addAction with String', t => {
   const flow = new Flow(app, undefined, 'Flow')
   app.setPublicFlow(flow)
 
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
@@ -166,7 +166,7 @@ test('Channel.addAction with String', t => {
 
 test('Channel.connect', t => {
   const app = new Application(undefined, appName)
-  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, [])
+  const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const action = new Action(app, undefined, nodeName, doubleX)
   app.registerAction(action.name, action)
 
