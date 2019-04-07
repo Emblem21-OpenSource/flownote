@@ -23,7 +23,7 @@ class Generator {
    * @param {[type]} flow [description]
    */
   FlowTypes (flow) {
-    console.log('FlowTypes')
+    // console.log('FlowTypes')
     return flow.eval()
   }
 
@@ -32,7 +32,7 @@ class Generator {
    * @param {[type]} node [description]
    */
   NodeTypes (node) {
-    console.log('NodeTypes')
+    // console.log('NodeTypes')
     return node.eval()
   }
 
@@ -41,7 +41,7 @@ class Generator {
    * @param {[type]} path [description]
    */
   PathTypes (path) {
-    console.log('PathTypes')
+    // console.log('PathTypes')
     return path.eval()
   }
 
@@ -50,7 +50,7 @@ class Generator {
    * @param {[type]} line [description]
    */
   Expression (line) {
-    console.log('Expression')
+    // console.log('Expression')
     return line.eval()
   }
 
@@ -63,7 +63,7 @@ class Generator {
    * @param {[type]} path         [description]
    */
   FlowDefinition (flowName, httpMethod, httpEndpoint, config, path) {
-    console.log('FlowDefinition')
+    // console.log('FlowDefinition')
     const method = httpMethod.eval()
     const endpoint = httpEndpoint.eval()
 
@@ -85,7 +85,7 @@ class Generator {
    * @param {[type]} actions    [description]
    */
   NodeDefinition (nodeLabel, properties, actions) {
-    console.log('NodeDefinition')
+    // console.log('NodeDefinition')
     const nodeName = nodeLabel.eval()
 
     if (this.nodeAliases[nodeName]) {
@@ -108,7 +108,7 @@ class Generator {
    * @param {[type]} actions [description]
    */
   Actions (actions) {
-    console.log('Actions')
+    // console.log('Actions')
     const list = actions.eval()
     const result = []
 
@@ -131,7 +131,7 @@ class Generator {
    * @param {[type]} path     [description]
    */
   Path (node, channel, path) {
-    console.log('Path')
+    // console.log('Path')
     const rootNode = node.eval()
     const steps = path.eval()
     const channelInstance = channel.eval()
@@ -157,7 +157,7 @@ class Generator {
    * @return {[type]}           [description]
    */
   NonemptyListOf (token, separator, tokens) {
-    console.log('NonemptyListOf')
+    // console.log('NonemptyListOf')
     const separatorInstance = separator.eval()
 
     if (separatorInstance instanceof StandardChannel) {
@@ -173,7 +173,7 @@ class Generator {
    * @param {[type]} extension [description]
    */
   Import (fileName, extension) {
-    console.log('Import')
+    // console.log('Import')
     // const contents = fs.readFileSync(`${fileName.eval()}.${extension.eval()}`)
     // @TODO
     return {}
@@ -184,7 +184,7 @@ class Generator {
    * @param {[type]} node [description]
    */
   Nodes (node) {
-    console.log('Nodes')
+    // console.log('Nodes')
     return node.eval()
   }
 
@@ -193,7 +193,7 @@ class Generator {
    * @param {[type]} node [description]
    */
   LinguisticNodes (node) {
-    console.log('LinguisticNodes')
+    // console.log('LinguisticNodes')
     return node.eval()
   }
 
@@ -202,7 +202,7 @@ class Generator {
    * @param {[type]} nodeName [description]
    */
   Milestone (nodeName) {
-    console.log('Milestone')
+    // console.log('Milestone')
     return new StandardMilestone(this.application, undefined, `Commit ${nodeName}`, 'fcfs', [], [])
   }
 
@@ -211,7 +211,7 @@ class Generator {
    * @param {[type]} nodeName [description]
    */
   LinguisticMilestone (nodeName) {
-    console.log('LinguisticMilestone')
+    // console.log('LinguisticMilestone')
     return new StandardMilestone(this.application, undefined, `Commit ${nodeName}`, 'fcfs', [], [])
   }
 
@@ -220,7 +220,7 @@ class Generator {
    * @param {[type]} node [description]
    */
   Node (node) {
-    console.log('Node')
+    // console.log('Node')
     return node.eval()
   }
 
@@ -230,7 +230,7 @@ class Generator {
    * @param {[type]} waitsFor [description]
    */
   WaitsFor (nodeName, waitsFor) {
-    console.log('WaitsFor')
+    // console.log('WaitsFor')
     // @TODO
   }
 
@@ -239,7 +239,7 @@ class Generator {
    * @param {[type]} node [description]
    */
   NodeBase (node) {
-    console.log('NodeBase')
+    // console.log('NodeBase')
     return node.eval()
   }
 
@@ -248,7 +248,7 @@ class Generator {
    * @param {[type]} nodeName [description]
    */
   SilentNode (node) {
-    console.log('SilentNode')
+    // console.log('SilentNode')
     const nodeInstance = node.eval()
 
     if (this.nodeAliases[nodeInstance.name]) {
@@ -265,7 +265,7 @@ class Generator {
    * @param {[type]} aliasLabel [description]
    */
   IdentityNode (node, aliasLabel) {
-    console.log('IdentityNode')
+    // console.log('IdentityNode')
     const nodeInstance = node.eval()
     const alias = aliasLabel.eval()
 
@@ -297,7 +297,7 @@ class Generator {
    * @param {[type]} words [description]
    */
   Concept (words) {
-    console.log('Concept')
+    // console.log('Concept')
     const result = []
     words.forEach(word => {
       if (word !== undefined) {
@@ -312,7 +312,7 @@ class Generator {
    * @param {[type]} channel [description]
    */
   Channel (channel) {
-    console.log('Channel')
+    // console.log('Channel')
     return channel.eval()
   }
 
@@ -322,7 +322,7 @@ class Generator {
    * @param {[type]} properties  [description]
    */
   ErrorChannel (channelName, properties) {
-    console.log('ErrorChannel')
+    // console.log('ErrorChannel')
     const name = channelName.eval()
     const props = properties.eval()
     return new ErrorChannel(this.application, undefined, name, undefined, [ name ], props.retry, props.retryDelay, [])
@@ -333,7 +333,7 @@ class Generator {
    * @param {[type]} properties [description]
    */
   PlainChannel (properties) {
-    console.log('PlainChannel')
+    // console.log('PlainChannel')
     const props = properties.eval()
     return new StandardChannel(this.application, undefined, 'Plain', undefined, [], props.retry, props.retryDelay, [])
   }
@@ -344,7 +344,7 @@ class Generator {
    * @param {[type]} properties  [description]
    */
   NamedChannel (channelName, properties) {
-    console.log('NamedChannel')
+    // console.log('NamedChannel')
     const name = channelName.eval()
     const props = properties.eval()
     return new StandardChannel(this.application, undefined, name, undefined, [ name ], props.retry, props.retryDelay, [])
@@ -355,7 +355,7 @@ class Generator {
    * @param {[type]} properties [description]
    */
   Properties (properties) {
-    console.log('Properties')
+    // console.log('Properties')
     const result = {}
     const propertiesInstance = properties.eval()
 
@@ -373,7 +373,7 @@ class Generator {
    * @param {[type]} value [description]
    */
   Property (key, value) {
-    console.log('Property')
+    // console.log('Property')
     return [key.eval(), value.eval()]
   }
 
@@ -382,7 +382,7 @@ class Generator {
    * @param {[type]} method [description]
    */
   HttpMethods (method) {
-    console.log('HttpMethods')
+    // console.log('HttpMethods')
     return method.eval()
   }
 
@@ -392,7 +392,7 @@ class Generator {
    * @return {[type]}       [description]
    */
   label (label) {
-    console.log('label')
+    // console.log('label')
     return label.eval().join('')
   }
 
@@ -402,7 +402,7 @@ class Generator {
    * @return {[type]}        [description]
    */
   string (string) {
-    console.log('string')
+    // console.log('string')
     return string.eval()
   }
 
@@ -411,7 +411,7 @@ class Generator {
    * @return {[type]} [description]
    */
   number (number) {
-    console.log('number')
+    // console.log('number')
     return number.eval()
   }
 
@@ -423,7 +423,7 @@ class Generator {
    * @return {[type]}         [description]
    */
   fraction (whole, dot, decimal) {
-    console.log('fraction')
+    // console.log('fraction')
     const num1 = whole.eval()
     const num2 = '0.' + decimal.eval()
 
@@ -431,7 +431,7 @@ class Generator {
   }
 
   whole (number) {
-    console.log('whole')
+    // console.log('whole')
     return (Number)(number.eval())
   }
 
@@ -441,7 +441,7 @@ class Generator {
    * @return {[type]}       [description]
    */
   space (space) {
-    console.log('space')
+    // console.log('space')
     return space.eval()
   }
 
@@ -451,7 +451,7 @@ class Generator {
    * @return {[type]}          [description]
    */
   comment (comments) {
-    console.log('comment')
+    // console.log('comment')
     return comments.eval()
   }
 
@@ -463,7 +463,7 @@ class Generator {
    * @return {[type]}          [description]
    */
   multiLineComment (comments) {
-    console.log('multiLineComment')
+    // console.log('multiLineComment')
     return comments.eval()
   }
 
@@ -474,7 +474,7 @@ class Generator {
    * @return {[type]}          [description]
    */
   singleLineComment (_1, comments) {
-    console.log('singleLineComment')
+    // console.log('singleLineComment')
     return comments.eval()
   }
 }

@@ -1,8 +1,15 @@
 #/bin/bash
+source .env
 
 APP_NAME=flownote
 
 case $1 in
+        start-stdin)
+                FLOWNOTE_APP_FILE_PATH=${$1:-$FLOWNOTE_APP_FILE_PATH} npm start-stdin
+                ;;
+        start-http)
+                FLOWNOTE_APP_FILE_PATH=${$1:-$FLOWNOTE_APP_FILE_PATH} npm start-http
+                ;;
         test)
                 npm test
                 ;;
@@ -71,7 +78,7 @@ case $1 in
         *)
                 printf "\e[38;5;166mUsage: \e[38;5;72m$0 \e[38;5;106m{an option below}\n"
                 printf "\n"
-                printf "\e[38;5;201mDevelopment Options \e[38;5;47m(\e[38;5;251mrequires a NodeJS environment\e[38;5;47m)\n"
+                printf "\e[38;5;201mDevelopment Options \e[38;5;47m(\e[38;5;251mRequires a NodeJS environment\e[38;5;47m)\n"
                 printf "  \e[38;5;123mtest                      \e[38;5;178mRuns the test suite.\n"
                 printf "  \e[38;5;123mtest-watch                \e[38;5;178mRuns the test suite every time code changes.\n"
                 printf "  \e[38;5;123mtest-coverage             \e[38;5;178mRuns the test suite  and generates a code coverage report.\n"
@@ -81,8 +88,10 @@ case $1 in
                 printf "  \e[38;5;123mbuild-browser-watch       \e[38;5;178mBuilds $APP_NAME for the browser every time code changes.\n"
                 printf "  \e[38;5;123mcompile                   \e[38;5;178mCompiles a $APP_NAME file into a JSON application.\n"
                 printf "  \e[38;5;123mreinstall                 \e[38;5;178mReinstalls all dependencies for $APP_NAME.\n"
+                printf "  \e[38;5;123mstart-stdin               \e[38;5;178mStarts a FlowNote app that responds to stdin events.\n"
+                printf "  \e[38;5;123mstart-http                \e[38;5;178mStarts a FlowNote app that responds to HTTP events.\n"
                 printf "\n"
-                printf "\e[38;5;201mDocker Options \e[38;5;47m(\e[38;5;251mrequires Docker\e[38;5;47m)\n"
+                printf "\e[38;5;201mDocker Options \e[38;5;47m(\e[38;5;251mRequires Docker. Please see the documentation for configuration options.\e[38;5;47m)\n"
                 printf "  \e[38;5;123mbuild-docker              \e[38;5;178mBuilds a production-ready $APP_NAME Docker image.\n"
                 printf "  \e[38;5;123mstart-docker              \e[38;5;178mStarts the $APP_NAME Docker process.\n"
                 printf "  \e[38;5;123mstop-docker               \e[38;5;178mStops the $APP_NAME Docker process.\n"
