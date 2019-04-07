@@ -152,7 +152,7 @@ Installation |
 [Flow](03-flow.md) | 
 [Nodes](04-nodes.md) | 
 [Channels](05-channels.md) | 
-[Concepts](07-language.md) | 
+[Use Cases](06-use-cases.md) | 
 [Language](08-language.md) | 
 [Contribution Overview](09-contribution.md) | 
 [Roadmap](10-roadmap.md) | 
