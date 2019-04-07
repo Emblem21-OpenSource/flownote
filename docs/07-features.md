@@ -49,12 +49,12 @@ FlowNote can be ran in the browser as well! Go [here](https://htmlpreview.github
 ( 
 [Installation](01-installation.md) | 
 Features | 
+[Use Cases](06-use-cases.md) | 
+[Language](08-language.md) | 
 [Application](02-application.md) | 
 [Flow](03-flow.md) | 
 [Nodes](04-nodes.md) | 
 [Channels](05-channels.md) | 
-[Use Cases](06-use-cases.md) | 
-[Language](08-language.md) | 
 [Contribution Overview](09-contribution.md) | 
 [Roadmap](10-roadmap.md) | 
 [Known Problems](11-known-problems.md)

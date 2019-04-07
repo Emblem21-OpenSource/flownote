@@ -11,15 +11,13 @@ class Compiler {
    * @param  {[type]} application     [description]
    * @return {[type]}                 [description]
    */
-  constructor (grammarFilePath = __dirname + '/default.ohm', semanticsPath = 'default', application, config) {
+  constructor (grammarFilePath = __dirname + '/default.ohm', semanticsPath = 'default', application, config, actions) {
     this.application = application
 
     if (this.application === undefined) {
-      this.application = new Application(undefined, 'New App', config || {}, undefined, undefined, [
-        // @TODO actions
-      ], undefined, undefined, undefined)
+      this.application = new Application(undefined, 'New App', config || {}, undefined, undefined, actions, undefined, undefined, undefined)
     }
-
+    this.actions = actions
     this.semanticsPath = semanticsPath
     this.grammarFilePath = grammarFilePath
   }
@@ -29,7 +27,7 @@ class Compiler {
    * @param  {[type]} filename [description]
    * @return {[type]}          [description]
    */
-  async compileFromFile(filename) {
+  async compileFromFile (filename) {
     this.filename = filename
     return this.compile(fs.readFileSync(this.filename, 'utf8'))
   }

@@ -3,10 +3,13 @@ import StandardNode from '../src/nodes/standardNode'
 import ErrorChannel from '../src/channels/errorChannel'
 import Flow from '../src/flow'
 import Application from '../src/application'
+import Compiler from '../compiler/index'
 
 const test = require('ava')
 const Action = require('../src/action')
 const CyclicalError = require('../src/errors/cyclicalError')
+
+const logLevel = 4
 
 /**
  * [createApp description]
@@ -14,7 +17,7 @@ const CyclicalError = require('../src/errors/cyclicalError')
  */
 function createApp () {
   const app = new Application(undefined, 'Test App', {
-    logLevel: 2
+    logLevel
   })
 
   const doubleXAction = new Action(app, undefined, 'doubleX', function doubleX () {
@@ -348,6 +351,95 @@ test('Self-referential flow to trigger cyclical error', async t => {
       t.fail()
     }
   }
+})
+
+test.only('Compiling a FlowNote into an Application', async t => {
+  const app = new Application(undefined, 'New App', {
+    logLevel,
+    silent: false
+  }, undefined, undefined, [
+    new Action(undefined, undefined, 'extractClickData', function extractClickData () {
+      this.set('click', this.get('click'))
+    }),
+    new Action(undefined, undefined, 'extractPlayerId', function extractPlayerId () {
+      this.set('playerId', this.get('playerId'))
+    }),
+    new Action(undefined, undefined, 'getXYCoordsFromClickData', function getXYCoordsFromClickData () {
+      this.set('x', this.get('click').x)
+      this.set('y', this.get('click').y)
+    }),
+    new Action(undefined, undefined, 'getPlayerById', function getPlayerById () {
+      this.set('player', {
+        id: this.get('playerId'),
+        name: 'Alice'
+      })
+    }),
+    new Action(undefined, undefined, 'detectPlayerMovementEvents', function detectPlayerMovementEvents () {
+      (this.get('events') || []).forEach(event => {
+        if (event.type === 'move') {
+          this.get('pendingMove', event.data)
+        }
+      })
+    }),
+    new Action(undefined, undefined, 'movePlayer', function movePlayer () {
+      const player = this.get('player')
+      const pendingMove = this.get('pendingMove')
+      player.x += pendingMove.x
+      player.y += pendingMove.y
+    }),
+    new Action(undefined, undefined, 'dispatchPlayerMovementEvents', function dispatchPlayerMovementEvents () {
+      this.emit('playerMoved')
+    }),
+    new Action(undefined, undefined, 'sendBoundaryError', function sendBoundaryError () {
+      this.emit('BoundaryError')
+    }),
+    new Action(undefined, undefined, 'getBroadcastMessage', function getBroadcastMessage () {
+      this.set('broadcastMessage', 'Player Moved')
+    }),
+    new Action(undefined, undefined, 'getRoomByPlayerId', function getRoomByPlayerId () {
+      this.set('broadcastRoomId', 1)
+    }),
+    new Action(undefined, undefined, 'broadcastToRoom', function broadcastToRoom () {
+      this.emit(`broadcast:${this.get('broadcastRoomId')}`, this.get('broadcastMessage'))
+    })
+  ])
+
+  const compiler = new Compiler(undefined, undefined, app)
+
+  const flowNoteCode = `
+node getClick = extractClickData, extractPlayerId
+node extractXY = getXYCoordsFromClickData
+node movePlayer = getPlayerById, detectPlayerMovementEvents, movePlayer, dispatchPlayerMovementEvents
+node displayBoundaryError = getPlayerById, sendBoundaryError
+node notifyRoom = getBroadcastMessage, getRoomByPlayerId, broadcastToRoom
+
+flow click(GET /click) = getClick$ -> extractXY#clickBranch
+
+clickBranch -Coordinates{ retry: 3 }> movePlayer*#move
+
+clickBranch -BoundaryError! displayBoundaryError
+
+clickBranch -> notifyRoom ... move
+`
+
+  await compiler.compile(flowNoteCode)
+
+  const result = await app.request('GET', '/click', {
+    playerId: 1,
+    click: {
+      x: 2,
+      y: 10
+    },
+    events: [
+      {
+        type: 'move',
+        x: 10,
+        y: 20
+      }
+    ]
+  })
+
+  console.log(result)
 })
 
 test.skip('Flow with waitFor', async t => {

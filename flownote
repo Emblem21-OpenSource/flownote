@@ -67,10 +67,18 @@ case $1 in
   compile)
     ./compile $2
     ;;
+  update-dockerhub)
+    docker tag $APP_NAME:latest $APP_NAME:latest
+    docker push $APP_NAME:latest
+    ;;
   build-docker)
     docker build -t $APP_NAME --rm=true .
     ;;
-  start-docker)
+  start-docker-stdin)
+    docker run -d --name $APP_NAME --env-file .env $APP_NAME
+    socat EXEC:"docker attach $APP_NAME",pty STDIO
+    ;;
+  start-docker-http)
     docker run -d --name $APP_NAME -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env $APP_NAME
     ;;
   stop-docker)
@@ -126,10 +134,12 @@ case $1 in
     printf "  \e[38;5;123mbuild-browser             \e[38;5;178mBuilds $APP_NAME for the browser.\n"
     printf "  \e[38;5;123mbuild-browser-watch       \e[38;5;178mBuilds $APP_NAME for the browser every time code changes.\n"
     printf "  \e[38;5;123mreinstall                 \e[38;5;178mReinstalls all dependencies for $APP_NAME.\n"
+    printf "  \e[38;5;123mupdate-dockerhub          \e[38;5;178mPushes Dockerfile changes up to $APP_NAME's DockerHub.\n"
     printf "\n"
     printf "\e[38;5;201mDocker Operations \e[38;5;47m(\e[38;5;251mRequires Docker. Please see the documentation for configuration options.\e[38;5;47m)\n"
     printf "  \e[38;5;123mbuild-docker              \e[38;5;178mBuilds a production-ready $APP_NAME Docker image.\n"
-    printf "  \e[38;5;123mstart-docker              \e[38;5;178mStarts the $APP_NAME Docker process.\n"
+    printf "  \e[38;5;123mstart-docker-stdin        \e[38;5;178mStarts the $APP_NAME Docker process accepting stdin requests.\n"
+    printf "  \e[38;5;123mstart-docker-http         \e[38;5;178mStarts the $APP_NAME Docker process accepting HTTP requests.\n"
     printf "  \e[38;5;123mstop-docker               \e[38;5;178mStops the $APP_NAME Docker process.\n"
     printf "  \e[38;5;123mremove-docker             \e[38;5;178mRemoes the $APP_NAME Docker process.\n"
     printf "  \e[38;5;123mrestart-docker            \e[38;5;178mRestarts the $APP_NAME Docker process.\n"

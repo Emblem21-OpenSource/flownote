@@ -1,5 +1,7 @@
 const CommonClass = require('./utils/commonClass')
-const Log = require('./utils/log')
+const IdGenerator = require('./utils/idGenerator')
+
+const idGenerator = IdGenerator()
 
 class Action extends CommonClass {
   /**
@@ -9,7 +11,7 @@ class Action extends CommonClass {
     this.application = applicaiton
     if (name !== undefined) {
       this.fromJSON({
-        id: id || this.application.getUniqueId(),
+        id: id || idGenerator(),
         name: name || 'Unnamed',
         method: method || '() => {}'
       })
@@ -51,8 +53,6 @@ class Action extends CommonClass {
     } else {
       this.method = result.method
     }
-
-    this.log = new Log(this.id, 'Action', this.name, this.application.config.logLevel, this.application.outputPipe, this.application.errorPipe)
 
     return this
   }

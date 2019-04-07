@@ -11,6 +11,8 @@ const CommonClass = require('./utils/commonClass')
 const Log = require('./utils/log')
 const stringify = require('fast-safe-stringify')
 
+const idGenerator = IdGenerator()
+
 const noop = () => {}
 
 class Application extends CommonClass {
@@ -31,7 +33,7 @@ class Application extends CommonClass {
     this.errorPipe = errorPipe || process.stderr
 
     this.fromJSON({
-      id: id || IdGenerator()(),
+      id: id || idGenerator(),
       name: name || 'Unnamed',
       config: Object.assign({
         logLevel: 2,
@@ -424,6 +426,7 @@ class Application extends CommonClass {
    * @return {[type]}        [description]
    */
   registerAction (name, action) {
+    action.application = this
     this.actions.set(name, action)
     return action
   }
@@ -479,7 +482,7 @@ class Application extends CommonClass {
    * @return {[type]} [description]
    */
   getUniqueId () {
-    return IdGenerator()()
+    return idGenerator()
   }
 
   /**

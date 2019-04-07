@@ -65,7 +65,7 @@ class Generator {
   FlowDefinition (flowName, httpMethod, httpEndpoint, config, path) {
     // console.log('FlowDefinition')
     const method = httpMethod.eval()
-    const endpoint = httpEndpoint.eval()
+    const endpoint = '/' + httpEndpoint.eval().join('/')
 
     if (this.application.getFlowByHttp(method, endpoint)) {
       throw new Error(`Flow definition already exists for the ${method} ${endpoint} endpoint.`)
@@ -74,7 +74,7 @@ class Generator {
     const flow = new Flow(this.application, undefined, flowName.eval(), config.eval(), undefined, method, endpoint, undefined)
     const pathRootNode = path.eval()
 
-    flow.connect(pathRootNode)
+    flow.connect(pathRootNode[0])
     this.application.registerFlow(flow)
   }
 
@@ -133,17 +133,21 @@ class Generator {
   Path (node, channel, path) {
     // console.log('Path')
     const rootNode = node.eval()
-    const steps = path.eval()
     const channelInstance = channel.eval()
-    let lastNode = channelInstance
+    const steps = path.eval()
 
+    let lastStep = channelInstance
+
+    console.log('> Pathing out', rootNode.name, steps.length)
     steps.forEach(step => {
       if (step !== undefined) {
-        lastNode.connect(step)
-        lastNode = step
+        console.log('>> connecting', step.name, 'to', lastStep.name)
+        lastStep.connect(step)
+        lastStep = step
       }
     })
 
+    console.log('>>> finalizing', channelInstance.name, 'to', rootNode.name)
     rootNode.connect(channelInstance)
 
     return rootNode
@@ -158,12 +162,37 @@ class Generator {
    */
   NonemptyListOf (token, separator, tokens) {
     // console.log('NonemptyListOf')
-    const separatorInstance = separator.eval()
+    const tokenInstance = token.eval()
+    const type = token.ctorName
 
-    if (separatorInstance instanceof StandardChannel) {
-      return [token.eval(), separator.eval()].concat(tokens.eval())
+    if (tokenInstance === undefined) {
+      // Blank line
+      console.log('> Empty Line')
+      return []
+    }
+
+    if (type === 'Nodes') {
+      // Dealing with a Path list
+      const separatorList = separator.eval()
+      const tokensList = tokens.eval()
+      const result = [ tokenInstance ]
+
+      for (var i = 0, len = separatorList.length; i < len; i++) {
+        result.push(separatorList[i])
+        result.push(tokensList[i])
+      }
+      console.log(']]]] Path with length of ' + result.length + ' starting with ' + result[0].name)
+      return result
+    } else if (type === 'Property') {
+      // Properties
+      console.log(']]]] Properties starting with ' + tokenInstance[0])
+      return tokenInstance.concat(tokens.eval())
+    } else if (type === 'label') {
+      // Actions
+      console.log(']]]] Action starting with ' + tokenInstance)
+      return [ tokenInstance ].concat(tokens.eval())
     } else {
-      return [token.eval()].concat(tokens.eval())
+      throw new Error('Unknown ctorName: ' + type)
     }
   }
 
@@ -174,6 +203,7 @@ class Generator {
    */
   Import (fileName, extension) {
     // console.log('Import')
+    // @TODO Register action modules to the app
     // const contents = fs.readFileSync(`${fileName.eval()}.${extension.eval()}`)
     // @TODO
     return {}
@@ -203,7 +233,7 @@ class Generator {
    */
   Milestone (nodeName) {
     // console.log('Milestone')
-    return new StandardMilestone(this.application, undefined, `Commit ${nodeName}`, 'fcfs', [], [])
+    return new StandardMilestone(this.application, undefined, `Milestone`, 'fcfs', [], [])
   }
 
   /**
@@ -212,7 +242,7 @@ class Generator {
    */
   LinguisticMilestone (nodeName) {
     // console.log('LinguisticMilestone')
-    return new StandardMilestone(this.application, undefined, `Commit ${nodeName}`, 'fcfs', [], [])
+    return new StandardMilestone(this.application, undefined, `Milestone`, 'fcfs', [], [])
   }
 
   /**
@@ -269,13 +299,11 @@ class Generator {
     const nodeInstance = node.eval()
     const alias = aliasLabel.eval()
 
-    if (this.nodeAliases[alias]) {
-      throw new Error(`The ${alias} alias already exists.`)
-    } else {
+    if (!this.nodeAliases[alias]) {
       this.nodeAliases[alias] = nodeInstance
     }
 
-    return nodeInstance
+    return this.nodeAliases[alias]
   }
 
   /**

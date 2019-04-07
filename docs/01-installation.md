@@ -1,7 +1,5 @@
 # Installation
 
-## Into a NodeJS Project
-
 FlowNote can be added to any project with this simple command, based upon your package manager:
 
 ```bash
@@ -11,6 +9,8 @@ npm install flownote --production --save
 ```bash
 yarn add flownote --production
 ```
+
+## Into a NodeJS Project
 
 Here's an example of how it would be used in a standard NodeJS project:
 
@@ -58,7 +58,7 @@ import {
 
 ## As a Standalone Compiler
 
-Coming soon!
+`./node_modules/bin/flownote compile <pathToApp.flow>`
 
 ## Into a Basic Browser Project
 
@@ -139,9 +139,20 @@ const spider = new FlowNote.Spider(/* args */)
 const compiler = new FlowNote.Compiler(/* args */)
 ```
 
-## As a Docker Image
+## As a Standalone Docker Process
+
+```Docker
+./node_modules/bin/flownote build-docker
+./node_modules/bin/flownote start-docker --port=<port>
+```
+
+## Within a Dockerfile
 
 Coming soon!
+
+## As a pull from DockerHub
+
+`docker pull emblem21/flownote`
 
 ##### Documentation
 

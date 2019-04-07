@@ -43,7 +43,7 @@ if (require.main === module) {
       httpServer.listen(serverPort, serverHost)
       application.log.info(`Waiting for incoming HTTP requests on http://${serverHost}/${serverPort} on the following endpoints:`)
       application.flows.forEach(flow => {
-        application.log.info(`${flow.endpointMethod} ${flow.endpointRoute} {${flow.endpointParams.join(', ')}}`)
+        application.log.info(`${flow.endpointMethod} /${flow.endpointRoute} {${flow.endpointParams.join(', ')}}`)
       })
     } else if (serverType === 'stdin') {
       // Listen for stdin events

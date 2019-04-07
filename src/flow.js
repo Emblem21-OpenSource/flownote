@@ -87,21 +87,6 @@ class Flow extends CommonClass {
       }
     }
 
-    if (result.to instanceof Node) {
-      this.connect(result.to)
-    } else if (result.to !== undefined) {
-      let existingNode
-      if (this.application.publicFlow !== undefined) {
-        existingNode = new Spider().search(this.application, result.to.id)
-      }
-
-      if (existingNode) {
-        this.connect(existingNode)
-      } else {
-        this.connect(new Node(this.application).fromJSON(result.to))
-      }
-    }
-
     this.endpointRoute = result.endpointRoute
     this.endpointMethod = result.endpointMethod
     this.endpointParams = result.endpointParams
