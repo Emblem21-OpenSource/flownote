@@ -1,6 +1,6 @@
 #/bin/bash
 
-APP_NAME=flownote
+APP_NAME=FlowNote
 FLOWNOTE_SERVER_HOST=localhost
 FLOWNOTE_SERVER_PORT=8080
 FLOWNOTE_SERVER_LOGGING=2
@@ -112,11 +112,11 @@ case $1 in
     printf "  \e[38;5;123m--host=, -h=              \e[38;5;178mSets the hostname for HTTP mode.\n"
     printf "  \e[38;5;123m--port=, -p=              \e[38;5;178mSets the port for HTTP mode.\n"
     printf "  \e[38;5;123m--log=, -l=               \e[38;5;178mSets logging verbosity (1=errors, 2=warning, 3=info, 4=debug).\n"
-    printf "  \e[38;5;123m--silent, -s              \e[38;5;178mSupresses FlowNote event emission.\n"
+    printf "  \e[38;5;123m--silent, -s              \e[38;5;178mSupresses $APP_NAME event emission.\n"
     printf "\n"
     printf "\e[38;5;201mDevelopment Operations \e[38;5;47m(\e[38;5;251mRequires a NodeJS environment\e[38;5;47m)\n"
-    printf "  \e[38;5;123mstart-stdin               \e[38;5;178mStarts a FlowNote app that responds to stdin events. (Silent is off by default)\n"
-    printf "  \e[38;5;123mstart-http                \e[38;5;178mStarts a FlowNote app that responds to HTTP events. (Silent is on by default)\n"
+    printf "  \e[38;5;123mstart-stdin               \e[38;5;178mStarts a $APP_NAME app that responds to stdin events. (Silent is off by default)\n"
+    printf "  \e[38;5;123mstart-http                \e[38;5;178mStarts a $APP_NAME app that responds to HTTP events. (Silent is on by default)\n"
     printf "  \e[38;5;123mcompile                   \e[38;5;178mCompiles a $APP_NAME file into a JSON application.\n"
     printf "  \e[38;5;123mtest                      \e[38;5;178mRuns the test suite.\n"
     printf "  \e[38;5;123mtest-watch                \e[38;5;178mRuns the test suite every time code changes.\n"
@@ -137,8 +137,8 @@ case $1 in
     printf "  \e[38;5;123mcli-docker                \e[38;5;178mStarts the CLI for the $APP_NAME Docker process.\n"
     printf "  \e[38;5;123mclean-rebuild-docker      \e[38;5;178mRebuilds the $APP_NAME Docker image and bypasses the cache.\n"
     printf "  \e[38;5;123mpurge-docker              \e[38;5;178mDeletes the $APP_NAME Docker process and image.\n"
-    printf "  \e[38;5;123mpurge-docker-containers   \e[38;5;178mDeletes all Docker conatiners.  BE CAREFUL!\n"
-    printf "  \e[38;5;123mpurge-all-docker          \e[38;5;178mDeletes all images and containers.  BE CAREFUL!\n"
+    printf "  \e[38;5;123mpurge-docker-containers   \e[38;5;178mDeletes all Docker conatiners.  \e[38;5;196mBE CAREFUL!\n"
+    printf "  \e[38;5;123mpurge-all-docker          \e[38;5;178mDeletes all images and containers.  \e[38;5;196mBE CAREFUL!\n"
     echo ""
     ;;
 esac
