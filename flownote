@@ -1,108 +1,144 @@
 #/bin/bash
-source .env
 
 APP_NAME=flownote
+FLOWNOTE_SERVER_HOST=localhost
+FLOWNOTE_SERVER_PORT=8080
+FLOWNOTE_SERVER_LOGGING=2
+FLOWNOTE_APP_FILE_PATH=""
+
+source .env
+
+for ARGUMENT in "$@"
+do
+  KEY=$(echo $ARGUMENT | cut -f1 -d=)
+  VALUE=$(echo $ARGUMENT | cut -f2 -d=)
+
+  case "$KEY" in
+    --host|-h) FLOWNOTE_SERVER_HOST=$VALUE;;
+    --port|-p) FLOWNOTE_SERVER_PORT=$VALUE;;
+    --log|-l) FLOWNOTE_SERVER_LOGGING=$VALUE;;
+    --slient|-s) FLOWNOTE_SERVER_SILENT=1;;
+    --flow|-f) FLOWNOTE_APP_FILE_PATH=$VALUE;;
+    *)
+  esac    
+done
 
 case $1 in
-        start-stdin)
-                FLOWNOTE_APP_FILE_PATH=${$1:-$FLOWNOTE_APP_FILE_PATH} npm start-stdin
-                ;;
-        start-http)
-                FLOWNOTE_APP_FILE_PATH=${$1:-$FLOWNOTE_APP_FILE_PATH} npm start-http
-                ;;
-        test)
-                npm test
-                ;;
-        test-watch)
-                npm test-watch
-                ;;
-        test-coverage)
-                npm test-coverage
-                ;;
-        profile)
-                npm profiler
-                ;;
-        profile-explorer)
-                npm profiler-explorer
-                ;;
-        build-browser)
-                npm browser-build
-                ;;
-        build-browser-watch)
-                npm browser-test
-                ;;
-        reinstall)
-                npm reinstall
-                ;;
-        compile)
-                ./compile ${@:2}
-                ;;
-        build-docker)
-                docker build -t $APP_NAME --rm=true .
-                ;;
-        start-docker)
-                docker run -d --name $APP_NAME -p 80:80 -p 443:443 --env-file .env $APP_NAME
-                ;;
-        stop-docker)
-                docker stop $APP_NAME
-                ;;
-        remove-docker)
-                docker rm $APP_NAME
-                ;;
-        restart-docker)
-                docker restart $APP_NAME
-                ;;
-        logs)
-                docker logs -f $APP_NAME
-                ;;
-        cli-docker)
-                docker exec -it $APP_NAME bash
-                ;;
-        clean-rebuild-docker)
-                docker build --no-cache=true --rm=true -t $APP_NAME .
-                ;;
-        purge-docker)
-                docker stop $APP_NAME
-                docker rm $APP_NAME
-                docker rmi $APP_NAME
-                ;;
-        purge-docker-containers)
-                docker stop $(docker ps -a -q)
-                docker rm $(docker ps -a -q)
-                ;;
-        purge-all-docker)
-                docker stop $(docker ps -a -q)
-                docker rm $(docker ps -a -q)
-                docker rmi $(docker images -a -q)
-                ;;
-        *)
-                printf "\e[38;5;166mUsage: \e[38;5;72m$0 \e[38;5;106m{an option below}\n"
-                printf "\n"
-                printf "\e[38;5;201mDevelopment Options \e[38;5;47m(\e[38;5;251mRequires a NodeJS environment\e[38;5;47m)\n"
-                printf "  \e[38;5;123mtest                      \e[38;5;178mRuns the test suite.\n"
-                printf "  \e[38;5;123mtest-watch                \e[38;5;178mRuns the test suite every time code changes.\n"
-                printf "  \e[38;5;123mtest-coverage             \e[38;5;178mRuns the test suite  and generates a code coverage report.\n"
-                printf "  \e[38;5;123mprofile                   \e[38;5;178mRuns a profiler and generates a performance report.\n"
-                printf "  \e[38;5;123mprofile-explorer          \e[38;5;178mRuns a profiler and generates a very detailed performance report.\n"
-                printf "  \e[38;5;123mbuild-browser             \e[38;5;178mBuilds $APP_NAME for the browser.\n"
-                printf "  \e[38;5;123mbuild-browser-watch       \e[38;5;178mBuilds $APP_NAME for the browser every time code changes.\n"
-                printf "  \e[38;5;123mcompile                   \e[38;5;178mCompiles a $APP_NAME file into a JSON application.\n"
-                printf "  \e[38;5;123mreinstall                 \e[38;5;178mReinstalls all dependencies for $APP_NAME.\n"
-                printf "  \e[38;5;123mstart-stdin               \e[38;5;178mStarts a FlowNote app that responds to stdin events.\n"
-                printf "  \e[38;5;123mstart-http                \e[38;5;178mStarts a FlowNote app that responds to HTTP events.\n"
-                printf "\n"
-                printf "\e[38;5;201mDocker Options \e[38;5;47m(\e[38;5;251mRequires Docker. Please see the documentation for configuration options.\e[38;5;47m)\n"
-                printf "  \e[38;5;123mbuild-docker              \e[38;5;178mBuilds a production-ready $APP_NAME Docker image.\n"
-                printf "  \e[38;5;123mstart-docker              \e[38;5;178mStarts the $APP_NAME Docker process.\n"
-                printf "  \e[38;5;123mstop-docker               \e[38;5;178mStops the $APP_NAME Docker process.\n"
-                printf "  \e[38;5;123mremove-docker             \e[38;5;178mRemoes the $APP_NAME Docker process.\n"
-                printf "  \e[38;5;123mrestart-docker            \e[38;5;178mRestarts the $APP_NAME Docker process.\n"
-                printf "  \e[38;5;123mlogs-docker               \e[38;5;178mFollows the logs for the $APP_NAME Docker process.\n"
-                printf "  \e[38;5;123mcli-docker                \e[38;5;178mStarts the CLI for the $APP_NAME Docker process.\n"
-                printf "  \e[38;5;123mclean-rebuild-docker      \e[38;5;178mRebuilds the $APP_NAME Docker image and bypasses the cache.\n"
-                printf "  \e[38;5;123mpurge-docker              \e[38;5;178mDeletes the $APP_NAME Docker process and image.\n"
-                printf "  \e[38;5;123mpurge-docker-containers   \e[38;5;178mDeletes all Docker conatiners.  BE CAREFUL!\n"
-                printf "  \e[38;5;123mpurge-all-docker          \e[38;5;178mDeletes all images and containers.  BE CAREFUL!\n"
-                echo ""
-                ;;
+  start-stdin)
+    FLOWNOTE_SERVER_TYPE=stdin \
+    FLOWNOTE_SERVER_LOGGING=$FLOWNOTE_SERVER_LOGGING \
+    FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-0} \
+    FLOWNOTE_APP_FILE_PATH=$FLOWNOTE_APP_FILE_PATH \
+    node index.js
+    ;;
+  start-http)
+    FLOWNOTE_SERVER_TYPE=http \
+    FLOWNOTE_SERVER_HOST=$FLOWNOTE_SERVER_HOST \
+    FLOWNOTE_SERVER_PORT=$FLOWNOTE_SERVER_PORT \
+    FLOWNOTE_SERVER_LOGGING=$FLOWNOTE_SERVER_LOGGING \
+    FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-1} \
+    FLOWNOTE_APP_FILE_PATH=$FLOWNOTE_APP_FILE_PATH \
+    node index.js
+    ;;
+  test)
+    npm test
+    ;;
+  test-watch)
+    npm test-watch
+    ;;
+  test-coverage)
+    npm test-coverage
+    ;;
+  profile)
+    npm profiler
+    ;;
+  profile-explorer)
+    npm profiler-explorer
+    ;;
+  build-browser)
+    npm browser-build
+    ;;
+  build-browser-watch)
+    npm browser-test
+    ;;
+  reinstall)
+    npm reinstall
+    ;;
+  compile)
+    ./compile $2
+    ;;
+  build-docker)
+    docker build -t $APP_NAME --rm=true .
+    ;;
+  start-docker)
+    docker run -d --name $APP_NAME -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env $APP_NAME
+    ;;
+  stop-docker)
+    docker stop $APP_NAME
+    ;;
+  remove-docker)
+    docker rm $APP_NAME
+    ;;
+  restart-docker)
+    docker restart $APP_NAME
+    ;;
+  logs)
+    docker logs -f $APP_NAME
+    ;;
+  cli-docker)
+    docker exec -it $APP_NAME bash
+    ;;
+  clean-rebuild-docker)
+    docker build --no-cache=true --rm=true -t $APP_NAME .
+    ;;
+  purge-docker)
+    docker stop $APP_NAME
+    docker rm $APP_NAME
+    docker rmi $APP_NAME
+    ;;
+  purge-docker-containers)
+    docker stop $(docker ps -a -q)
+    docker rm $(docker ps -a -q)
+    ;;
+  purge-all-docker)
+    docker stop $(docker ps -a -q)
+    docker rm $(docker ps -a -q)
+    docker rmi $(docker images -a -q)
+    ;;
+  *)
+    printf "\e[38;5;166mUsage: \e[38;5;72m$0 \e[38;5;106m[flags] [an operation below]\n"
+    printf "\n"
+    printf "\e[38;5;201mFlags\n"
+    printf "  \e[38;5;123m--host=, -h=              \e[38;5;178mSets the hostname for HTTP mode.\n"
+    printf "  \e[38;5;123m--port=, -p=              \e[38;5;178mSets the port for HTTP mode.\n"
+    printf "  \e[38;5;123m--log=, -l=               \e[38;5;178mSets logging verbosity (1=errors, 2=warning, 3=info, 4=debug).\n"
+    printf "  \e[38;5;123m--silent, -s              \e[38;5;178mSupresses FlowNote event emission.\n"
+    printf "\n"
+    printf "\e[38;5;201mDevelopment Operations \e[38;5;47m(\e[38;5;251mRequires a NodeJS environment\e[38;5;47m)\n"
+    printf "  \e[38;5;123mstart-stdin               \e[38;5;178mStarts a FlowNote app that responds to stdin events. (Silent is off by default)\n"
+    printf "  \e[38;5;123mstart-http                \e[38;5;178mStarts a FlowNote app that responds to HTTP events. (Silent is on by default)\n"
+    printf "  \e[38;5;123mcompile                   \e[38;5;178mCompiles a $APP_NAME file into a JSON application.\n"
+    printf "  \e[38;5;123mtest                      \e[38;5;178mRuns the test suite.\n"
+    printf "  \e[38;5;123mtest-watch                \e[38;5;178mRuns the test suite every time code changes.\n"
+    printf "  \e[38;5;123mtest-coverage             \e[38;5;178mRuns the test suite  and generates a code coverage report.\n"
+    printf "  \e[38;5;123mprofile                   \e[38;5;178mRuns a profiler and generates a performance report.\n"
+    printf "  \e[38;5;123mprofile-explorer          \e[38;5;178mRuns a profiler and generates a very detailed performance report.\n"
+    printf "  \e[38;5;123mbuild-browser             \e[38;5;178mBuilds $APP_NAME for the browser.\n"
+    printf "  \e[38;5;123mbuild-browser-watch       \e[38;5;178mBuilds $APP_NAME for the browser every time code changes.\n"
+    printf "  \e[38;5;123mreinstall                 \e[38;5;178mReinstalls all dependencies for $APP_NAME.\n"
+    printf "\n"
+    printf "\e[38;5;201mDocker Operations \e[38;5;47m(\e[38;5;251mRequires Docker. Please see the documentation for configuration options.\e[38;5;47m)\n"
+    printf "  \e[38;5;123mbuild-docker              \e[38;5;178mBuilds a production-ready $APP_NAME Docker image.\n"
+    printf "  \e[38;5;123mstart-docker              \e[38;5;178mStarts the $APP_NAME Docker process.\n"
+    printf "  \e[38;5;123mstop-docker               \e[38;5;178mStops the $APP_NAME Docker process.\n"
+    printf "  \e[38;5;123mremove-docker             \e[38;5;178mRemoes the $APP_NAME Docker process.\n"
+    printf "  \e[38;5;123mrestart-docker            \e[38;5;178mRestarts the $APP_NAME Docker process.\n"
+    printf "  \e[38;5;123mlogs-docker               \e[38;5;178mFollows the logs for the $APP_NAME Docker process.\n"
+    printf "  \e[38;5;123mcli-docker                \e[38;5;178mStarts the CLI for the $APP_NAME Docker process.\n"
+    printf "  \e[38;5;123mclean-rebuild-docker      \e[38;5;178mRebuilds the $APP_NAME Docker image and bypasses the cache.\n"
+    printf "  \e[38;5;123mpurge-docker              \e[38;5;178mDeletes the $APP_NAME Docker process and image.\n"
+    printf "  \e[38;5;123mpurge-docker-containers   \e[38;5;178mDeletes all Docker conatiners.  BE CAREFUL!\n"
+    printf "  \e[38;5;123mpurge-all-docker          \e[38;5;178mDeletes all images and containers.  BE CAREFUL!\n"
+    echo ""
+    ;;
 esac

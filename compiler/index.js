@@ -11,11 +11,11 @@ class Compiler {
    * @param  {[type]} application     [description]
    * @return {[type]}                 [description]
    */
-  constructor (grammarFilePath = __dirname + '/default.ohm', semanticsPath = 'default', application) {
+  constructor (grammarFilePath = __dirname + '/default.ohm', semanticsPath = 'default', application, config) {
     this.application = application
 
     if (this.application === undefined) {
-      this.application = new Application(undefined, 'New App', {}, undefined, undefined, [
+      this.application = new Application(undefined, 'New App', config || {}, undefined, undefined, [
         // @TODO actions
       ], undefined, undefined, undefined)
     }

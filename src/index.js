@@ -14,18 +14,20 @@ import StandardMilestone from './nodes/standardMilestone.js'
 import ErrorChannel from './channels/errorChannel.js'
 import Compiler from '../compiler/index.js'
 
-exports.Action = Action
-exports.Application = Application
-exports.Channel = Channel
-exports.Event = Event
-exports.Flow = Flow
-exports.Milestone = Milestone
-exports.StandardMilestone = StandardMilestone
-exports.Node = Node
-exports.Request = Request
-exports.Spider = Spider
-exports.StandardChannel = StandardChannel
-exports.RetryChannel = RetryChannel
-exports.StandardNode = StandardNode
-exports.ErrorChannel = ErrorChannel
-exports.Compiler = Compiler
+export {
+  Action,
+  Application,
+  Channel,
+  Event,
+  Flow,
+  Milestone,
+  Node,
+  Request,
+  Spider,
+  StandardChannel,
+  RetryChannel,
+  StandardNode,
+  StandardMilestone,
+  ErrorChannel,
+  Compiler
+}

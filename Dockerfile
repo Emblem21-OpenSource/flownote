@@ -33,12 +33,13 @@ RUN set -ex; \
 COPY compiler /usr/src/app
 COPY compile /usr/src/app
 COPY src /usr/src/app
+COPY .env /usr/src/app
 
 RUN set -ex; \
   if [ "$FLOWNOTE_SERVER_TYPE" = "stdin" ]; then \
-    npm start-stdin \
+    ./flownote start-stdin \
   elif [ "$FLOWNOTE_SERVER_TYPE" = "http" ]; then \
-    npm start-http \
+    ./flownote start-http \
   fi;
 
 # https://nodejs.org/de/docs/guides/nodejs-docker-webapp/

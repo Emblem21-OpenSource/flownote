@@ -104,7 +104,7 @@ class Application extends CommonClass {
    * [listen description]
    * @return {[type]} [description]
    */
-  async listen () {
+  listen () {
     this.log.debug('Listening')
     this.log.debug(this.listening)
     // Prepare Readable stream handling for the inputPipe

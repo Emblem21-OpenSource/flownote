@@ -1,6 +1,26 @@
 # Use Cases
 
-Coming soon!
+## See all runtime options
+
+`./flownote`
+
+## Run a FlowNote Server that listens to stdin requests
+
+`./flownote start-stdin --flow=<pathToApp.flow>`
+
+## Run a FlowNote Server that listens to HTTP requests
+
+`./flownote start-http --host=<hostname> --port=<port> --flow=<pathToApp.flow>`
+
+## Compile a FlowNote file to its Application JSON 
+
+`./flownote compile <pathToApp.flow>`
+
+## Stream a FlowNote file into its Application JSON
+
+`cat <pathToApp.flow` > ./compile`
+
+
 
 ##### Documentation
 
