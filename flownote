@@ -5,6 +5,7 @@ FLOWNOTE_SERVER_HOST=localhost
 FLOWNOTE_SERVER_PORT=8080
 FLOWNOTE_SERVER_LOGGING=2
 FLOWNOTE_APP_FILE_PATH=""
+FLOWNOTE_ACTIONS_FILE_PATH=""
 
 source .env
 
@@ -19,6 +20,7 @@ do
     --log|-l) FLOWNOTE_SERVER_LOGGING=$VALUE;;
     --slient|-s) FLOWNOTE_SERVER_SILENT=1;;
     --flow|-f) FLOWNOTE_APP_FILE_PATH=$VALUE;;
+    --actions|-a) FLOWNOTE_ACTIONS_FILE_PATH=$VALUE;;
     *)
   esac    
 done
@@ -29,6 +31,7 @@ case $1 in
     FLOWNOTE_SERVER_LOGGING=$FLOWNOTE_SERVER_LOGGING \
     FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-0} \
     FLOWNOTE_APP_FILE_PATH=$FLOWNOTE_APP_FILE_PATH \
+    FLOWNOTE_ACTIONS_FILE_PATH=$FLOWNOTE_ACTIONS_FILE_PATH \
     node index.js
     ;;
   start-http)
@@ -38,31 +41,32 @@ case $1 in
     FLOWNOTE_SERVER_LOGGING=$FLOWNOTE_SERVER_LOGGING \
     FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-1} \
     FLOWNOTE_APP_FILE_PATH=$FLOWNOTE_APP_FILE_PATH \
+    FLOWNOTE_ACTIONS_FILE_PATH=$FLOWNOTE_ACTIONS_FILE_PATH \
     node index.js
     ;;
   test)
     npm test
     ;;
   test-watch)
-    npm test-watch
+    npm run test-watch
     ;;
   test-coverage)
-    npm test-coverage
+    npm run test-coverage
     ;;
   profile)
-    npm profiler
+    npm run profiler
     ;;
   profile-explorer)
-    npm profiler-explorer
+    npm run profiler-explorer
     ;;
   build-browser)
-    npm browser-build
+    npm run browser-build
     ;;
   build-browser-watch)
-    npm browser-test
+    npm run browser-test
     ;;
   reinstall)
-    npm reinstall
+    npm run reinstall
     ;;
   compile)
     ./compile $2
@@ -120,6 +124,8 @@ case $1 in
     printf "  \e[38;5;123m--host=, -h=              \e[38;5;178mSets the hostname for HTTP mode.\n"
     printf "  \e[38;5;123m--port=, -p=              \e[38;5;178mSets the port for HTTP mode.\n"
     printf "  \e[38;5;123m--log=, -l=               \e[38;5;178mSets logging verbosity (1=errors, 2=warning, 3=info, 4=debug).\n"
+    printf "  \e[38;5;123m--flow=, -f=              \e[38;5;178mThe path of FlowNote file to use.\n"
+    printf "  \e[38;5;123m--actions=, -a=           \e[38;5;178mThe path of the module containing all actions to register.\n"
     printf "  \e[38;5;123m--silent, -s              \e[38;5;178mSupresses $APP_NAME event emission.\n"
     printf "\n"
     printf "\e[38;5;201mDevelopment Operations \e[38;5;47m(\e[38;5;251mRequires a NodeJS environment\e[38;5;47m)\n"

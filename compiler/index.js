@@ -11,11 +11,11 @@ class Compiler {
    * @param  {[type]} application     [description]
    * @return {[type]}                 [description]
    */
-  constructor (grammarFilePath = __dirname + '/default.ohm', semanticsPath = 'default', application, config, actions) {
+  constructor (grammarFilePath = __dirname + '/default.ohm', semanticsPath = 'default', application, config, actions, name) {
     this.application = application
 
     if (this.application === undefined) {
-      this.application = new Application(undefined, 'New App', config || {}, undefined, undefined, actions, undefined, undefined, undefined)
+      this.application = new Application(undefined, name, config || {}, undefined, undefined, actions, undefined, undefined, undefined)
     }
     this.actions = actions
     this.semanticsPath = semanticsPath

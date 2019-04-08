@@ -1,3 +1,4 @@
+import Action from '../src/action'
 import StandardChannel from '../src/channels/standardChannel'
 import ErrorChannel from '../src/channels/errorChannel'
 import NamedChannel from '../src/channels/namedChannel'
@@ -5,7 +6,7 @@ import StandardNode from '../src/nodes/standardNode'
 import StandardMilestone from '../src/nodes/standardMilestone'
 import Flow from '../src/flow'
 
-// const fs = require('fs')
+const fs = require('fs')
 
 class Generator {
   /**

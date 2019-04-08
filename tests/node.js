@@ -2,9 +2,9 @@ import Channel from '../src/channel'
 import Node from '../src/node'
 import Application from '../src/application'
 import Flow from '../src/flow'
+import Action from '../src/action'
 
 const test = require('ava')
-const Action = require('../src/action')
 
 const appName = 'Test'
 const nodeName = 'Double X'

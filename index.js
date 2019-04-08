@@ -2,18 +2,26 @@ require = require('esm')(module)
 
 const FlowNote = require('./src/index')
 
-const serverType = (process.env.FLOWNOTE_SERVER_TYPE || 'stdin').toLowerCase()
-const serverPort = parseInt(process.env.FLOWNOTE_SERVER_PORT) || 8080
-const serverHost = process.env.FLOWNOTE_SERVER_HOST || 'localhost'
-const serverLogging = parseInt(process.env.FLOWNOTE_SERVER_LOGGING) || 2
-const serverSilent = parseInt(process.env.FLOWNOTE_SERVER_SILENT)
-const appFilePath = (process.env.FLOWNOTE_APP_FILE_PATH || new Error('No FlowNote file designated.')).toLowerCase()
-// @TODO Allow application name to be passed in
-
-console.log(serverSilent)
-
 if (require.main === module) {
   // Index called via CLI
+
+  const serverType = (process.env.FLOWNOTE_SERVER_TYPE || 'stdin').toLowerCase()
+  const serverPort = parseInt(process.env.FLOWNOTE_SERVER_PORT) || 8080
+  const serverHost = process.env.FLOWNOTE_SERVER_HOST || 'localhost'
+  const serverLogging = parseInt(process.env.FLOWNOTE_SERVER_LOGGING) || 2
+  const serverSilent = parseInt(process.env.FLOWNOTE_SERVER_SILENT)
+
+  if (!process.env.FLOWNOTE_APP_FILE_PATH) {
+    throw new Error('No FlowNote file designated.')
+  }
+
+  if (!process.env.FLOWNOTE_ACTIONS_FILE_PATH) {
+    throw new Error('No FlowNote actions module designated.')
+  }
+
+  const appFilePath = process.env.FLOWNOTE_APP_FILE_PATH.toLowerCase()
+  const actionsFilePath = process.env.FLOWNOTE_ACTIONS_FILE_PATH
+  // @TODO Allow application name to be passed in
 
   // Establish exception handling
   process.on('unhandledRejection', (reason, p) => {
@@ -25,11 +33,16 @@ if (require.main === module) {
   })
   process.on('warning', console.warn)
 
+  let actions = require(actionsFilePath)
+  if (actions.default) {
+    actions = actions.default
+  }
+
   // Get FlowNote app details and load them
   const compiler = new FlowNote.Compiler(undefined, undefined, undefined, {
     logLevel: serverLogging,
     silent: serverSilent
-  })
+  }, actions || [])
 
   compiler.compileFromFile(appFilePath).then(application => {
     // Application compiled

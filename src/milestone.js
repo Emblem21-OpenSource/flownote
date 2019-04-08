@@ -1,6 +1,6 @@
 import Channel from './channel'
+import Action from './action'
 
-const Action = require('./action')
 const CommonClass = require('./utils/commonClass')
 const Log = require('./utils/log')
 

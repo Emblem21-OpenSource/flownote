@@ -1,10 +1,11 @@
 import Flow from './flow'
 import Event from './event'
+import Compiler from '../compiler/index'
+import Action from './action'
 
 const querystring = require('querystring')
 const IdGenerator = require('./utils/idGenerator')
 const EventQueue = require('./eventQueue')
-const Action = require('./action')
 // const Delegate = require('./delegate')
 const Request = require('./request')
 const CommonClass = require('./utils/commonClass')
@@ -672,6 +673,23 @@ class Application extends CommonClass {
     return result
   }
   */
+}
+
+/**
+ * [compile description]
+ * @param  {[type]} name         [description]
+ * @param  {[type]} flowFilePath [description]
+ * @param  {[type]} config       [description]
+ * @param  {[type]} actions      [description]
+ * @param  {[type]} eventQueue   [description]
+ * @param  {[type]} inputPipe    [description]
+ * @param  {[type]} outputPipe   [description]
+ * @param  {[type]} errorPipe    [description]
+ * @return {[type]}              [description]
+ */
+Application.compile = async function compile (name, flowFilePath, config, actions, eventQueue, inputPipe, outputPipe, errorPipe) {
+  const compiler = new Compiler(undefined, undefined, undefined, config, actions, name)
+  return compiler.compileFromFile(flowFilePath)
 }
 
 export { Application as default }

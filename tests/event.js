@@ -3,9 +3,9 @@ import Node from '../src/node'
 import Flow from '../src/flow'
 import Application from '../src/application'
 import Event from '../src/event'
+import Action from '../src/action'
 
 const test = require('ava')
-const Action = require('../src/action')
 const Request = require('../src/request')
 
 const appName = 'Test'

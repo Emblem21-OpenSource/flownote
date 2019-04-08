@@ -1,7 +1,7 @@
 import Application from '../src/application'
+import Action from '../src/action'
 
 const test = require('ava')
-const Action = require('../src/action')
 const Request = require('../src/request')
 
 const appName = 'Test'

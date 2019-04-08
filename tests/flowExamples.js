@@ -4,9 +4,9 @@ import ErrorChannel from '../src/channels/errorChannel'
 import Flow from '../src/flow'
 import Application from '../src/application'
 import Compiler from '../compiler/index'
+import Action from '../src/action'
 
 const test = require('ava')
-const Action = require('../src/action')
 const CyclicalError = require('../src/errors/cyclicalError')
 
 const logLevel = 2

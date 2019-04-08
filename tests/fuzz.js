@@ -2,9 +2,9 @@ import StandardChannel from '../src/channels/standardChannel'
 import StandardNode from '../src/nodes/standardNode'
 import Flow from '../src/flow'
 import Application from '../src/application'
+import Action from '../src/action'
 
 const test = require('ava')
-const Action = require('../src/action')
 const rangedFuzzing = require('fuzzur')
 
 const rangedFuzzingOptions = {}

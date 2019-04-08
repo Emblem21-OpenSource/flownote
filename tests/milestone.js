@@ -3,9 +3,9 @@ import Node from '../src/node'
 import Flow from '../src/flow'
 import Application from '../src/application'
 import Milestone from '../src/milestone'
+import Action from '../src/action'
 
 const test = require('ava')
-const Action = require('../src/action')
 
 const appName = 'Test'
 const nodeName = 'Double X'

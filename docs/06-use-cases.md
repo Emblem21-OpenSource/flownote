@@ -20,6 +20,54 @@
 
 `cat <pathToApp.flow` > ./compile`
 
+## Create your own stdin application using the FlowNote module (Using Promises)
+
+```javascript
+import { Application } from 'flownote'
+import {
+  getAccount,
+  changeEmail,
+  emailBoss
+} from './yourActions'
+
+Application.compile('Name of your app', 'path/to/app.flow', {
+  // Configuration options
+  logLevel: 4
+}, [
+  // Register Actions for your App here
+  getAccount,
+  changeEmail,
+  emailBoss
+]).then(app => {
+  app.listen()
+})
+```
+
+## Create your own HTTP application using the FlowNote module (Using Promises)
+
+```javascript
+import { Application } from 'flownote'
+import Http from 'http'
+import {
+  getAccount,
+  changeEmail,
+  emailBoss
+} from './yourActions'
+
+Application.compile('Name of your app', 'path/to/app.flow', {
+  // Configuration options
+  logLevel: 4
+}, [
+  // Register Actions for your App here
+  getAccount,
+  changeEmail,
+  emailBoss
+]).then(app => {
+  const httpServer = http.createServer(app.httpRequestHandler())
+  httpServer.listen()
+})
+```
+
 ##### Documentation
 
 ( 
