@@ -67,4 +67,17 @@ class Action extends CommonClass {
   }
 }
 
+/**
+ * [load description]
+ * @param  {[type]} actions [description]
+ * @return {[type]}         [description]
+ */
+Action.load = function load (actions) {
+  const results = []
+  for (const name in actions) {
+    results.push(new Action(undefined, undefined, name, actions[name]))
+  }
+  return results
+}
+
 module.exports = Action
