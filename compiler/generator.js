@@ -20,6 +20,20 @@ class Generator {
   }
 
   /**
+   * [getNodeInstance description]
+   * @param  {[type]} nodeName [description]
+   * @return {[type]}          [description]
+   */
+  getNodeInstance (nodeName) {
+    const config = this.nodeFactories[nodeName] || {
+      tags: [],
+      actions: []
+    }
+
+    return new StandardNode(this.application, undefined, nodeName, undefined, config.tags, config.actions)
+  }
+
+  /**
    * [FlowTypes description]
    * @param {[type]} flow [description]
    */
@@ -81,6 +95,14 @@ class Generator {
     for (var i = 1, len = pathChain.length; i < len; i++) {
       const step = pathChain[i]
       if (step !== undefined) {
+        if (lastStep instanceof StandardNode) {
+          // When dealing with milestones, we have to change the lastStep to the milestone
+          const milestone = lastStep.hasMilestone()
+          if (milestone) {
+            lastStep = milestone
+          }
+        }
+
         lastStep.connect(step)
         lastStep = step
       }
@@ -105,14 +127,14 @@ class Generator {
     }
 
     if (this.nodeFactories[nodeName] === undefined) {
-      this.nodeFactories[nodeName] = (nodeName, tags, config, actions) => {
-        return new StandardNode(this.application, undefined, nodeName, undefined, tags, actions)
+      this.nodeFactories[nodeName] = {
+        tags: [ /* @TODO */ ],
+        config: properties.eval(),
+        actions: actions.eval()
       }
     } else {
       throw new Error(`Node definition already exists for the ${nodeName}.`)
     }
-    const propertiesInstance = properties.eval()
-    return this.nodeFactories[nodeName](nodeName, [ /* @TODO */], propertiesInstance, actions.eval())
   }
 
   /**
@@ -153,7 +175,14 @@ class Generator {
     // console.log('> Pathing out', rootNode.name, steps.length)
     steps.forEach(step => {
       if (step !== undefined) {
-        // console.log('>> connecting', step.name, 'to', lastStep.name)
+        if (lastStep instanceof StandardNode) {
+          // When dealing with milestones, we have to change the lastStep to the milestone
+          const milestone = lastStep.hasMilestone()
+          if (milestone) {
+            lastStep = milestone
+          }
+        }
+
         lastStep.connect(step)
         lastStep = step
       }
@@ -241,7 +270,12 @@ class Generator {
    */
   Milestone (nodeName) {
     // console.log('Milestone')
-    return new StandardMilestone(this.application, undefined, `Milestone`, 'fcfs', [], [])
+    const node = nodeName.eval()
+    const channel = new StandardChannel(this.application, undefined, 'Plain', undefined, [])
+    const milestone = new StandardMilestone(this.application, undefined, `Milestone`, 'fcfs', [], [])
+    node.connect(channel)
+    channel.connect(milestone)
+    return node
   }
 
   /**
@@ -326,7 +360,7 @@ class Generator {
       return this.nodeAliases[name]
     }
 
-    return this.nodeFactories[name](name, undefined, undefined, undefined)
+    return this.getNodeInstance(name)
   }
 
   /**

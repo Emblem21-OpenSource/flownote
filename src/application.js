@@ -366,7 +366,6 @@ class Application extends CommonClass {
         let dispatched = false
 
         for (var channel = 0, len = from.to.length; channel < len; channel++) {
-          console.log('>', from.to[channel].name, type)
           if (from.to[channel].accepts.indexOf(type) > -1) {
             this.log.debug(`... and leads to ${from.to[channel].name}`)
             this.log.debug(`Dispatching ${type} to ${from.to[channel].name}`)

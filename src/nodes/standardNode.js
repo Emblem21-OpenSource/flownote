@@ -5,6 +5,7 @@ class StandardNode extends Node {
     const gotoChannel = application.requireAction('gotoChannel', function gotoChannel () {
       this.dispatch('StandardChannel')
     })
+
     super(application, id, name, to, tags, actions.concat([ gotoChannel ]))
   }
 }

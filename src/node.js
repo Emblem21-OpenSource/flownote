@@ -1,4 +1,6 @@
 import Channel from './channel'
+import StandardChannel from './channels/standardChannel'
+import Milestone from './milestone'
 
 const Action = require('./action')
 const CommonClass = require('./utils/commonClass')
@@ -128,6 +130,19 @@ class Node extends CommonClass {
       this.application.emit('Action', action, event.request)
       await action.execute(actionContext)
     }
+  }
+
+  /**
+   * [hasMilestone description]
+   * @return {Boolean} [description]
+   */
+  hasMilestone () {
+    for (var i = 0, len = this.to.length; i < len; i++) {
+      if (this.to[i] instanceof StandardChannel && this.top[i].to instanceof Milestone) {
+        return this.top[i].to
+      }
+    }
+    return false
   }
 }
 

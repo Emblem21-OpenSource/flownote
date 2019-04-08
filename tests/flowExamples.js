@@ -9,7 +9,7 @@ const test = require('ava')
 const Action = require('../src/action')
 const CyclicalError = require('../src/errors/cyclicalError')
 
-const logLevel = 4
+const logLevel = 2
 
 /**
  * [createApp description]
@@ -365,35 +365,36 @@ test.only('Compiling a FlowNote into an Application', async t => {
       this.set('playerId', this.get('playerId'))
     }),
     new Action(undefined, undefined, 'getXYCoordsFromClickData', function getXYCoordsFromClickData () {
-      this.set('x', this.get('click').x)
-      this.set('y', this.get('click').y)
-      console.log('wataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+      this.set('clickX', this.get('click').x)
+      this.set('clickY', this.get('click').y)
       this.dispatch('Coordinates')
     }),
     new Action(undefined, undefined, 'getPlayerById', function getPlayerById () {
       this.set('player', {
         id: this.get('playerId'),
-        name: 'Alice'
+        name: 'Alice',
+        x: 10,
+        y: 12
       })
     }),
     new Action(undefined, undefined, 'detectPlayerMovementEvents', function detectPlayerMovementEvents () {
       (this.get('events') || []).forEach(event => {
         if (event.type === 'move') {
-          this.get('pendingMove', event.data)
+          this.set('pendingMove', event)
         }
       })
     }),
     new Action(undefined, undefined, 'movePlayer', function movePlayer () {
       const player = this.get('player')
       const pendingMove = this.get('pendingMove')
-      player.x += pendingMove.x
-      player.y += pendingMove.y
+      player.x += this.get('clickX')
+      player.y += this.get('clickY')
     }),
     new Action(undefined, undefined, 'dispatchPlayerMovementEvents', function dispatchPlayerMovementEvents () {
-      this.emit('playerMoved')
+      this.dispatch('playerMoved')
     }),
     new Action(undefined, undefined, 'sendBoundaryError', function sendBoundaryError () {
-      this.emit('BoundaryError')
+      this.dispatch('BoundaryError')
     }),
     new Action(undefined, undefined, 'getBroadcastMessage', function getBroadcastMessage () {
       this.set('broadcastMessage', 'Player Moved')
@@ -402,7 +403,7 @@ test.only('Compiling a FlowNote into an Application', async t => {
       this.set('broadcastRoomId', 1)
     }),
     new Action(undefined, undefined, 'broadcastToRoom', function broadcastToRoom () {
-      this.emit(`broadcast:${this.get('broadcastRoomId')}`, this.get('broadcastMessage'))
+      this.dispatch(`broadcast:${this.get('broadcastRoomId')}`, this.get('broadcastMessage'))
     })
   ])
 
@@ -434,14 +435,18 @@ clickBranch -> notifyRoom ... move
     },
     events: [
       {
-        type: 'move',
-        x: 10,
-        y: 20
+        type: 'move'
       }
     ]
   })
 
-  console.log(result)
+  t.is(result.state.playerId, 1)
+  t.is(result.state.clickX, 2)
+  t.is(result.state.clickY, 10)
+  t.is(result.state.player.id, 1)
+  t.is(result.state.player.name, 'Alice')
+  t.is(result.state.player.x, 12)
+  t.is(result.state.player.y, 22)
 })
 
 test.skip('Flow with waitFor', async t => {
