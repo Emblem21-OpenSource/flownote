@@ -1,5 +1,7 @@
 # The Application Concept
 
+![Application](docs/images/Application.png)
+
 Applications contain Flows (which represent your business logic.) and an Event Queue (for Event progression).
 
 ## Event Queue

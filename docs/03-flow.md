@@ -1,5 +1,7 @@
 # The Flow Concept
 
+![Flow](docs/images/Flow.png)
+
 Flows contain Nodes and Milestones that are connected together via Channels. Flows can also connect to Flows to maximize reuse of business logic.
 
 ## Configuring

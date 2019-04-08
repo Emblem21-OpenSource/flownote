@@ -10,7 +10,7 @@ Also, visit our [Gitter](https://gitter.im/flownote/community?utm_source=badge&u
 
 * [Installation](https://emblem21-opensource.github.io/flownote/docs/01-installation.html)
 * [Features](https://emblem21-opensource.github.io/flownote/docs/07-features.html)
-* [Use Cases](https://emblem21-opensource.github.io/flownote/docs/07-use-cases.html)
+* [Use Cases](https://emblem21-opensource.github.io/flownote/docs/06-use-cases.html)
 * [Language](https://emblem21-opensource.github.io/flownote/docs/08-language.html)
 * [Application](https://emblem21-opensource.github.io/flownote/docs/02-application.html)
 * [Flow](https://emblem21-opensource.github.io/flownote/docs/03-flow.html)
