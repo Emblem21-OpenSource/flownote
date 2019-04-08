@@ -58,8 +58,7 @@ Error in ${this.filename}:
 ${bar}
 ${matches.input}
 ${new Array(errorPosition).join(' ') + '^'}
-${bar}
-`)
+${bar}`)
       }
     })
 

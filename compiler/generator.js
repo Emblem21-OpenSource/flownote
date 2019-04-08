@@ -1,5 +1,6 @@
 import StandardChannel from '../src/channels/standardChannel'
 import ErrorChannel from '../src/channels/errorChannel'
+import NamedChannel from '../src/channels/namedChannel'
 import StandardNode from '../src/nodes/standardNode'
 import StandardMilestone from '../src/nodes/standardMilestone'
 import Flow from '../src/flow'
@@ -72,9 +73,20 @@ class Generator {
     }
 
     const flow = new Flow(this.application, undefined, flowName.eval(), config.eval(), undefined, method, endpoint, undefined)
-    const pathRootNode = path.eval()
+    const pathChain = path.eval()
+    const rootNode = pathChain[0]
 
-    flow.connect(pathRootNode[0])
+    let lastStep = pathChain[0]
+
+    for (var i = 1, len = pathChain.length; i < len; i++) {
+      const step = pathChain[i]
+      if (step !== undefined) {
+        lastStep.connect(step)
+        lastStep = step
+      }
+    }
+
+    flow.connect(rootNode)
     this.application.registerFlow(flow)
   }
 
@@ -138,16 +150,16 @@ class Generator {
 
     let lastStep = channelInstance
 
-    console.log('> Pathing out', rootNode.name, steps.length)
+    // console.log('> Pathing out', rootNode.name, steps.length)
     steps.forEach(step => {
       if (step !== undefined) {
-        console.log('>> connecting', step.name, 'to', lastStep.name)
+        // console.log('>> connecting', step.name, 'to', lastStep.name)
         lastStep.connect(step)
         lastStep = step
       }
     })
 
-    console.log('>>> finalizing', channelInstance.name, 'to', rootNode.name)
+    // console.log('>>> finalizing', channelInstance.name, 'to', rootNode.name)
     rootNode.connect(channelInstance)
 
     return rootNode
@@ -167,7 +179,6 @@ class Generator {
 
     if (tokenInstance === undefined) {
       // Blank line
-      console.log('> Empty Line')
       return []
     }
 
@@ -181,15 +192,12 @@ class Generator {
         result.push(separatorList[i])
         result.push(tokensList[i])
       }
-      console.log(']]]] Path with length of ' + result.length + ' starting with ' + result[0].name)
       return result
     } else if (type === 'Property') {
       // Properties
-      console.log(']]]] Properties starting with ' + tokenInstance[0])
       return tokenInstance.concat(tokens.eval())
     } else if (type === 'label') {
       // Actions
-      console.log(']]]] Action starting with ' + tokenInstance)
       return [ tokenInstance ].concat(tokens.eval())
     } else {
       throw new Error('Unknown ctorName: ' + type)
@@ -260,8 +268,9 @@ class Generator {
    * @param {[type]} waitsFor [description]
    */
   WaitsFor (nodeName, waitsFor) {
-    // console.log('WaitsFor')
-    // @TODO
+    const node = nodeName.eval()
+    // @TODO const waitingNode = waitsFor.eval()
+    return node
   }
 
   /**
@@ -375,7 +384,7 @@ class Generator {
     // console.log('NamedChannel')
     const name = channelName.eval()
     const props = properties.eval()
-    return new StandardChannel(this.application, undefined, name, undefined, [ name ], props.retry, props.retryDelay, [])
+    return new NamedChannel(this.application, undefined, name, undefined, [ name ], props.retry, props.retryDelay, [])
   }
 
   /**

@@ -9,22 +9,34 @@ import Flow from './flow'
 class Spider {
   search (source, target) {
     let list
+    var i, len
 
     if (source instanceof Application) {
       if (source.publicFlow) {
+        // Public Flow is designated
         list = [ source.publicFlow.to ]
       } else {
-        throw Error('Spider requires Application to have a Public Flow defined')
+        // Search all flows of an application
+        for (i = 0, len = source.flows; i < len; i++) {
+          const result = this.search(source.flows[i], target)
+          if (result) {
+            return result
+          }
+        }
+        return false
       }
     } else if ((source instanceof Channel) || (source instanceof Milestone) || (source instanceof Flow)) {
+      // Dealing with a step
       list = [ source.to ]
     } else if (source.id !== undefined) {
+      // Dealing with text
       list = source.to
     } else {
+      // Forgot what this is for lol
       list = source
     }
 
-    for (var i = 0, len = list.length; i < len; i++) {
+    for (i = 0, len = list.length; i < len; i++) {
       var found = false
 
       if ((target.id || target.name) && (list[i] === target || list[i].id === target.id || list[i].name === target.name)) {

@@ -367,6 +367,8 @@ test.only('Compiling a FlowNote into an Application', async t => {
     new Action(undefined, undefined, 'getXYCoordsFromClickData', function getXYCoordsFromClickData () {
       this.set('x', this.get('click').x)
       this.set('y', this.get('click').y)
+      console.log('wataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+      this.dispatch('Coordinates')
     }),
     new Action(undefined, undefined, 'getPlayerById', function getPlayerById () {
       this.set('player', {

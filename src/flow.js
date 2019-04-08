@@ -118,7 +118,7 @@ class Flow extends CommonClass {
     return new Promise((resolve, reject) => {
       this.log.debug(`Waiting for Request ${request.id} to complete...`)
       const listener = this.application.on('Flow.end', (source, resultRequest, error) => {
-        this.log.debug('Handling flow end...')
+        this.log.debug(`Handling flow end from ${source.name}...`)
 
         if (error !== undefined) {
           return reject(error)
