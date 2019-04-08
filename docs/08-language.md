@@ -2,7 +2,7 @@
 
 FlowNote is designed to bring the linguistic part of our brains to help reason about and design flow-based programming tasks.  As a result, it has grammar. It's currently experimental, so check back later.  To generate the following Flow:
 
-![Flow](docs/images/Flow.png)
+![Flow](images/Flow.png)
 
 This graph can be represented via the following FlowNote code:
 

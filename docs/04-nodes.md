@@ -1,6 +1,6 @@
 # The Node Concept
 
-![Nodes](docs/images/Nodes.png)
+![Nodes](images/Nodes.png)
 
 Nodes contain Actions and connect to one or more Channels. Node Actions are responsible for explicitly `dispatch`ing events for intended Channels. Node Actions can fire `dispatch` multiple times per execution, initiating a parallel Event progression through a Flow. Node Actions can also `schedule` future Actions for Milestones.
 
@@ -10,13 +10,13 @@ Milestones will execute all of their Actions and any Actions that have been `sch
 
 ## Actions
 
-![Actions](docs/images/Actions.png)
+![Actions](images/Actions.png)
 
 Actions are individual axioms about your business rules.  Within an action, you can `dispatch` Event progression, `set` and `get` values to a Request, `schedule` Actions to perform at a Milestone, and `waitFor` Nodes, Channels, and/or Milestones to process an Event.  Each Node, Channel, or Milestone can have one or more Actions that will be sequentially executed when an Event is passed between them.
 
 ### Context
 
-![Actions](docs/images/ActionContext.png)
+![Actions](images/ActionContext.png)
 
 Coming soon!
 
