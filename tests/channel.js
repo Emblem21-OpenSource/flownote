@@ -134,7 +134,7 @@ test('Channel.addAction with Action', t => {
 
   const channel = new Channel(app, undefined, channelName, undefined, [], undefined, undefined, [])
   const action = new Action(app, undefined, nodeName, doubleX)
-  app.registerAction(action)
+  app.registerAction(action.name, action)
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
   node1.connect(channel)

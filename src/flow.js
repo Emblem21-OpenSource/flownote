@@ -151,6 +151,17 @@ class Flow extends CommonClass {
       this.application.dispatch(`Node.${this.to.name}`, event.request, this, this.to)
     }
   }
+
+  print (source = this, indents = '') {
+    console.log(indents + source.name)
+    if (source.to instanceof Array) {
+      for (var i = 0, len = source.to.length; i < len; i++) {
+        this.print(source.to[i], indents + ' ')
+      }
+    } else if (source.to !== undefined) {
+      this.print(source.to, indents + ' ')
+    }
+  }
 }
 
 export { Flow as default }

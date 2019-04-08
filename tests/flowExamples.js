@@ -353,10 +353,10 @@ test('Self-referential flow to trigger cyclical error', async t => {
   }
 })
 
-test.only('Compiling a FlowNote into an Application', async t => {
+test('Compiling a FlowNote into an Application', async t => {
   const app = new Application(undefined, 'New App', {
     logLevel,
-    silent: false
+    silent: true
   }, undefined, undefined, [
     new Action(undefined, undefined, 'extractClickData', function extractClickData () {
       this.set('click', this.get('click'))
@@ -386,7 +386,6 @@ test.only('Compiling a FlowNote into an Application', async t => {
     }),
     new Action(undefined, undefined, 'movePlayer', function movePlayer () {
       const player = this.get('player')
-      const pendingMove = this.get('pendingMove')
       player.x += this.get('clickX')
       player.y += this.get('clickY')
     }),
