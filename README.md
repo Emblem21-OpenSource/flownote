@@ -1,12 +1,12 @@
 ![FlowNote](docs/images/logo.png)
 
-FlowNote is an engine to create, organize, inspect, visualize, and hook into event-oriented applications with a language that makes reasoning about flow-based paradigms easy.  
+FlowNote lets developers create, organize, and reason about event-oriented applications with a simple flow-based language.
 
-FlowNote has many [features](docs/07-features.md) and solves many common problems with event-driven architecture. [Check our documentation](https://emblem21-opensource.github.io/flownote/) to get a more comprehensive understanding how how to use it.
+FlowNote has a bunch of [features](docs/07-features.md) to help reason about and represent many common problems with event-driven development. [Check out the documentation](https://emblem21-opensource.github.io/flownote/) to get started.
 
-Also, visit our [Gitter](https://gitter.im/flownote/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) to have a chat with our tiny but dedicated community. :D
+We also have a [Gitter](https://gitter.im/flownote/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) if you prefer to ask specific questions and visit our tiny but growing community.
 
-## Documetation
+## Documentation
 
 * [Installation](https://emblem21-opensource.github.io/flownote/docs/01-installation.html)
 * [Features](https://emblem21-opensource.github.io/flownote/docs/07-features.html)

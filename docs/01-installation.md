@@ -1,6 +1,6 @@
 # Installation
 
-FlowNote can be added to any project with this simple command, based upon your package manager:
+FlowNote can be added to any NodeJS project with NPM or Yarn:
 
 ```bash
 npm install flownote --production --save
@@ -55,6 +55,8 @@ import {
   Compiler
 } from 'flownote'
 ```
+
+You can see an example of this integration [with this test]().
 
 ## As a Standalone Compiler
 

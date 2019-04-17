@@ -18,7 +18,7 @@
 
 ## Stream a FlowNote file into its Application JSON
 
-`cat <pathToApp.flow` > ./compile`
+`cat <pathToApp.flow > ./compile`
 
 ## Create your own stdin application using the FlowNote module (Using Promises)
 
