@@ -93,13 +93,21 @@ class Node extends CommonClass {
    * [addAction description]
    * @param {[type]} name [description]
    */
-  addAction (nameOrAction) {
+  addAction (nameOrAction, spliceIndex) {
     if (nameOrAction instanceof Action) {
-      this.actions.push(nameOrAction)
+      if (spliceIndex !== undefined) {
+        this.actions.splice(spliceIndex, 0, nameOrAction)
+      } else {
+        this.actions.push(nameOrAction)
+      }
     } else {
       const action = this.application.getAction(nameOrAction)
       if (action) {
-        this.actions.push(action)
+        if (spliceIndex !== undefined) {
+          this.actions.splice(spliceIndex, 0, action)
+        } else {
+          this.actions.push(action)
+        }
       } else {
         throw RangeError(`Could not find the ${action} action`)
       }

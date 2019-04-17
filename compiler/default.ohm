@@ -28,7 +28,7 @@ FlowNote {
     = WaitsFor
     | Node
 
-  WaitsFor = Node "..." StandardNode
+  WaitsFor = Node "..." label
 
   Node
     = IdentityNode

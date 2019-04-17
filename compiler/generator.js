@@ -304,7 +304,11 @@ class Generator {
    */
   WaitsFor (nodeName, waitsFor) {
     const node = nodeName.eval()
-    // @TODO const waitingNode = waitsFor.eval()
+    const waitsForAction = waitsFor.eval()
+    const action = new Action(this.application, undefined, `waitsFor${waitsForAction}`, async function () {
+      await this.waitsFor(waitsForAction)
+    })
+    node.addAction(action, node.actions.length - 1)
     return node
   }
 

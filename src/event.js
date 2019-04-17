@@ -99,9 +99,9 @@ class Event extends CommonClass {
     }
 
     if (result.flow instanceof Flow) {
-      this.flow = result.from
+      this.flow = result.flow
     } else if (result.from !== undefined) {
-      const existingFlow = new Spider().search(this.application, result.flow) // result.flow will be an id
+      const existingFlow = this.application.getFlow(result.flow) // result.flow will be an id
       // The flow will exist at the time the event is rehydrated
       this.flow = existingFlow
     }

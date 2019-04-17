@@ -368,7 +368,7 @@ class Application extends CommonClass {
 
         for (var channel = 0, len = from.to.length; channel < len; channel++) {
           if (from.to[channel].accepts.indexOf(type) > -1) {
-            this.log.debug(`... and leads to ${from.to[channel].name}`)
+            this.log.debug(`... and node leads to ${from.to[channel].name}`)
             this.log.debug(`Dispatching ${type} to ${from.to[channel].name}`)
             const event = new Event(this, undefined, type, request, from.to[channel], flow, retries)
             this.eventQueue.push(event)
@@ -380,8 +380,9 @@ class Application extends CommonClass {
           if (error) {
             // Throw an error if an Error channel was not found
             this.emit('Flow.end', flow, request, error)
+          } else {
+            this.emit('Flow.end', flow, request)
           }
-          this.emit('Flow.end', flow, request)
         }
       } else {
         if (error) {
@@ -389,7 +390,7 @@ class Application extends CommonClass {
           this.emit('Flow.end', flow, request, error)
         } else {
           // Dealing with a Channel
-          this.log.debug(`... and leads to ${from.to.name}`)
+          this.log.debug(`... and channel leads to ${from.to.name}`)
           const event = new Event(this, undefined, type, request, from.to, flow, retries)
           this.eventQueue.push(event)
         }
@@ -400,7 +401,7 @@ class Application extends CommonClass {
         this.emit('Flow.end', flow, request, error)
       } else {
         // Only end up here if a node without a channel dispatches
-        this.log.debug(`... and leads to ${from.to.name}`)
+        this.log.debug(`... and step leads to ${from.to.name}`)
         const event = new Event(this, undefined, type, request, from.to, flow, retries)
         this.eventQueue.push(event)
       }
@@ -562,11 +563,13 @@ class Application extends CommonClass {
 
     this.onEvent(message)
 
-    if (this.config.silent === false) {
-      if (error) {
-        this.errorPipe.write(stringify(message))
-      } else {
-        this.outputPipe.write(stringify(message))
+    if (!(type === 'Flow.end' && request.waiting)) {
+      if (this.config.silent === false) {
+        if (error) {
+          this.errorPipe.write(stringify(message))
+        } else {
+          this.outputPipe.write(stringify(message))
+        }
       }
     }
   }
@@ -612,8 +615,8 @@ class Application extends CommonClass {
 
     if (!flow) {
       throw new RangeError(`${method} ${path} is not a valid endpoint.`)
-    }
-
+    
+}
     if (typeof params === 'string') {
       params = querystring.parse(params)
     } else if (!(params instanceof Object)) {

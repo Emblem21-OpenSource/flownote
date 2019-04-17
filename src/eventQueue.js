@@ -2,6 +2,7 @@ import Event from './event'
 import Spider from './spider'
 import ActionContext from './actionContext'
 import MemoryQueue from './queues/memoryQueue'
+import Flow from './flow'
 
 const CommonClass = require('./utils/commonClass')
 const Log = require('./utils/log')
@@ -94,7 +95,7 @@ class EventQueue extends CommonClass {
               const previousStep = event.request.steps[event.request.steps.length - 1]
 
               if (previousStep && this.application.id === previousStep.appId) {
-                const lastFlow = new Spider().search(this.application, previousStep.flowId)
+                const lastFlow = this.application.getFlow(previousStep.flowId)
                 if (lastFlow) {
                   lastStep = new Spider().search(lastFlow, previousStep.stepId)
                   if (lastStep && lastStep.retry) {

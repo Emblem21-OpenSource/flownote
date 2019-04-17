@@ -1,7 +1,7 @@
 {
   "name": "flownote",
   "version": "1.0.0-alpha.9",
-  "description": "FlowNote is an engine to create, organize, inspect, visualize, and hook into event-oriented applications with a language that makes reasoning about flow-based paradigms easy.",
+  "description": "FlowNote lets developers create, organize, and reason about event-oriented applications with a simple flow-based language.",
   "main": "index.js",
   "keywords": [
     "flow-based",

@@ -14,7 +14,7 @@ class Spider {
     if (source instanceof Application) {
       if (source.publicFlow) {
         // Public Flow is designated
-        list = [ source.publicFlow.to ]
+        return this.search(source.publicFlow, target)
       } else {
         // Search all flows of an application
         for (i = 0, len = source.flows; i < len; i++) {

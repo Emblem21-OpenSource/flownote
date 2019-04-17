@@ -4,6 +4,14 @@
 
 [![Chat us up on Gitter](https://badges.gitter.im/flownote/community.svg)](https://gitter.im/flownote/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
+## Testing
+
+Make sure the following commands pass before submitting a PR:
+
+* `npm test`
+* ` npm run browser-test` then go to `http://localhost:1000`
+* `npm run profiler`
+
 ## Pull Requests
 
 When you're ready to submit pull requests, make sure you create a new branch off of the most recent tag (`git checkout -b <nameOfYourBranch> <version>`), modify your code, run `npm version patch`, then push the commit.
@@ -28,13 +36,13 @@ These dependencies are needed and will also have to be ported or be given simila
 
 ( 
 [Installation](01-installation.md) | 
-[Features](07-features.md) | 
-[Use Cases](06-use-cases.md) | 
-[Language](08-language.md) | 
-[Application](02-application.md) | 
-[Flow](03-flow.md) | 
-[Nodes](04-nodes.md) | 
-[Channels](05-channels.md) | 
+[Features](02-features.md) | 
+[Use Cases](03-use-cases.md) | 
+[Language](04-language.md) | 
+[Application](05-application.md) | 
+[Flow](06-flow.md) | 
+[Nodes](07-nodes.md) | 
+[Channels](08-channels.md) | 
 Contribution Overview | 
 [Roadmap](10-roadmap.md) | 
 [Known Problems](11-known-problems.md)

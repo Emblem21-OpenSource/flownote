@@ -109,10 +109,12 @@ class ActionContext {
       }
     }
 
+    request.waiting = true
     return new Promise((resolve, reject) => {
       const listener = application.on('Node', async (source, resultRequest, error) => {
         this.log.debug(`Waiting for ${source.name}...`)
         if (error !== undefined) {
+          request.waiting = false
           return reject(resultRequest)
         }
 
@@ -123,6 +125,8 @@ class ActionContext {
           if (callback) {
             result = await callback(resultRequest)
           }
+
+          request.waiting = false
           resolve(result)
         }
       })

@@ -17,7 +17,8 @@ const logLevel = 2
  */
 function createApp () {
   const app = new Application(undefined, 'Test App', {
-    logLevel
+    logLevel,
+    silent: true
   })
 
   const doubleXAction = new Action(app, undefined, 'doubleX', function doubleX () {
@@ -51,7 +52,7 @@ function createApp () {
     return new Promise(resolve => setTimeout(() => {
       this.set('y', this.get('y') * 10)
       resolve()
-    }, 20))
+    }, 1000))
   })
   const waitForDelay = new Action(app, undefined, 'waitForDelay', function waitForDelay () {
     return this.waitFor(this.get('waitForDelayId'))
@@ -448,7 +449,7 @@ clickBranch -> notifyRoom ... move
   t.is(result.state.player.y, 22)
 })
 
-test.skip('Flow with waitFor', async t => {
+test('Flow with waitFor', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
   app.setPublicFlow(flow)
@@ -457,7 +458,7 @@ test.skip('Flow with waitFor', async t => {
   const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const addXAndYNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('addXAndY') ])
   const channelB = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
-  const halveXNode = new StandardNode(app, undefined, 'Add X and Y', [], [], [ app.getAction('halveX') ])
+  const halveXNode = new StandardNode(app, undefined, 'halveXNode', [], [], [ app.getAction('halveX') ])
   const channelC = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const channelD = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
   const delay = new StandardNode(app, undefined, 'delayTwentyMilliseconds', [], [], [ app.getAction('delayTwentyMilliseconds') ])

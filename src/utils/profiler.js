@@ -2,7 +2,7 @@ import StandardChannel from '../../src/channels/standardChannel'
 import StandardNode from '../../src/nodes/standardNode'
 import Flow from '../../src/flow'
 import Application from '../../src/application'
-import Action from './action'
+import Action from '../../src/action'
 
 const http = require('http')
 

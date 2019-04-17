@@ -43,7 +43,7 @@ class Request {
     this.accumulatedActions = []
     this.steps = []
     this.stack = stacks.set(this, new Map())
-
+    this.waiting = false
     this.log = new Log(this.id, 'Request', this.application.name, this.application.config.logLevel, this.application.outputPipe, this.application.errorPipe)
   }
 
