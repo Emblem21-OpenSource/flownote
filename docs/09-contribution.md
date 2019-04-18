@@ -9,8 +9,9 @@
 Make sure the following commands pass before submitting a PR:
 
 * `npm test`
-* ` npm run browser-test` then go to `http://localhost:1000`
+* `npm run browser-test` then go to `http://localhost:1000`
 * `npm run profiler`
+* `npm run browser-build`
 
 ## Pull Requests
 
