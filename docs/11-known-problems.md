@@ -2,6 +2,8 @@
 
 * `waitsFor` does not work correctly.
 * `setImmediate` is very slow.
+* `npm run profiler` doesn't work in Ubuntu
+* `npm run browser-test` gets a `EACCES` error in Ubuntu.
 * [Outstanding bugs](https://github.com/Emblem21-OpenSource/flownote/labels/bug)
 
 ##### Documentation
