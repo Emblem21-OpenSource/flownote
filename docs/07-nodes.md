@@ -10,19 +10,15 @@ Nodes contain Actions and connect to one or more Channels.  They receive events 
 
 Actions are individual axioms about your business rules represented by JavaScript.  Within an action, you can do the following:
 
-* `dispatch()`: Things
-* `set()`: Things
-* `get()`: Things
-* `fromStore()`: Things
-* `toStore()`: Things
-* `schedule()`: Things
-* `waitFor()`: Things
+* `dispatch(eventName)`: Places an Event, by name, on the Event Queue.
+* `set(key, value)`: Commits the value to the Request state based on the key.
+* `get(key)`: Retrieves the current Request state based on the key.
+* `toStore(name, key, value)`: Sets the value to the named store based on the key.
+* `fromStore(name, key)`: Retrieves the keyed value from the name store.
+* `schedule(action, strategy)`: Schedules an Action to be processed at the next Milestone.
+* `waitFor(stepId, callback)`: Tells the Node to dispatch Channel events only when the step specified by the `stepId` has finished.
 
-
-
-`dispatch` Event progression, `set` and `get` values to a Request, `schedule` Actions to perform at a Milestone, and `waitFor` Nodes, Channels, and/or Milestones to process an Event.  Each Node, Channel, or Milestone can have one or more Actions that will be sequentially executed when an Event is passed between them.
-
-
+If a Node or Milestone has multiple Actions, they will be executed in sequence.  Each time an Action is ran, lifecycle information about that information is emitted.
 
 ## Milestones
 
