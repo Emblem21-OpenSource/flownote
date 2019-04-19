@@ -33,7 +33,7 @@ if (require.main === module) {
   })
   process.on('warning', console.warn)
 
-  let actions = require(actionsFilePath)
+  let actions = require(`./${actionsFilePath}`)
   if (actions.default) {
     actions = actions.default
   }

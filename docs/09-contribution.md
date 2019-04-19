@@ -32,6 +32,7 @@ These dependencies will have to be ported as well.
 * [OhmJS](https://github.com/harc/ohm): Parser, lexer, and compiler
 * [Flatted](https://github.com/WebReflection/flatted): Safely represents and restores circular JSON (Application snapshots)
 * [HyperID](https://github.com/mcollina/hyperid): Fast GUID generation
+* [QS](https://github.com/ljharb/qs): Parses complex querystrings (nested objects and arrays) for HTTP GET requests.
 
 ##### Documentation
 

@@ -58,7 +58,8 @@
     "flatted": "^2.0.0",
     "get-stdin": "^6.0.0",
     "hyperid": "^1.4.1",
-    "ohm-js": "^0.14.0"
+    "ohm-js": "^0.14.0",
+    "qs": "^6.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",

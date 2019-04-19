@@ -20,6 +20,8 @@ Actions are individual axioms about your business rules represented by JavaScrip
 
 If a Node or Milestone has multiple Actions, they will be executed in sequence.  Each time an Action is ran, lifecycle information about that information is emitted.
 
+When defining an Action, you have to pass in a function that performs the actual action.  *This function **cannot** be an arrow function [due to limitations in how .call() works](https://github.com/Emblem21-OpenSource/flownote/blob/09480e60cd2738ea011d236da18f36cd7515c78b/src/action.js#L66)*.  You have to use standard Functions or Promises with Actions.
+
 ## Milestones
 
 Milestones will execute all `schedule`d Actions that have been accumulated.  Scheduled actions will be executed in the order they have been scheduled.  Once those Actions are completed, the Request will have no more Scheduled actions pending.  It is **HIGHLY** recommended to `schedule` Actions that are related to retrieving or committing information to persistent, remote, and/or non-idempotent services.  If you don't do this, you will experience difficult-to-reverse transactional situations during parallel processing or random order of exeuction during sequential processing. Like Nodes, Milestones also connect to one or more Channels.

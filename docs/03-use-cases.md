@@ -8,11 +8,11 @@ Here are a variety of common use cases for FlowNote.
 
 ## Run a FlowNote Server that listens to stdin requests
 
-`./node_modules/.bin/flownote start-stdin --flow=<pathToApp.flow>`
+`./node_modules/.bin/flownote start-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>`
 
 ## Run a FlowNote Server that listens to HTTP requests
 
-`./node_modules/.bin/flownote start-http --host=<hostname> --port=<port> --flow=<pathToApp.flow>`
+`./node_modules/.bin/flownote start-http --host=<hostname> --port=<port> --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>`
 
 ## Output the Application JSON of compiled FlowNote code.
 
@@ -279,9 +279,9 @@ Here's an example of how it would be used in a basic HTML template:
 ```bash
 ./node_modules/.bin/flownote build-docker
 
-./node_modules/.bin/flownote start-docker-stdin # to listen to stdin
+./node_modules/.bin/flownote start-docker-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js> # to listen to stdin
 # or
-./node_modules/.bin/flownote start-docker-http # to listen to HTTP
+./node_modules/.bin/flownote start-docker-http --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js> # to listen to HTTP
 ```
 
 ## Within a Dockerfile

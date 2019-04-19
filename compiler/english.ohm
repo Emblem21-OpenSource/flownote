@@ -36,10 +36,10 @@ FlowNote {
   LinguisticMilestone = LinguisticNode "then commits"
 
   LinguisticNode
-    = LinguisticWaitsFor
+    = LinguisticWaitFor
     | LinguisticNodeBase
 
-  LinguisticWaitsFor = LinguisticNodeBase "but waits for" LinguisticStandardNode
+  LinguisticWaitFor = LinguisticNodeBase "but waits for" LinguisticStandardNode
 
   LinguisticNodeBase
     = LinguisticSilentNode

@@ -28,6 +28,6 @@ COPY src /usr/src/app
 COPY .env /usr/src/app
 COPY flownote /usr/src/app
 
-ENTRYPOINT [ './flownote', "start-$FLOWNOTE_SERVER_TYPE" ]
+ENTRYPOINT [ "./flownote", "start-$FLOWNOTE_SERVER_TYPE", "--actions=$FLOWNOTE_ACTIONS_FILE_PATH", "--flow=$FLOWNOTE_APP_FILE_PATH" ]
 
 # https://nodejs.org/de/docs/guides/nodejs-docker-webapp/

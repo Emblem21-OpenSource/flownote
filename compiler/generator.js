@@ -298,15 +298,15 @@ class Generator {
   }
 
   /**
-   * [WaitsFor description]
+   * [WaitFor description]
    * @param {[type]} nodeName [description]
-   * @param {[type]} waitsFor [description]
+   * @param {[type]} waitFor [description]
    */
-  WaitsFor (nodeName, waitsFor) {
+  WaitFor (nodeName, waitFor) {
     const node = nodeName.eval()
-    const waitsForAction = waitsFor.eval()
-    const action = new Action(this.application, undefined, `waitsFor${waitsForAction}`, async function () {
-      await this.waitsFor(waitsForAction)
+    const waitForAction = waitFor.eval()
+    const action = new Action(this.application, undefined, `waitFor${waitForAction}`, async function () {
+      await this.waitFor(waitForAction)
     })
     node.addAction(action, node.actions.length - 1)
     return node

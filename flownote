@@ -1,4 +1,4 @@
-#/bin/bash
+#/bin/sh
 
 APP_NAME=FlowNote
 NODE_ENV=production
@@ -84,7 +84,8 @@ case $1 in
     socat EXEC:"docker attach $DOCKER_TAG",pty STDIO
     ;;
   start-docker-http)
-     docker run -d -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env $DOCKER_TAG
+    #docker run -d -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env -ti $DOCKER_TAG
+    docker run -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env -ti --rm $DOCKER_TAG
     ;;
   stop-docker)
     docker stop $DOCKER_TAG

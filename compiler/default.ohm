@@ -25,10 +25,10 @@ FlowNote {
   Import = "import" "\"" label "."? label? "\""
 
   Nodes
-    = WaitsFor
+    = WaitFor
     | Node
 
-  WaitsFor = Node "..." label
+  WaitFor = Node "..." label
 
   Node
     = IdentityNode

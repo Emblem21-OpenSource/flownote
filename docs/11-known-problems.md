@@ -1,9 +1,10 @@
 # Known Problems and Shortcomings
 
-* `waitsFor` does not work correctly.
-* `setImmediate` is very slow.
-* `npm run profiler` doesn't work in Ubuntu
+* `waitFor` functionality is not working completely in many scenarios.
+* The queue drain is based on [`setImmediate`, which is very slow](https://github.com/Emblem21-OpenSource/flownote/blob/09480e60cd2738ea011d236da18f36cd7515c78b/src/eventQueue.js#L58) but stable.
+* `npm run profiler` doesn't work in Ubuntu.
 * `npm run browser-test` gets a `EACCES` error in Ubuntu.
+* The callback argument in an Action definition *cannot* be arrow function. ([*.call()* does not like arrow functions](https://github.com/Emblem21-OpenSource/flownote/blob/09480e60cd2738ea011d236da18f36cd7515c78b/src/action.js#L66))
 * [Outstanding bugs](https://github.com/Emblem21-OpenSource/flownote/labels/bug)
 
 ##### Documentation

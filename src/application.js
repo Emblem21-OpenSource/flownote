@@ -3,7 +3,7 @@ import Event from './event'
 import Compiler from '../compiler/index'
 import Action from './action'
 
-const querystring = require('querystring')
+const querystring = require('qs')
 const IdGenerator = require('./utils/idGenerator')
 const EventQueue = require('./eventQueue')
 // const Delegate = require('./delegate')
@@ -615,10 +615,13 @@ class Application extends CommonClass {
 
     if (!flow) {
       throw new RangeError(`${method} ${path} is not a valid endpoint.`)
-    
-}
+    }
+
+    console.log(params)
+
     if (typeof params === 'string') {
       params = querystring.parse(params)
+      console.log('>>', params)
     } else if (!(params instanceof Object)) {
       throw new TypeError(`Unknown flow request of type ${typeof params}`)
     }

@@ -38,8 +38,8 @@ function getSemantics (application) {
     Node: (node) => {
       return generator.Node(node)
     },
-    WaitsFor: (nodeName, _, waitsFor) => {
-      return generator.WaitsFor(nodeName, waitsFor)
+    WaitFor: (nodeName, _, waitFor) => {
+      return generator.WaitFor(nodeName, waitFor)
     },
     NodeBase: (node) => {
       return generator.NodeBase(node)
