@@ -16,11 +16,15 @@ yarn add flownote --production
 
 Create your `.env` file in the following manner:
 
-```shell
+```bash
 cp ./node_modules/flownote/.env .env
 ```
 
-Then open the .`env` and change the variables according to the documentation within.
+Then open the .`env` and change the variables according to the documentation within.  Finally, build the docker image:
+
+```bash
+./node_modules/.bin/flownote build-docker
+```
 
 ##### Documentation
 

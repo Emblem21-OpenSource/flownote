@@ -278,7 +278,10 @@ Here's an example of how it would be used in a basic HTML template:
 
 ```bash
 ./node_modules/.bin/flownote build-docker
-./node_modules/.bin/flownote start-docker
+
+./node_modules/.bin/flownote start-docker-stdin # to listen to stdin
+# or
+./node_modules/.bin/flownote start-docker-http # to listen to HTTP
 ```
 
 ## Within a Dockerfile

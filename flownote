@@ -1,6 +1,7 @@
 #/bin/bash
 
 APP_NAME=FlowNote
+NODE_ENV=production
 FLOWNOTE_SERVER_HOST=localhost
 FLOWNOTE_SERVER_PORT=8080
 FLOWNOTE_SERVER_LOGGING=2
@@ -76,37 +77,37 @@ case $1 in
     docker push $APP_NAME:latest
     ;;
   build-docker)
-    docker build -t $APP_NAME --rm=true .
+    docker build -t $DOCKER_TAG --build-arg NODE_ENV=$NODE_ENV .
     ;;
   start-docker-stdin)
-    docker run -d --name $APP_NAME --env-file .env $APP_NAME
-    socat EXEC:"docker attach $APP_NAME",pty STDIO
+    docker run -d --env-file .env $DOCKER_TAG
+    socat EXEC:"docker attach $DOCKER_TAG",pty STDIO
     ;;
   start-docker-http)
-    docker run -d --name $APP_NAME -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env $APP_NAME
+     docker run -d -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env $DOCKER_TAG
     ;;
   stop-docker)
-    docker stop $APP_NAME
+    docker stop $DOCKER_TAG
     ;;
   remove-docker)
-    docker rm $APP_NAME
+    docker rm $DOCKER_TAG
     ;;
   restart-docker)
-    docker restart $APP_NAME
+    docker restart $DOCKER_TAG
     ;;
   logs)
-    docker logs -f $APP_NAME
+    docker logs -f $DOCKER_TAG
     ;;
   cli-docker)
-    docker exec -it $APP_NAME bash
+    docker exec -it $DOCKER_TAG bash
     ;;
   clean-rebuild-docker)
-    docker build --no-cache=true --rm=true -t $APP_NAME .
+    docker build --no-cache=true --rm=true -t $DOCKER_TAG .
     ;;
   purge-docker)
-    docker stop $APP_NAME
-    docker rm $APP_NAME
-    docker rmi $APP_NAME
+    docker stop $DOCKER_TAG
+    docker rm $DOCKER_TAG
+    docker rmi $DOCKER_TAG
     ;;
   purge-docker-containers)
     docker stop $(docker ps -a -q)
