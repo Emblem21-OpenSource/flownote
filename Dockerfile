@@ -6,12 +6,14 @@ ARG NODE_ENV
 RUN apk update && apk add yarn
 
 # Setup the App folder
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir -p /usr/src/flownote
+RUN mkdir -p /usr/src/flownote/compiler
+RUN mkdir -p /usr/src/flownote/src
+WORKDIR /usr/src/flownote
 
 # Copy the dependencies
-COPY package.json /usr/src/app
-COPY yarn.lock /usr/src/app
+COPY package.json /usr/src/flownote
+COPY yarn.lock /usr/src/flownote
 
 # Install Node Modules
 RUN set -ex; \
@@ -22,12 +24,12 @@ RUN set -ex; \
   fi;
 
 # Copy over the minimally needed files
-COPY compiler /usr/src/app
-COPY compile /usr/src/app
-COPY src /usr/src/app
-COPY .env /usr/src/app
-COPY flownote /usr/src/app
+COPY compiler /usr/src/flownote/compiler
+COPY src /usr/src/flownote/src
+COPY .env /usr/src/flownote
+COPY compile /usr/src/flownote
+COPY index.js /usr/src/flownote
+COPY entrypoint.sh /usr/src/flownote
+COPY flownote /usr/src/flownote
 
-ENTRYPOINT [ "./flownote", "start-$FLOWNOTE_SERVER_TYPE", "--actions=$FLOWNOTE_ACTIONS_FILE_PATH", "--flow=$FLOWNOTE_APP_FILE_PATH" ]
-
-# https://nodejs.org/de/docs/guides/nodejs-docker-webapp/
+ENTRYPOINT [ "./entrypoint.sh" ]

@@ -85,11 +85,7 @@ case $1 in
     ;;
   start-docker-http)
     #docker run -d -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env -ti $DOCKER_TAG
-    echo $FLOWNOTE_SERVER_PORT 
-    echo $DOCKER_TAG
-    echo $FLOWNOTE_APP_FILE_PATH
-    echo $FLOWNOTE_ACTIONS_FILE_PATH
-    docker run -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env -ti --rm $DOCKER_TAG
+    docker run --rm -p 8090:$FLOWNOTE_SERVER_PORT/tcp -p 443:443/tcp -P --env-file .env --expose=$FLOWNOTE_SERVER_PORT -ti $DOCKER_TAG
     ;;
   stop-docker)
     docker stop $DOCKER_TAG

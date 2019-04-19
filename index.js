@@ -8,7 +8,7 @@ if (require.main === module) {
 
   const serverType = (process.env.FLOWNOTE_SERVER_TYPE || 'stdin').toLowerCase()
   const serverPort = parseInt(process.env.FLOWNOTE_SERVER_PORT) || 8080
-  const serverHost = process.env.FLOWNOTE_SERVER_HOST || 'localhost'
+  const serverHost = process.env.FLOWNOTE_SERVER_HOST || '0.0.0.0'
   const serverLogging = parseInt(process.env.FLOWNOTE_SERVER_LOGGING) || 2
   const serverSilent = parseInt(process.env.FLOWNOTE_SERVER_SILENT)
 

@@ -10,8 +10,10 @@ Before submitting a Pull Request, make sure the following commands pass:
 
 * `npm test`
 * `npm run browser-test` then go to `http://localhost:1000`
-* `npm run profiler`
 * `npm run browser-build`
+* `npm run profiler`
+* `./flownote start-http` then go to `http://localhost:8080/click?click[x]=10`
+* `./flownote start-docker-http` then go to `http://localhost/click?click[x]=10`
 
 ## Pull Requests
 
