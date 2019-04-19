@@ -17,7 +17,8 @@ Once requested, an Event will be passed to the first Node in the Flow. The Node 
 
 ## Examples
 
-Coming soon!
+* [Programmatic example](https://github.com/Emblem21-OpenSource/flownote/blob/8957b98d719b2b0339e38006708156d493f951ce/tests/flowExamples.js#L88) of connecting Nodes and Channels for a Flow.
+* [FlowNote example](https://github.com/Emblem21-OpenSource/flownote/blob/8957b98d719b2b0339e38006708156d493f951ce/tests/flowExamples.js#L419) of connecting Nodes and Channels to a Flow.
 
 ##### Documentation
 
