@@ -2,6 +2,7 @@
 
 * `waitsFor` does not work correctly.
 * `setImmediate` is very slow.
+* [Outstanding bugs](https://github.com/Emblem21-OpenSource/flownote/labels/bug)
 
 ##### Documentation
 

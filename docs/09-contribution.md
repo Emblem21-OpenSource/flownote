@@ -2,11 +2,11 @@
 
 ## Community
 
-[![Chat us up on Gitter](https://badges.gitter.im/flownote/community.svg)](https://gitter.im/flownote/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+Chat us up on Gitter! [![Chat us up on Gitter](https://badges.gitter.im/flownote/community.svg)](https://gitter.im/flownote/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Testing
 
-Make sure the following commands pass before submitting a PR:
+Before submitting a Pull Request, make sure the following commands pass:
 
 * `npm test`
 * `npm run browser-test` then go to `http://localhost:1000`
@@ -15,23 +15,23 @@ Make sure the following commands pass before submitting a PR:
 
 ## Pull Requests
 
-When you're ready to submit pull requests, make sure you create a new branch off of the most recent tag (`git checkout -b <nameOfYourBranch> <version>`), modify your code, run `npm version patch`, then push the commit.
+When you're ready to submit pull requests, make sure you create a new branch off of `master`.  We'll eventually have a `next` branch as the project increases in popularity.
 
 ## Porting
 
-For those interested in porting FlowNote to another language, here are the dependencies that are optional:
+It might be worthwhile to port FlowNote to Python, Go, or Rust.  If someone wants to take up that task, here's a list of optional dependencies FlowNote uses.
 
-* Node [v8.11.1](https://nodejs.org/en/blog/release/v8.11.1/): Host language
-* Colors [v1.2.0-rc0](https://github.com/Marak/colors.js/tree/v1.2.0-rc0): Cross-terminal coloring tool
-* ESM [v3.2.10](https://github.com/standard-things/esm/tree/3.2.10): Easy import/export support
-* Fast Safe Stringify [v2.0.6](https://github.com/davidmarkclements/fast-safe-stringify/tree/v2.0.6): Fast JSON representation (Event emissions)
-* ClinicJS [v4.0.0](https://github.com/nearform/node-clinic/tree/v4.0.0): Profiling tool
+* [Node v11.12.0](https://nodejs.org/en/blog/release/v11.12.0/): Host language
+* [Colors](https://github.com/Marak/colors.js): Cross-terminal coloring tool
+* [ESM](https://github.com/standard-things/esm): Easy import/export support
+* [Fast Safe Stringify](https://github.com/davidmarkclements/fast-safe-stringify): Fast JSON representation (Event emissions)
+* [ClinicJS](https://github.com/nearform/node-clinic): Profiling tool
 
-These dependencies are needed and will also have to be ported or be given similar alternatives:
+These dependencies will have to be ported as well.
 
-* Ohm [v0.14.0](https://github.com/harc/ohm/tree/v0.14.0): Parser, lexer, and compiler
-* Flatted [v2.0.0](https://github.com/WebReflection/flatted/tree/v2.0.0): Safely represents and restores circular JSON (Application snapshots)
-* HyperID [v1.4.1](https://github.com/mcollina/hyperid/tree/ad1ccf743358ed6d79fad9ffbbf470645f8da612): Fast GUID generation
+* [OhmJS](https://github.com/harc/ohm): Parser, lexer, and compiler
+* [Flatted](https://github.com/WebReflection/flatted): Safely represents and restores circular JSON (Application snapshots)
+* [HyperID](https://github.com/mcollina/hyperid): Fast GUID generation
 
 ##### Documentation
 

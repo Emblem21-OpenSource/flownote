@@ -24,6 +24,28 @@ If a Node or Milestone has multiple Actions, they will be executed in sequence. 
 
 Milestones will execute all `schedule`d Actions that have been accumulated.  Scheduled actions will be executed in the order they have been scheduled.  Once those Actions are completed, the Request will have no more Scheduled actions pending.  It is **HIGHLY** recommended to `schedule` Actions that are related to retrieving or committing information to persistent, remote, and/or non-idempotent services.  If you don't do this, you will experience difficult-to-reverse transactional situations during parallel processing or random order of exeuction during sequential processing. Like Nodes, Milestones also connect to one or more Channels.
 
+## FlowNote
+
+This example defines Nodes and the Actions they will execute.
+
+```java
+Node someNode = action1
+Node anotherNode = action2, action3
+Node lastNode = action4, action5, action6
+```
+
+This defines a Flow as a single Node.
+
+```java
+Flow example(GET /example) = someNode
+```
+
+This defines a Flow as a single Node which leads to a Milestone (*) that executes any accumulated Scheduled Actions.
+
+```java
+Flow example(GET /example) = someNode*
+```
+
 ## Examples
 
 * [This action](https://github.com/Emblem21-OpenSource/flownote/blob/8957b98d719b2b0339e38006708156d493f951ce/tests/flowExamples.js#L24) doubles the value of *x*.

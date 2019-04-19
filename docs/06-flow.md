@@ -15,6 +15,20 @@ Once requested, an Event will be passed to the first Node in the Flow. The Node 
 * `showTrace` will show all transitions between Nodes, Milestones, and Channels the Request made when `request.asResult` is called.
 * `showChanges` will show all changes made to the Request when `request.asResult` is called.
 
+## FlowNote
+
+This defines a Flow that listens for `GET` requests to the `/example` path.  The Flow will execute a single Node.
+
+```java
+Flow example(GET /example) = someNode
+```
+
+This defines a Flow that listens for `GET` requests to the `/example` path.  The Flow will execute a single Node and it will return the state, the trace, and all changes that happened to the state.
+
+```java
+Flow example(GET /example) { showState: true, showTrace: true, showChanges: true } = someNode
+```
+
 ## Examples
 
 * [Programmatic example](https://github.com/Emblem21-OpenSource/flownote/blob/8957b98d719b2b0339e38006708156d493f951ce/tests/flowExamples.js#L88) of connecting Nodes and Channels for a Flow.
