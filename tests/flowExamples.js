@@ -147,7 +147,7 @@ test('Basic math flow showing result state, changes, and trace', async t => {
   t.is(result.changes[4].value, 7)
   t.is(result.changes[5].key, 'y')
   t.is(result.changes[5].value, -3)
-  t.is(result.trace.length, 6)
+  t.is(result.trace.length, 7)
 })
 
 test('Basic math flow with unreachable error', async t => {
