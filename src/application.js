@@ -617,11 +617,8 @@ class Application extends CommonClass {
       throw new RangeError(`${method} ${path} is not a valid endpoint.`)
     }
 
-    console.log(params)
-
     if (typeof params === 'string') {
       params = querystring.parse(params)
-      console.log('>>', params)
     } else if (!(params instanceof Object)) {
       throw new TypeError(`Unknown flow request of type ${typeof params}`)
     }

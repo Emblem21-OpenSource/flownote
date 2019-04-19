@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 APP_NAME=FlowNote
 NODE_ENV=production
@@ -8,7 +8,7 @@ FLOWNOTE_SERVER_LOGGING=2
 FLOWNOTE_APP_FILE_PATH=""
 FLOWNOTE_ACTIONS_FILE_PATH=""
 
-source .env
+. ./.env
 
 for ARGUMENT in "$@"
 do
@@ -85,6 +85,10 @@ case $1 in
     ;;
   start-docker-http)
     #docker run -d -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env -ti $DOCKER_TAG
+    echo $FLOWNOTE_SERVER_PORT 
+    echo $DOCKER_TAG
+    echo $FLOWNOTE_APP_FILE_PATH
+    echo $FLOWNOTE_ACTIONS_FILE_PATH
     docker run -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env -ti --rm $DOCKER_TAG
     ;;
   stop-docker)

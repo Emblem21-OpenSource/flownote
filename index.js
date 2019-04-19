@@ -1,4 +1,5 @@
-require = require('esm')(module)
+const esm = require('esm')
+require = esm(module)
 
 const FlowNote = require('./src/index')
 
