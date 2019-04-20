@@ -32,8 +32,6 @@ If you'd like to install FlowNote as a standalone server for Docker, do the foll
 ./node_modules/.bin/flownote flownote-docker
 ```
 
-## Basic Setup
-
 ## Use Cases
 
 You're ready to begin!  Check out the common [use cases of FlowNote](03-use-cases.md) to learn how to get started.
