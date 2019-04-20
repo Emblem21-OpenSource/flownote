@@ -6,29 +6,29 @@ Before we begin, you should get familiar with [how a FlowNote application is str
 
 Here are a variety of common use cases for FlowNote.
 
-## As an External Application
+## As an Standalone Application
 
 If you wish for FlowNote to be a standalone server, here are four ways you can do it:
 
-### Run a Standalone Process that listens to stdin requests
+### Run a stdin server
 
 ```bash
 ./node_modules/.bin/flownote standalone-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
 ```
 
-### Run Standalone Process that listens to HTTP requests
+### Run a HTTP server
 
 ```bash
 ./node_modules/.bin/flownote standalone-http --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
 ```
 
-### Run a Standalone Docker Process that listens to stdin requests
+### Run a stdin server via Docker
 
 ```bash
 ./node_modules/.bin/flownote start-docker-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
 ```
 
-### Run Standalone Docker Process that listens to HTTP requests
+### Run a HTTP server via Docker
 
 ```bash
 ./node_modules/.bin/flownote start-docker-http --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
@@ -46,11 +46,13 @@ Coming soon!
 
 If you want to bring FlowNote as an module into your project, here are a variety of ways to do it:
 
-### Single-request Application using FlowNote code and ECMAScript to toy with FlowNote
+### Run FlowNote to execute a single request
 
 Here's an example of how it to make a temporary app for a single request in NodeJS project:
 
 ```javascript
+const esm = require('esm')
+require = esm(module)
 const FlowNote = require('flownote')
 
 // Define the Application
@@ -83,7 +85,7 @@ async function start () {
 console.log(start())
 ```
 
-### Single-request Application using FlowNote code and EJS to toy with FlowNote
+### Run FlowNote (with EJS) to execute a single request
 
 For EJS with `import/export` support, use the following:
 
@@ -129,6 +131,8 @@ console.log(start())
 You can run a FlowNote app from a file:
 
 ```javascript
+const esm = require('esm')
+require = esm(module)
 const FlowNote = require('flownote')
 
 // Define the Application
@@ -157,7 +161,7 @@ start()
 
 This will create an app that responds to stdin reqeusts.
 
-### Running a stdin Application from a FlowNote file (Condensed)
+### Running a stdin Application (with EJS) from a FlowNote file
 
 ```javascript
 import { Application } from 'flownote'
@@ -187,6 +191,8 @@ This will create an app that responds to stdin reqeusts.
 You can run a FlowNote app from a file:
 
 ```javascript
+const esm = require('esm')
+require = esm(module)
 const FlowNote = require('flownote')
 const http = require('http')
 
@@ -217,7 +223,7 @@ start()
 
 This will create an app that responds to HTTP requests on `http://localhost:3000`.
 
-### Running a HTTP Application from a FlowNote file (Condensed)
+### Running a HTTP Application (with EJS) from a FlowNote file
 
 ```javascript
 import { Application } from 'flownote'
