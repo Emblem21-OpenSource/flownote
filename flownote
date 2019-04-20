@@ -40,8 +40,6 @@ case $1 in
     ;;
   standalone-http)
     cd "$NODE_MODULE_PATH"
-    echo "$NODE_MODULE_PATH"
-    pwd
     FLOWNOTE_SERVER_TYPE=http \
     FLOWNOTE_SERVER_HOST=$FLOWNOTE_SERVER_HOST \
     FLOWNOTE_SERVER_PORT=$FLOWNOTE_SERVER_PORT \
