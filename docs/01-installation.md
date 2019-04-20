@@ -13,7 +13,13 @@ yarn add flownote@next --production
 After that, copy the default `.env` file to your directory with:
 
 ```bash
-cp ./node_modules/flownote/.env .env
+cp node_modules/flownote/.env .env
+```
+
+If you already have a `.env` file, do the following:
+
+```bash
+cat node_modules/flownote/.env >> .env
 ```
 
 Then open the `.env` and change the variables according to the documentation within.
@@ -26,9 +32,13 @@ If you'd like to install FlowNote as a standalone server for Docker, do the foll
 ./node_modules/.bin/flownote flownote-docker
 ```
 
+## Basic Setup
+
 ## Use Cases
 
-You're ready to begin!  Check out the common [use cases of FlowNote](03-use-cases.md) to learn how to get started.
+You're ready to begin!  Now that you have FlowNote installed, you should [create Actions](../compiler/testActions.js) and some [FlowNote code](../copmiler/test.flow).
+
+Once you've done that, check out the common [use cases of FlowNote](03-use-cases.md) to learn how to get started.
 
 ##### Documentation
 
