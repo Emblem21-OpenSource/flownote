@@ -36,7 +36,7 @@ case $1 in
     FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-0} \
     FLOWNOTE_APP_FILE_PATH="../../$FLOWNOTE_APP_FILE_PATH" \
     FLOWNOTE_ACTIONS_FILE_PATH="../../$FLOWNOTE_ACTIONS_FILE_PATH" \
-    node index.js
+    node server.js
     ;;
   standalone-http)
     cd "$NODE_MODULE_PATH"
@@ -47,7 +47,7 @@ case $1 in
     FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-1} \
     FLOWNOTE_APP_FILE_PATH="../../$FLOWNOTE_APP_FILE_PATH" \
     FLOWNOTE_ACTIONS_FILE_PATH="../../$FLOWNOTE_ACTIONS_FILE_PATH" \
-    node index.js
+    node server.js
     ;;
   start-stdin)
     FLOWNOTE_SERVER_TYPE=stdin \
@@ -55,7 +55,7 @@ case $1 in
     FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-0} \
     FLOWNOTE_APP_FILE_PATH="$FLOWNOTE_APP_FILE_PATH" \
     FLOWNOTE_ACTIONS_FILE_PATH="$FLOWNOTE_ACTIONS_FILE_PATH" \
-    node index.js
+    node server.js
     ;;
   start-http)
     FLOWNOTE_SERVER_TYPE=http \
@@ -65,7 +65,7 @@ case $1 in
     FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-1} \
     FLOWNOTE_APP_FILE_PATH="$FLOWNOTE_APP_FILE_PATH" \
     FLOWNOTE_ACTIONS_FILE_PATH="$FLOWNOTE_ACTIONS_FILE_PATH" \
-    node index.js
+    node server.js
     ;;
   test)
     npm test
