@@ -28,7 +28,7 @@ COPY compiler /usr/src/flownote/compiler
 COPY src /usr/src/flownote/src
 COPY .env /usr/src/flownote
 COPY compile /usr/src/flownote
-COPY index.js /usr/src/flownote
+COPY server.js /usr/src/flownote
 COPY entrypoint.sh /usr/src/flownote
 COPY flownote /usr/src/flownote
 
