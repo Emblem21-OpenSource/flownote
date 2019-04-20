@@ -30,6 +30,8 @@ If you wish for FlowNote to be a standalone server, here are four ways you can d
 ./node_modules/.bin/flownote start-docker-http --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
 ```
 
+You'll want to [see how the Language works](04-Language.md) to understand how to write FlowNote code.
+
 ### Within a Dockerfile
 
 Coming soon!
