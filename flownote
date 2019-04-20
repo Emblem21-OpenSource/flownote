@@ -67,6 +67,24 @@ case $1 in
     FLOWNOTE_ACTIONS_FILE_PATH="$FLOWNOTE_ACTIONS_FILE_PATH" \
     node server.js
     ;;
+  watch-stdin)
+    FLOWNOTE_SERVER_TYPE=stdin \
+    FLOWNOTE_SERVER_LOGGING=$FLOWNOTE_SERVER_LOGGING \
+    FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-0} \
+    FLOWNOTE_APP_FILE_PATH="$FLOWNOTE_APP_FILE_PATH" \
+    FLOWNOTE_ACTIONS_FILE_PATH="$FLOWNOTE_ACTIONS_FILE_PATH" \
+    ./node_modules/.bin/nodemon server.js
+    ;;
+  watch-http)
+    FLOWNOTE_SERVER_TYPE=http \
+    FLOWNOTE_SERVER_HOST=$FLOWNOTE_SERVER_HOST \
+    FLOWNOTE_SERVER_PORT=$FLOWNOTE_SERVER_PORT \
+    FLOWNOTE_SERVER_LOGGING=$FLOWNOTE_SERVER_LOGGING \
+    FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-1} \
+    FLOWNOTE_APP_FILE_PATH="$FLOWNOTE_APP_FILE_PATH" \
+    FLOWNOTE_ACTIONS_FILE_PATH="$FLOWNOTE_ACTIONS_FILE_PATH" \
+    ./node_modules/.bin/nodemon server.js
+    ;;
   test)
     npm test
     ;;
@@ -156,10 +174,12 @@ case $1 in
     printf "  \e[38;5;123m--silent, -s              \e[38;5;178mSupresses $APP_NAME event emission.\n"
     printf "\n"
     printf "\e[38;5;201mDevelopment Operations \e[38;5;47m(\e[38;5;251mRequires a NodeJS environment\e[38;5;47m)\n"
-    printf "  \e[38;5;123mstandalone-stdin          \e[38;5;178mStarts a $APP_NAME app as an external application for stdin events. (Silent is off by default)\n"
-    printf "  \e[38;5;123mstandalone-http           \e[38;5;178mStarts a $APP_NAME app as an external application for HTTP events. (Silent is on by default)\n"
-    printf "  \e[38;5;123mstart-stdin               \e[38;5;178mStarts a $APP_NAME app that responds to stdin events. (Silent is off by default)\n"
-    printf "  \e[38;5;123mstart-http                \e[38;5;178mStarts a $APP_NAME app that responds to HTTP events. (Silent is on by default)\n"
+    printf "  \e[38;5;123mstandalone-stdin          \e[38;5;178mStarts a $APP_NAME app as an external application for stdin requests. (Silent is off by default)\n"
+    printf "  \e[38;5;123mstandalone-http           \e[38;5;178mStarts a $APP_NAME app as an external application for HTTP requests. (Silent is on by default)\n"
+    printf "  \e[38;5;123mstart-stdin               \e[38;5;178mStarts a $APP_NAME app that responds to stdin requests. (Silent is off by default)\n"
+    printf "  \e[38;5;123mstart-http                \e[38;5;178mStarts a $APP_NAME app that responds to HTTP requests. (Silent is on by default)\n"
+    printf "  \e[38;5;123mwatch-stdin               \e[38;5;178mStarts a $APP_NAME app that responds to stdin requests and restarts when source code changes. (Silent is off by default)\n"
+    printf "  \e[38;5;123mwatch-http                \e[38;5;178mStarts a $APP_NAME app that responds to HTTP requests and restarts when source code changes. \n"
     printf "  \e[38;5;123mcompile                   \e[38;5;178mCompiles a $APP_NAME file into a JSON application.\n"
     printf "  \e[38;5;123mtest                      \e[38;5;178mRuns the test suite.\n"
     printf "  \e[38;5;123mtest-watch                \e[38;5;178mRuns the test suite every time code changes.\n"
