@@ -59,7 +59,7 @@ const { Action } = require('flownote')
 Then run:
 
 ```bash
-./node_modules/.bin/flownote standalone-http --flow=app.flow --actions=actions.js
+./node_modules/.bin/flownote start-http --standalone --flow=app.flow --actions=actions.js
 ```
 
 ## Use Cases

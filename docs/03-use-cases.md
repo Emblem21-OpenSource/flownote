@@ -10,16 +10,28 @@ Here are a variety of common use cases for FlowNote.
 
 If you wish for FlowNote to be a standalone server, here are four ways you can do it:
 
-### Run a stdin server
+### Run a stdin server from your project
 
 ```bash
-./node_modules/.bin/flownote standalone-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+./node_modules/.bin/flownote start-stdin --standalone --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
 ```
 
-### Run a HTTP server
+### Run a HTTP server from your project
 
 ```bash
-./node_modules/.bin/flownote standalone-http --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+./node_modules/.bin/flownote start-http --standalone --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+```
+
+### Run a watch-restarting stdin server from your project
+
+```bash
+./node_modules/.bin/flownote start-stdin --standalone --watch --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+```
+
+### Run a watch-restarting HTTP server from your project
+
+```bash
+./node_modules/.bin/flownote start-http --standalone --watch --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
 ```
 
 ### Run a stdin server via Docker
