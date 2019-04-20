@@ -10,6 +10,8 @@ FLOWNOTE_ACTIONS_FILE_PATH=""
 
 . ./.env
 
+NODE_MODULE_PATH="$(dirname $(realpath -s $0))/../flownote"
+
 for ARGUMENT in "$@"
 do
   KEY=$(echo $ARGUMENT | cut -f1 -d=)
@@ -27,6 +29,26 @@ do
 done
 
 case $1 in
+  standalone-stdin)
+    cd $NODE_MODULE_PATH
+    FLOWNOTE_SERVER_TYPE=stdin \
+    FLOWNOTE_SERVER_LOGGING=$FLOWNOTE_SERVER_LOGGING \
+    FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-0} \
+    FLOWNOTE_APP_FILE_PATH=../../$FLOWNOTE_APP_FILE_PATH \
+    FLOWNOTE_ACTIONS_FILE_PATH=../../$FLOWNOTE_ACTIONS_FILE_PATH \
+    node index.js
+    ;;
+  standalone-http)
+    cd $NODE_MODULE_PATH
+    FLOWNOTE_SERVER_TYPE=http \
+    FLOWNOTE_SERVER_HOST=$FLOWNOTE_SERVER_HOST \
+    FLOWNOTE_SERVER_PORT=$FLOWNOTE_SERVER_PORT \
+    FLOWNOTE_SERVER_LOGGING=$FLOWNOTE_SERVER_LOGGING \
+    FLOWNOTE_SERVER_SILENT=${FLOWNOTE_SERVER_SILENT:-1} \
+    FLOWNOTE_APP_FILE_PATH=../../$FLOWNOTE_APP_FILE_PATH \
+    FLOWNOTE_ACTIONS_FILE_PATH=../../$FLOWNOTE_ACTIONS_FILE_PATH \
+    node index.js
+    ;;
   start-stdin)
     FLOWNOTE_SERVER_TYPE=stdin \
     FLOWNOTE_SERVER_LOGGING=$FLOWNOTE_SERVER_LOGGING \
@@ -76,38 +98,41 @@ case $1 in
     docker tag $APP_NAME:latest $APP_NAME:latest
     docker push $APP_NAME:latest
     ;;
+  flownote-docker)
+    cd $NODE_MODULE_PATH
+    docker build -t $DOCKER_TAG --build-arg NODE_ENV=$NODE_ENV -f Dockerfile .
+    ;;
   build-docker)
     docker build -t $DOCKER_TAG --build-arg NODE_ENV=$NODE_ENV .
     ;;
   start-docker-stdin)
-    docker run -d --env-file .env $DOCKER_TAG
+    docker run -d --name=$DOCKER_PROCESS_NAME --env-file .env $DOCKER_TAG
     socat EXEC:"docker attach $DOCKER_TAG",pty STDIO
     ;;
   start-docker-http)
-    #docker run -d -p 80:$FLOWNOTE_SERVER_PORT -p 443:443 --env-file .env -ti $DOCKER_TAG
-    docker run --rm -p 8090:$FLOWNOTE_SERVER_PORT/tcp -p 443:443/tcp -P --env-file .env --expose=$FLOWNOTE_SERVER_PORT -ti $DOCKER_TAG
+    docker run -d --name=$DOCKER_PROCESS_NAME -p 80:$FLOWNOTE_SERVER_PORT/tcp -p 443:443/tcp -P --env-file .env --expose=$FLOWNOTE_SERVER_PORT -ti $DOCKER_TAG
     ;;
   stop-docker)
-    docker stop $DOCKER_TAG
+    docker stop $DOCKER_PROCESS_NAME
     ;;
   remove-docker)
-    docker rm $DOCKER_TAG
+    docker rm $DOCKER_PROCESS_NAME
     ;;
   restart-docker)
-    docker restart $DOCKER_TAG
+    docker restart $DOCKER_PROCESS_NAME
     ;;
   logs)
-    docker logs -f $DOCKER_TAG
+    docker logs -f $DOCKER_PROCESS_NAME
     ;;
   cli-docker)
-    docker exec -it $DOCKER_TAG bash
+    docker run -it --entrypoint /bin/sh $DOCKER_TAG
     ;;
   clean-rebuild-docker)
-    docker build --no-cache=true --rm=true -t $DOCKER_TAG .
+    docker build --build-arg NODE_ENV=$NODE_ENV --no-cache=true --rm=true -t $DOCKER_TAG .
     ;;
   purge-docker)
-    docker stop $DOCKER_TAG
-    docker rm $DOCKER_TAG
+    docker stop $DOCKER_PROCESS_NAME
+    docker rm $DOCKER_PROCESS_NAME
     docker rmi $DOCKER_TAG
     ;;
   purge-docker-containers)
@@ -131,6 +156,8 @@ case $1 in
     printf "  \e[38;5;123m--silent, -s              \e[38;5;178mSupresses $APP_NAME event emission.\n"
     printf "\n"
     printf "\e[38;5;201mDevelopment Operations \e[38;5;47m(\e[38;5;251mRequires a NodeJS environment\e[38;5;47m)\n"
+    printf "  \e[38;5;123mstandalone-stdin          \e[38;5;178mStarts a $APP_NAME app as an external application for stdin events. (Silent is off by default)\n"
+    printf "  \e[38;5;123mstandalone-http           \e[38;5;178mStarts a $APP_NAME app as an external application for HTTP events. (Silent is on by default)\n"
     printf "  \e[38;5;123mstart-stdin               \e[38;5;178mStarts a $APP_NAME app that responds to stdin events. (Silent is off by default)\n"
     printf "  \e[38;5;123mstart-http                \e[38;5;178mStarts a $APP_NAME app that responds to HTTP events. (Silent is on by default)\n"
     printf "  \e[38;5;123mcompile                   \e[38;5;178mCompiles a $APP_NAME file into a JSON application.\n"
@@ -145,7 +172,8 @@ case $1 in
     printf "  \e[38;5;123mupdate-dockerhub          \e[38;5;178mPushes Dockerfile changes up to $APP_NAME's DockerHub.\n"
     printf "\n"
     printf "\e[38;5;201mDocker Operations \e[38;5;47m(\e[38;5;251mRequires Docker. Please see the documentation for configuration options.\e[38;5;47m)\n"
-    printf "  \e[38;5;123mbuild-docker              \e[38;5;178mBuilds a production-ready $APP_NAME Docker image.\n"
+    printf "  \e[38;5;123mflownote-docker           \e[38;5;178mBuilds a standalone $APP_NAME Docker image for separate projects.\n"
+    printf "  \e[38;5;123mbuild-docker              \e[38;5;178mBuilds a $APP_NAME Docker image.\n"
     printf "  \e[38;5;123mstart-docker-stdin        \e[38;5;178mStarts the $APP_NAME Docker process accepting stdin requests.\n"
     printf "  \e[38;5;123mstart-docker-http         \e[38;5;178mStarts the $APP_NAME Docker process accepting HTTP requests.\n"
     printf "  \e[38;5;123mstop-docker               \e[38;5;178mStops the $APP_NAME Docker process.\n"

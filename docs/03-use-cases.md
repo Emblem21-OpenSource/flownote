@@ -2,25 +2,41 @@
 
 Here are a variety of common use cases for FlowNote.
 
-## See all runtime options
+## As an External Application
 
-`./node_modules/.bin/flownote`
+### Run a Standalone Process that listens to stdin requests
 
-## Run a FlowNote Server that listens to stdin requests
+```bash
+./node_modules/.bin/flownote standalone-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+```
 
-`./node_modules/.bin/flownote start-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>`
+### Run Standalone Process that listens to HTTP requests
 
-## Run a FlowNote Server that listens to HTTP requests
+```bash
+./node_modules/.bin/flownote standalone-http --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+```
 
-`./node_modules/.bin/flownote start-http --host=<hostname> --port=<port> --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>`
+### Run a Standalone Docker Process that listens to stdin requests
 
-## Output the Application JSON of compiled FlowNote code.
+```bash
+./node_modules/.bin/flownote start-docker-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+```
 
-`./node_modules/.bin/flownote compile <pathToApp.flow>`
+### Run Standalone Docker Process that listens to HTTP requests
 
-## Stream FlowNote code into the compiler
+```bash
+./node_modules/.bin/flownote start-docker-http --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+```
 
-`cat <pathToApp.flow > ./compile`
+### Within a Dockerfile
+
+Coming soon!
+
+### From DockerHub
+
+`docker pull emblem21/flownote` (Coming soon!)
+
+## As a Module
 
 ### Single-request Application using FlowNote code and ECMAScript to toy with FlowNote
 
@@ -220,7 +236,7 @@ Application.compile('Name of your app', 'path/to/app.flow', {
 
 This will create an app that responds to HTTP requests on `http://localhost:3000`.
 
-## Into a Basic Browser Project
+### Into a Basic Browser Project
 
 Add this tag to your HTML <head>:
 
@@ -274,23 +290,27 @@ Here's an example of how it would be used in a basic HTML template:
 <html>
 ```
 
-## Run a FlowNote file as a Standalone Docker Process
+## For FlowNote interal development
 
-```bash
-./node_modules/.bin/flownote build-docker
+### See all runtime options
 
-./node_modules/.bin/flownote start-docker-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js> # to listen to stdin
-# or
-./node_modules/.bin/flownote start-docker-http --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js> # to listen to HTTP
-```
+`./node_modules/.bin/flownote`
 
-## Within a Dockerfile
+### Run a FlowNote Server that listens to stdin requests
 
-Coming soon!
+`./node_modules/.bin/flownote start-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>`
 
-## From DockerHub
+### Run a FlowNote Server that listens to HTTP requests
 
-`docker pull emblem21/flownote` (Coming soon!)
+`./node_modules/.bin/flownote start-http --host=<hostname> --port=<port> --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>`
+
+### Output the Application JSON of compiled FlowNote code.
+
+`./node_modules/.bin/flownote compile <pathToApp.flow>`
+
+### Stream FlowNote code into the compiler
+
+`cat <pathToApp.flow > ./compile`
 
 ##### Documentation
 

@@ -1,7 +1,5 @@
 # Installation
 
-## NodeJS and Babel/Webpack/CommonJS JavaScript Projects
-
 FlowNote can be added to any NodeJS project with NPM or Yarn:
 
 ```bash
@@ -14,17 +12,21 @@ yarn add flownote --production
 
 ## Docker
 
-Create your `.env` file in the following manner:
+Once FlowNote is installed, create your `.env` file in the following manner:
 
 ```bash
 cp ./node_modules/flownote/.env .env
 ```
 
-Then open the .`env` and change the variables according to the documentation within.  Finally, build the docker image:
+Then open the `.env` and change the variables according to the documentation within.  Finally, build the docker image with:
 
 ```bash
-./node_modules/.bin/flownote build-docker
+./node_modules/.bin/flownote flownote-docker
 ```
+
+## Use Cases
+
+Once you've prepared everything, find the right [Use Case](03-use-cases.md) to use FlowNote.
 
 ##### Documentation
 
