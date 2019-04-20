@@ -9,7 +9,7 @@ const stores = new Map()
 exports.set = function set (storeName, key, value) {
   const data = stores.get(storeName) || {}
   data[key] = value
-  stores.set(this, data)
+  stores.set(storeName, data)
 }
 
 /**
@@ -19,5 +19,5 @@ exports.set = function set (storeName, key, value) {
  * @return {[type]}           [description]
  */
 exports.get = function get (storeName, key) {
-  return stores.get(storeName) || {}
+  return (stores.get(storeName) || {})[key]
 }

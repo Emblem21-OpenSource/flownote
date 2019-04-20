@@ -29,9 +29,8 @@
     "eoa"
   ],
   "scripts": {
-    "test": "ava",
+    "test": "nyc ava",
     "test-watch": "ava --watch",
-    "test-coverage": "nyc ava",
     "profiler": "./node_modules/.bin/clinic doctor --autocannon / --method GET -- node profiler.js",
     "profiler-explorer": "./node_modules/.bin/clinic bubbleprof --autocannon / --method GET -- node profiler.js",
     "browser-build": "./node_modules/.bin/webpack --mode production --colors",
@@ -51,6 +50,24 @@
   "engines": {
     "node": ">=11.12.0"
   },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/**/*.js",
+      "compiler/**/*.js"
+    ],
+    "exclude": [
+      "tests/**/*.js"
+    ]
+  },
+  "esm": {
+    "cjs": true
+  },
+  "ava": {
+    "require": [
+      "esm"
+    ]
+  },
   "dependencies": {
     "colors": "^1.2.0-rc0",
     "esm": "^3.2.10",
@@ -66,9 +83,9 @@
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-modules-commonjs": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
+    "@babel/register": "^7.4.0",
     "autoprefixer": "^9.5.0",
     "ava": "^1.0.0-rc.1",
-    "babel-core": "^6.26.3",
     "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
     "clean-webpack-plugin": "^2.0.1",

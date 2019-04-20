@@ -2,7 +2,6 @@ import Node from './node'
 import Spider from './spider'
 
 const CommonClass = require('./utils/commonClass')
-const Request = require('./request')
 const Log = require('./utils/log')
 
 const noop = () => {}
