@@ -3,11 +3,11 @@
 FlowNote can be added to any NodeJS project with NPM or Yarn:
 
 ```bash
-npm install flownote@next --production --save
+npm install esm flownote@next --production --save
 ```
 
 ```bash
-yarn add flownote@next --production
+yarn add esm flownote@next --production
 ```
 
 After that, copy the default `.env` file to your directory with:
@@ -30,6 +30,36 @@ If you'd like to install FlowNote as a standalone server for Docker, do the foll
 
 ```bash
 ./node_modules/.bin/flownote flownote-docker
+```
+
+## Quick Start
+
+```bash
+mkdir ~/someFlowNoteProject
+cd ~/someFlowNoteProject
+npm init
+npm install esm flownote@next --production --save
+cp node_modules/flownote/.env .env
+
+# Change this file to make the actions you want
+cp node_modules/flownote/compiler/testActions.js actions.js
+
+# Change this file for the FlowNote code you want
+cp node_modules/flownote/compiler/test.flow app.flow
+```
+
+From here, replace the first line in the `actions.js` file with:
+
+```javascript
+const esm = require('esm')
+require = esm(module)
+const { Action } = require('flownote')
+```
+
+Then run:
+
+```bash
+./node_modules/.bin/flownote standalone-http --flow=app.flow --actions=actions.js
 ```
 
 ## Use Cases
