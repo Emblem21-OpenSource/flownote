@@ -4,6 +4,8 @@ Here are a variety of common use cases for FlowNote.
 
 ## As an External Application
 
+If you wish for FlowNote to be a standalone server, here are four ways you can do it:
+
 ### Run a Standalone Process that listens to stdin requests
 
 ```bash
@@ -37,6 +39,8 @@ Coming soon!
 `docker pull emblem21/flownote` (Coming soon!)
 
 ## As a Module
+
+If you want to bring FlowNote as an module into your project, here are a variety of ways to do it:
 
 ### Single-request Application using FlowNote code and ECMAScript to toy with FlowNote
 
@@ -174,7 +178,7 @@ Application.compile('Name of your app', 'path/to/app.flow', {
 
 This will create an app that responds to stdin reqeusts.
 
-## Running a HTTP Application from a FlowNote file
+### Running a HTTP Application from a FlowNote file
 
 You can run a FlowNote app from a file:
 
@@ -292,6 +296,8 @@ Here's an example of how it would be used in a basic HTML template:
 
 ## For FlowNote interal development
 
+IF you are doing work on FlowNote's internals, here's some handy commands you can use to confirm your work:
+
 ### See all runtime options
 
 `./node_modules/.bin/flownote`
@@ -311,6 +317,14 @@ Here's an example of how it would be used in a basic HTML template:
 ### Stream FlowNote code into the compiler
 
 `cat <pathToApp.flow > ./compile`
+
+### Run tests to make sure you haven't broken anything
+
+`./flownote test`
+
+### Run tests every time you change a file
+
+`./flownote test-watch`
 
 ##### Documentation
 

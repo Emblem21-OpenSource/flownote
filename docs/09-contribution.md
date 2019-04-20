@@ -17,7 +17,7 @@ Before submitting a Pull Request, make sure the following commands pass:
 
 ## Pull Requests
 
-When you're ready to submit pull requests, make sure you create a new branch off of `master`.  We'll eventually have a `next` branch as the project increases in popularity.
+When you're ready to submit pull requests, make sure you create a new branch off of `master`.  (The `master` branch is always `next` on NPM)
 
 ## Porting
 
