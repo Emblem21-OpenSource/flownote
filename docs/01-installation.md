@@ -36,9 +36,7 @@ If you'd like to install FlowNote as a standalone server for Docker, do the foll
 
 ## Use Cases
 
-You're ready to begin!  Now that you have FlowNote installed, you should [create Actions](../compiler/testActions.js) and some [FlowNote code](../copmiler/test.flow).
-
-Once you've done that, check out the common [use cases of FlowNote](03-use-cases.md) to learn how to get started.
+You're ready to begin!  Check out the common [use cases of FlowNote](03-use-cases.md) to learn how to get started.
 
 ##### Documentation
 

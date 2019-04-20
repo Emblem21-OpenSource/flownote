@@ -1,5 +1,9 @@
 # Use Cases
 
+FlowNote can be used as a standalone application, a Docker process, as a module for the server or browser, or as a command-line tool.
+
+Before we begin, you should get familiar with [how a FlowNote application is structured](05-application.md), [make a few Actions](07-nodes.md#Actiosn), and [write some FlowNote code](04-language.md).
+
 Here are a variety of common use cases for FlowNote.
 
 ## As an External Application

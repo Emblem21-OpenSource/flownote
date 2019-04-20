@@ -53,6 +53,7 @@ Flow example(GET /example) = someNode*
 * [This action](https://github.com/Emblem21-OpenSource/flownote/blob/8957b98d719b2b0339e38006708156d493f951ce/tests/flowExamples.js#L24) doubles the value of *x*.
 * [This action](https://github.com/Emblem21-OpenSource/flownote/blob/8957b98d719b2b0339e38006708156d493f951ce/tests/flowExamples.js#L51) will wait 1000 milliseconds before multiplying *y* by 10.
 * [This action](https://github.com/Emblem21-OpenSource/flownote/blob/8957b98d719b2b0339e38006708156d493f951ce/tests/flowExamples.js#L33) will set *y* equal to *x* minus from *y*.
+* [Here's an array of Actions](https://github.com/Emblem21-OpenSource/flownote/blob/master/compiler/testActions.js), ready to be the `--actions` parametere for standalone usage.
 
 ##### Documentation
 
