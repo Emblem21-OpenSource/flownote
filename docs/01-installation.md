@@ -20,7 +20,7 @@ Then open the `.env` and change the variables according to the documentation wit
 
 ## Docker
 
-Once that's done, you can do this to start building FlowNote apps for Docker:
+If you'd like to install FlowNote as a standalone server for Docker, do the following:
 
 ```bash
 ./node_modules/.bin/flownote flownote-docker
@@ -28,7 +28,7 @@ Once that's done, you can do this to start building FlowNote apps for Docker:
 
 ## Use Cases
 
-You're read to being.  Review common [Use Cases](03-use-cases.md) to specify how you intend to use FlowNote.
+You're ready to begin!  Check out the common [use cases of FlowNote](03-use-cases.md) to learn how to get started.
 
 ##### Documentation
 
