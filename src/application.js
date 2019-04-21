@@ -11,6 +11,7 @@ const Request = require('./request')
 const CommonClass = require('./utils/commonClass')
 const Log = require('./utils/log')
 const stringify = require('fast-safe-stringify')
+const NotFoundError = require('./errors/notFoundError')
 
 const idGenerator = IdGenerator()
 
@@ -92,7 +93,7 @@ class Application extends CommonClass {
           error: e.message
         }
 
-        if (e instanceof RangeError) { // @TODO I'll probably need a custom error for this
+        if (e instanceof NotFoundError) { // @TODO I'll probably need a custom error for this
           res.writeHead(404, { 'Content-Type': 'text/plain' })
         } else {
           res.writeHead(500, { 'Content-Type': 'text/plain' })
@@ -614,7 +615,7 @@ class Application extends CommonClass {
     const flow = this.getFlowByHttp(method, path)
 
     if (!flow) {
-      throw new RangeError(`${method} ${path} is not a valid endpoint.`)
+      throw new NotFoundError(`${method} ${path} is not a valid endpoint.`)
     }
 
     if (typeof params === 'string') {

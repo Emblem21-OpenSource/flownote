@@ -57,7 +57,10 @@
       "compiler/**/*.js"
     ],
     "exclude": [
-      "tests/**/*.js"
+      "tests/**/*.js",
+      "src/delegate.js",
+      "src/streamManager.js",
+      "src/utils/profiler.js"
     ]
   },
   "esm": {
