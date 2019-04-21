@@ -9,8 +9,8 @@ import Action from '../src/action'
 const test = require('ava')
 const CyclicalError = require('../src/errors/cyclicalError')
 
-const logLevel = 4
-const silent = false
+const logLevel = 2
+const silent = true
 
 /**
  * [createApp description]
@@ -355,7 +355,7 @@ test('Self-referential flow to trigger cyclical error', async t => {
   }
 })
 
-test.only('Compiling a FlowNote into an Application', async t => {
+test('Compiling a FlowNote into an Application', async t => {
   const app = new Application(undefined, 'New App', {
     logLevel,
     silent
@@ -417,13 +417,13 @@ node movePlayer = getPlayerById, detectPlayerMovementEvents, movePlayer, dispatc
 node displayBoundaryError = getPlayerById, sendBoundaryError
 node notifyRoom = getBroadcastMessage, getRoomByPlayerId, broadcastToRoom
 
-flow click(GET /click) = getClick$ -> extractXY$#clickBranch
+flow click(GET /click) = getClick$ -> extractXY#clickBranch
 
-clickBranch -Coordinates{ retry: 3 }> movePlayer$*#move
+clickBranch -Coordinates{ retry: 3 }> movePlayer*#move
 
-clickBranch -BoundaryError! displayBoundaryError$
+clickBranch -BoundaryError! displayBoundaryError
 
-clickBranch -> notifyRoom$ ... move
+clickBranch -> notifyRoom ... move
 `
 
   await compiler.compile(flowNoteCode)

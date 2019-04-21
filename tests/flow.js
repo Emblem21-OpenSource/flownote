@@ -85,7 +85,7 @@ test('Flow.asFlattened', t => {
   channel.connect(node2)
   const flattened = flow.asFlattened()
 
-  t.regex(flattened, /,"Double X",\["13"\],\["14"\],\["15"\]/)
+  t.regex(flattened, /,"Double X",\["14"\],\["15"\],\["16"\]/)
   t.regex(flattened, /","Plain",/)
   t.regex(flattened, /},"test",{/)
   t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"/)
@@ -108,7 +108,7 @@ test('Flow.asFlattened (Circular)', t => {
   channel.connect(node1)
   const flattened = flow.asFlattened()
 
-  t.regex(flattened, /,"Double X",\["13"\],\["14"\],\["15"\]/)
+  t.regex(flattened, /,"Double X",\["14"\],\["15"\],\["16"\]/)
   t.regex(flattened, /","Plain",/)
   t.regex(flattened, /},"test",{/)
   t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"/)

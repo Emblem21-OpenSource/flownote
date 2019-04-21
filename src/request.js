@@ -85,28 +85,6 @@ class Request {
   }
 
   /**
-   * [change description]
-   * @param  {[type]} key   [description]
-   * @param  {[type]} value [description]
-   * @return {[type]}       [description]
-   */
-  thenChange (key, value, stepId) {
-    const lastChange = this.changes[this.changes.length - 1]
-
-    this.changes.push({
-      appId: lastChange.appId,
-      flowId: lastChange.flowId,
-      stepId: stepId || lastChange.stepId,
-      key: key,
-      value
-    })
-
-    this.application.emit('ValueChange', { [key]: value }, this, undefined, false /* @TODO hrmmm */)
-
-    return this
-  }
-
-  /**
    * Returns the current value map of the request
    * @param  {[type]} data [description]
    * @return {[type]}      [description]

@@ -44,7 +44,7 @@ test('Channel.asFlattened', t => {
   channel.connect(node2)
   const flattened = node1.asFlattened()
 
-  t.regex(flattened, /,"Double X",\["6"\],\["7"\],\["8"\]/)
+  t.regex(flattened, /,"Double X",\["7"\],\["8"\],\["9"\]/)
   t.regex(flattened, /","Plain",/)
   t.regex(flattened, /},"test",{/)
   t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"/)
@@ -60,7 +60,7 @@ test('Channel.asFlattened (Circular)', t => {
   channel.connect(node1)
   const flattened = node1.asFlattened()
 
-  t.regex(flattened, /,"Double X",\["6"\],\["7"\],\["8"\]/)
+  t.regex(flattened, /,"Double X",\["7"\],\["8"\],\["9"\]/)
   t.regex(flattened, /","Plain",/)
   t.regex(flattened, /},"test",{/)
   t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"/)

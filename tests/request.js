@@ -48,13 +48,13 @@ test('Request.addChange', async t => {
   t.is(request.changes[0].value, 7)
 })
 
-test('Request.addChange then Request.thenChange', async t => {
+test('Request.addChange multiple times', async t => {
   const app = new Application(undefined, appName)
   const request = new Request(app, {}, flow, node)
 
   request
     .change(app, flow, node, 'a', 7)
-    .thenChange('b', 12)
+    .change(app, flow, node, 'b', 12)
 
   t.is(request.changes.length, 2)
   t.is(request.changes[0].appId, app.id)
@@ -75,9 +75,9 @@ test('Request.getState', async t => {
 
   request
     .change(app, flow, node, 'a', 7)
-    .thenChange('b', 12)
-    .thenChange('a', 1)
-    .thenChange('b', 2)
+    .change(app, flow, node, 'b', 12)
+    .change(app, flow, node, 'a', 1)
+    .change(app, flow, node, 'b', 2)
 
   const state = request.getState({
     a: 7,

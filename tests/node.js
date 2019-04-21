@@ -42,7 +42,7 @@ test('Node.asFlattened', t => {
   const node = new Node(app, undefined, nodeName, [ to ], [ 'test' ], [ action ])
   const flattened = node.asFlattened()
 
-  t.regex(flattened, /,"Double X",\["6"\],\["7"\],\["8"\]/)
+  t.regex(flattened, /,"Double X",\["7"\],\["8"\],\["9"\]/)
   t.regex(flattened, /","Plain",\[\],\[\]/)
   t.regex(flattened, /},"test",{/)
   t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"\]/)
@@ -58,7 +58,7 @@ test('Node.asFlattened (Circular)', t => {
   to.connect(node)
   const flattened = node.asFlattened()
 
-  t.regex(flattened, /,"Double X",\["6"\],\["7"\],\["8"\]/)
+  t.regex(flattened, /,"Double X",\["7"\],\["8"\],\["9"\]/)
   t.regex(flattened, /","Plain",/)
   t.regex(flattened, /},"test",{/)
   t.regex(flattened, /"data => {\\?r?\\n  data\.x \*= 2\\?r?\\n  return data\\?r?\\n}"\]/)
