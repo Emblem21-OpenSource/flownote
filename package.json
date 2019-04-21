@@ -1,6 +1,6 @@
 {
   "name": "flownote",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "description": "FlowNote lets developers create, organize, and reason about event-oriented applications with a simple flow-based language.",
   "main": "src/index.js",
   "keywords": [
