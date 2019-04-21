@@ -78,7 +78,9 @@ class Request {
       key,
       value
     })
-    this.application.emit('ValueChange', { [key]: value }, this)
+    const isSilent = step.config && step.config.silent
+    this.application.emit('ValueChange', { [key]: value }, this, undefined, isSilent)
+
     return this
   }
 
@@ -98,7 +100,9 @@ class Request {
       key: key,
       value
     })
-    this.application.emit('ValueChange', { [key]: value }, this)
+
+    this.application.emit('ValueChange', { [key]: value }, this, undefined, false /* @TODO hrmmm */)
+
     return this
   }
 

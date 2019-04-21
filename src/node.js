@@ -17,7 +17,7 @@ class Node extends CommonClass {
    * @param  {[type]} actions [description]
    * @return {[type]}         [description]
    */
-  constructor (application, id, name, to, tags, actions) {
+  constructor (application, id, name, to, tags, actions, config) {
     super()
     this.application = application
     if (name !== undefined) {
@@ -26,7 +26,10 @@ class Node extends CommonClass {
         name: name || 'Unnamed',
         to: to || [],
         tags: tags || [],
-        actions: actions || []
+        actions: actions || [],
+        config: Object.assign({
+          silent: false
+        }, config || {})
       })
     }
   }
@@ -41,7 +44,8 @@ class Node extends CommonClass {
       name: this.name,
       to: this.to,
       tags: this.tags,
-      actions: this.actions
+      actions: this.actions,
+      config: this.config
     }
   }
 
@@ -64,6 +68,7 @@ class Node extends CommonClass {
     this.id = result.id
     this.name = result.name
     this.to = []
+    this.config = result.config
 
     for (var i = 0, len = result.to.length; i < len; i++) {
       if (result.to[i] instanceof Channel) {
@@ -131,11 +136,12 @@ class Node extends CommonClass {
    */
   async process (event, actionContext) {
     this.log.debug(`Processing node ${this.name}`)
-    this.application.emit('Node', this, event.request)
+
+    this.application.emit('Node', this, event.request, undefined, this.config.silent)
 
     for (const action of this.actions) {
       this.log.debug(`Executing node action ${action.name}`)
-      this.application.emit('Action', action, event.request)
+      this.application.emit('Action', action, event.request, undefined, this.config.silent)
       await action.execute(actionContext)
     }
   }

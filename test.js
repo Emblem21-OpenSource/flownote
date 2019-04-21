@@ -7,6 +7,9 @@ process.on('unhandledRejection', (reason, p) => {
 
 process.on('warning', console.warn)
 
+// const esm = require('esm')
+// require = esm(module)
+
 require('./tests/action.js')
 require('./tests/actionContext.js')
 require('./tests/application.js')

@@ -270,10 +270,12 @@ class Generator {
    * @param {[type]} nodeName [description]
    */
   Milestone (nodeName) {
-    // console.log('Milestone')
     const node = nodeName.eval()
     const channel = new StandardChannel(this.application, undefined, 'Plain', undefined, [])
     const milestone = new StandardMilestone(this.application, undefined, `Milestone`, 'fcfs', [], [])
+
+    milestone.config.silent = node.config.silent
+
     node.connect(channel)
     channel.connect(milestone)
     return node
@@ -333,7 +335,8 @@ class Generator {
       throw new Error('Cannot modify labeled a Path root.')
     }
 
-    // @TODO nodeInstance.silence()
+    nodeInstance.config.silent = true
+
     return nodeInstance
   }
 

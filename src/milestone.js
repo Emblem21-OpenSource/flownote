@@ -14,7 +14,7 @@ class Milestone extends CommonClass {
    * @param  {[type]} to       [description]
    * @return {[type]}          [description]
    */
-  constructor (application, id, name, strategy, to, actions) {
+  constructor (application, id, name, strategy, to, actions, config) {
     super()
     this.application = application
     if (name !== undefined) {
@@ -23,7 +23,10 @@ class Milestone extends CommonClass {
         name: name || 'Unnamed',
         strategy: strategy || 'fcfs', //   First come, first serve; Wait for all; Custom priority
         to: to || [],
-        actions: actions || []
+        actions: actions || [],
+        config: Object.assign({
+          silent: false
+        }, config || {})
       })
     }
   }
@@ -38,7 +41,8 @@ class Milestone extends CommonClass {
       name: this.name,
       strategy: this.strategy,
       to: this.to,
-      actions: this.actions
+      actions: this.actions,
+      config: this.config
     }
   }
 
@@ -62,6 +66,7 @@ class Milestone extends CommonClass {
     this.name = result.name
     this.strategy = result.strategy
     this.to = []
+    this.config = result.config
 
     for (var i = 0, len = result.to.length; i < len; i++) {
       if (result.to[i] instanceof Channel) {
@@ -123,20 +128,26 @@ class Milestone extends CommonClass {
    */
   async process (event, actionContext) {
     this.log.debug(`Processing Milestone`)
-    this.application.emit('Milestone.start', this, event.request)
+
+    this.application.emit('Milestone.start', this, event.request, undefined, this.config.silent)
+
     for (const action of this.actions) {
       this.log.debug(`Executing Milestone action ${action.name}`)
-      this.application.emit('Action', action, event.request)
+
+      this.application.emit('Action', action, event.request, undefined, this.config.silent)
+
       await action.execute(actionContext)
     }
 
     for (const accumulatedAction of event.request.accumulatedActions) {
       this.log.debug(`Executing Accumulated action ${accumulatedAction.name}`)
-      this.application.emit('Action', accumulatedAction, event.request)
+
+      this.application.emit('Action', accumulatedAction, event.request, undefined, this.config.silent)
+
       await accumulatedAction.execute(actionContext)
     }
 
-    this.application.emit('Milestone.end', this, event.request)
+    this.application.emit('Milestone.end', this, event.request, undefined, this.config.silent)
   }
 }
 

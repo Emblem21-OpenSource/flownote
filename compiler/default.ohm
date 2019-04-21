@@ -32,18 +32,21 @@ FlowNote {
 
   Node
     = IdentityNode
-    | SilentNode
     | NodeBase
 
   IdentityNode = NodeBase "#" label
 
-  SilentNode = NodeBase "$"
-  
   NodeBase
     = Milestone
+    | SilentNode
     | StandardNode
 
-  Milestone = StandardNode "*"  
+  Milestone 
+    = StandardNode "*"
+    | SilentNode "*"
+
+  SilentNode = StandardNode "$"
+
   StandardNode = label
   
   Channel

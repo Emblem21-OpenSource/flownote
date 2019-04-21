@@ -9,7 +9,8 @@ import Action from '../src/action'
 const test = require('ava')
 const CyclicalError = require('../src/errors/cyclicalError')
 
-const logLevel = 2
+const logLevel = 4
+const silent = false
 
 /**
  * [createApp description]
@@ -18,7 +19,7 @@ const logLevel = 2
 function createApp () {
   const app = new Application(undefined, 'Test App', {
     logLevel,
-    silent: true
+    silent
   })
 
   const doubleXAction = new Action(app, undefined, 'doubleX', function doubleX () {
@@ -354,10 +355,10 @@ test('Self-referential flow to trigger cyclical error', async t => {
   }
 })
 
-test('Compiling a FlowNote into an Application', async t => {
+test.only('Compiling a FlowNote into an Application', async t => {
   const app = new Application(undefined, 'New App', {
     logLevel,
-    silent: true
+    silent
   }, undefined, undefined, [
     new Action(undefined, undefined, 'extractClickData', function extractClickData () {
       this.set('click', this.get('click'))
@@ -416,13 +417,13 @@ node movePlayer = getPlayerById, detectPlayerMovementEvents, movePlayer, dispatc
 node displayBoundaryError = getPlayerById, sendBoundaryError
 node notifyRoom = getBroadcastMessage, getRoomByPlayerId, broadcastToRoom
 
-flow click(GET /click) = getClick$ -> extractXY#clickBranch
+flow click(GET /click) = getClick$ -> extractXY$#clickBranch
 
-clickBranch -Coordinates{ retry: 3 }> movePlayer*#move
+clickBranch -Coordinates{ retry: 3 }> movePlayer$*#move
 
-clickBranch -BoundaryError! displayBoundaryError
+clickBranch -BoundaryError! displayBoundaryError$
 
-clickBranch -> notifyRoom ... move
+clickBranch -> notifyRoom$ ... move
 `
 
   await compiler.compile(flowNoteCode)

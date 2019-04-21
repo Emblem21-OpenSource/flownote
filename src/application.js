@@ -537,7 +537,7 @@ class Application extends CommonClass {
    * @param  {[type]} request   [description]
    * @return {[type]}           [description]
    */
-  async emit (type, source, request, error) {
+  async emit (type, source, request, error, silent = false) {
     for (const listener of this.listeners) {
       if (listener.eventType === type) {
         await listener.method(source, request, error)
@@ -565,7 +565,7 @@ class Application extends CommonClass {
     this.onEvent(message)
 
     if (!(type === 'Flow.end' && request.waiting)) {
-      if (this.config.silent === false) {
+      if (this.config.silent === false && silent === false) {
         if (error) {
           this.errorPipe.write(stringify(message))
         } else {
