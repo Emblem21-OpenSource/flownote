@@ -239,12 +239,34 @@ class Generator {
    * @param {[type]} fileName  [description]
    * @param {[type]} extension [description]
    */
-  Import (fileName, extension) {
-    // console.log('Import')
-    // @TODO Register action modules to the app
-    // const contents = fs.readFileSync(`${fileName.eval()}.${extension.eval()}`)
-    // @TODO
-    return {}
+  Import (filenameToken, compiler) {
+    const filename = filenameToken.eval()
+    const isUrl = filename.indexOf('//') > -1
+
+    if (isUrl) {
+      // @TODO
+    } else {
+      const extension = filename.substr(filename.lastIndexOf('.') + 1).toLowerCase()
+
+      if (extension === 'js' || extension === 'mjs') {
+        // Import actions
+        let actions = require(`${process.cwd()}/${filename}`)
+
+        if (actions.default) {
+          actions = actions.default
+        }
+
+        actions.forEach(action => {
+          this.application.registerAction(action.name, action)
+        })
+      } else if (extension === 'flow') {
+        // Import flow
+        const contents = fs.readFileSync(`${process.cwd()}/${filename}`).toString()
+        compiler.compile(contents)
+      } else {
+        throw new RangeError('Import only supports .js files or .flow files')
+      }
+    }
   }
 
   /**
@@ -480,9 +502,9 @@ class Generator {
    * @param  {[type]} string [description]
    * @return {[type]}        [description]
    */
-  string (string) {
+  string (str) {
     // console.log('string')
-    return string.eval()
+    return str.sourceString
   }
 
   /**

@@ -1,6 +1,6 @@
 import Generator from './generator'
 
-function getSemantics (application) {
+function getSemantics (application, compiler) {
   const generator = new Generator(application)
 
   return {
@@ -26,8 +26,8 @@ function getSemantics (application) {
     EmptyListOf: () => {
       return []
     },
-    Import: (_1, _2, fileName, _3, extension, _4) => {
-      return generator.Import(fileName, extension)
+    Import: (_1, path) => {
+      return generator.Import(path, compiler)
     },
     Nodes: (node) => {
       return generator.Nodes(node)
@@ -77,8 +77,8 @@ function getSemantics (application) {
     label: (label) => {
       return generator.label(label)
     },
-    string: (_1, string, _2) => {
-      return generator.string(string)
+    string: (_1, str, _2) => {
+      return generator.string(str)
     },
     _terminal: () => {
       return this.primitiveValue

@@ -123,7 +123,9 @@ const app = new Application(undefined, 'App Name', {
 
 async function start () {
   // Compile FlowNote code into the app
-  await new Compiler(undefined, undefined, app).compile(`
+  const compiler = new Compiler(undefined, undefined, app)
+  await compiler.loadSemantics()
+  compiler.compile(`
     node doubleX = validateX, multiplyXByTwo
 
     flow click(GET /timesFour) = doubleX -> doubleX

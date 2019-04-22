@@ -41,7 +41,9 @@ const compiler = new FlowNote.Compiler(undefined, undefined, undefined, {
   silent: serverSilent
 }, actions || [])
 
-compiler.compileFromFile(appFilePath).then(application => {
+compiler.loadSemantics().then(() => {
+  const application = compiler.compileFromFile(appFilePath)
+
   // Application compiled
 
   // Select Application Mode

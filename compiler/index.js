@@ -23,11 +23,20 @@ class Compiler {
   }
 
   /**
+   * [loadSemantics description]
+   * @return {[type]} [description]
+   */
+  async loadSemantics() {
+    this.semantics = (await import(/* webpackInclude: /.+-semantics\.js$/ */ `./${this.semanticsPath}-semantics.js`)).default
+    return this
+  }
+
+  /**
    * [compileFromFile description]
    * @param  {[type]} filename [description]
    * @return {[type]}          [description]
    */
-  async compileFromFile (filename) {
+  compileFromFile (filename) {
     this.filename = filename
     return this.compile(fs.readFileSync(this.filename, 'utf8'))
   }
@@ -37,10 +46,9 @@ class Compiler {
    * @param  {[type]} contents [description]
    * @return {[type]}          [description]
    */
-  async compile (contents) {
-    this.semantics = (await import(/* webpackInclude: /.+-semantics\.js$/ */ `./${this.semanticsPath}-semantics.js`)).default
-    const semantics = new Semantics(this.semantics, this.grammarFilePath)
-    const generator = semantics.getGenerator(this.application)
+  compile (contents) {
+    const semantics = new Semantics(this.semantics, this.grammarFilePath, this)
+    const generator = semantics.getGenerator(this.application, this)
     const lines = contents.split('\n')
 
     lines.forEach(line => {

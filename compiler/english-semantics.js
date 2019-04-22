@@ -1,6 +1,6 @@
 import Generator from './generator'
 
-module.exports = function getSemantics (application) {
+module.exports = function getSemantics (application, compiler) {
   const generator = new Generator(application)
 
   return {

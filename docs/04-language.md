@@ -41,7 +41,23 @@ clickBranch -> notifyRoom ... move
 
 In nine lines of code, we can orchestrate how multiple functions interact with one another together with retry functionality, error handling, sane transactional persistence, dynamic dependencies, and expose them for usage very easily.
 
-##### Behavior Driven-Design (Coming soon!)
+## Import 
+
+Flow files can also import the Actiosn they need and other Flow files.  Action defintion files should have an extension of `.js` or `.mjs` and it should export an array of Actions.  This dependency can be expressed in a Flow file in the following manner:
+
+```java
+import "actionDefinitions.js"
+```
+
+You can also import other Flow files to compose Applications out of Nodes and Flows.  Flow files imported in this manner should have an extension of `.flow`. This dependency can be expressed in a Flow file in the following manner:
+
+```java
+import "someFileFile.flow"
+```
+
+Pathing for these `import` statements are based on the current working directory where you run your FlowNote, not based on relative pathing.
+
+## Behavior Driven-Design (Coming soon!)
 
 Additionally, FlowNote allows for Behavior Driven-Design grammar as well to allow non-developer conceptualization of how an Application should world. This is a English BDD example of the above code:
 

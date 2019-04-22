@@ -693,6 +693,7 @@ class Application extends CommonClass {
  */
 Application.compile = async function compile (name, flowFilePath, config, actions, eventQueue, inputPipe, outputPipe, errorPipe) {
   const compiler = new Compiler(undefined, undefined, undefined, config, actions, name)
+  await compiler.loadSemantics()
   return compiler.compileFromFile(flowFilePath)
 }
 

@@ -409,6 +409,7 @@ test('Compiling a FlowNote into an Application', async t => {
   ])
 
   const compiler = new Compiler(undefined, undefined, app)
+  await compiler.loadSemantics()
 
   const flowNoteCode = `
 node getClick = extractClickData, extractPlayerId
@@ -426,7 +427,45 @@ clickBranch -BoundaryError! displayBoundaryError
 clickBranch -> notifyRoom ... move
 `
 
-  await compiler.compile(flowNoteCode)
+  compiler.compile(flowNoteCode)
+
+  const result = await app.request('GET', '/click', {
+    playerId: 1,
+    click: {
+      x: 2,
+      y: 10
+    },
+    events: [
+      {
+        type: 'move'
+      }
+    ]
+  })
+
+  t.is(result.state.playerId, 1)
+  t.is(result.state.clickX, 2)
+  t.is(result.state.clickY, 10)
+  t.is(result.state.player.id, 1)
+  t.is(result.state.player.name, 'Alice')
+  t.is(result.state.player.x, 12)
+  t.is(result.state.player.y, 22)
+})
+
+test('Compiling a FlowNote into an Application with Import statement', async t => {
+  const app = new Application(undefined, 'New App', {
+    logLevel,
+    silent
+  })
+
+  const compiler = new Compiler(undefined, undefined, app)
+  await compiler.loadSemantics()
+
+  const flowNoteCode = `
+import "compiler/testActions.js"
+import "compiler/test.flow"
+`
+
+  compiler.compile(flowNoteCode)
 
   const result = await app.request('GET', '/click', {
     playerId: 1,

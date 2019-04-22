@@ -6,11 +6,12 @@ class Semantics {
    * [constructor description]
    * @return {[type]}                 [description]
    */
-  constructor (semantics, grammarFilePath) {
+  constructor (semantics, grammarFilePath, compiler) {
     this.semantics = semantics
     this.grammer = undefined
     this.filename = grammarFilePath
     this.grammar = ohm.grammar(fs.readFileSync(this.filename, 'utf8'))
+    this.compiler = compiler
   }
 
   /**
@@ -44,8 +45,8 @@ class Semantics {
    * @param  {[type]} application [description]
    * @return {[type]}             [description]
    */
-  getGenerator (application) {
-    return this.grammar.createSemantics().addOperation('eval', this.semantics(application))
+  getGenerator (application, compiler) {
+    return this.grammar.createSemantics().addOperation('eval', this.semantics(application, this.compiler))
   }
 
   /**

@@ -18,6 +18,7 @@ if (languageIndex === -1) {
 
 async function start () {
   const compiler = new Compiler(`compiler/${language}.ohm`, language)
+  await compiler.loadSemantics()
   const filepath = args[args.length - 1]
 
   let application

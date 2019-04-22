@@ -22,7 +22,7 @@ FlowNote {
 
   Path = StandardNode Channel NonemptyListOf<Nodes, Channel>
 
-  Import = "import" "\"" label "."? label? "\""
+  Import = "import" string
 
   Nodes
     = WaitFor
