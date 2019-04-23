@@ -7,6 +7,7 @@ import StandardMilestone from '../src/nodes/standardMilestone'
 import Flow from '../src/flow'
 
 const fs = require('fs')
+const path = require('path')
 
 class Generator {
   /**
@@ -264,7 +265,25 @@ class Generator {
         const contents = fs.readFileSync(`${process.cwd()}/${filename}`).toString()
         compiler.compile(contents)
       } else {
-        throw new RangeError('Import only supports .js files or .flow files')
+        // Use node_modules
+
+        // Import Actions file
+        const packageJson = require(`${process.cwd()}/node_modules/${filename}/package.json`)
+        const main = packageJson.main || 'index.js'
+        let actions = require(`${process.cwd()}/node_modules/${filename}/${main}`)
+
+        if (actions.default) {
+          actions = actions.default
+        }
+
+        actions.forEach(action => {
+          this.application.registerAction(action.name, action)
+        })
+
+        // Import Flow file
+        const flowDir = path.dirName(`${process.cwd()}/node_modules/${filename}/${main}`)
+        const flowFile = fs.readFileSync(`${flowDir}/index.flow`).toString()
+        compiler.compile(flowFile)
       }
     }
   }
