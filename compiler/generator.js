@@ -149,7 +149,7 @@ class Generator {
 
     list.forEach(actionLabel => {
       if (actionLabel !== undefined) {
-        const action = this.application.requireAction(actionLabel, new Function(`return function ${actionLabel} () {
+        const action = this.application.requireAction(actionLabel, new Function(`return function () {
           // @TODO Fill out this stub
         }`)())
         result.push(action)
@@ -226,8 +226,8 @@ class Generator {
     } else if (type === 'Property') {
       // Properties
       return tokenInstance.concat(tokens.eval())
-    } else if (type === 'label') {
-      // Actions
+    } else if (type === 'label' || type === 'Axiom') {
+      // Actions or Axioms
       return [ tokenInstance ].concat(tokens.eval())
     } else {
       throw new Error('Unknown ctorName: ' + type)
@@ -485,6 +485,16 @@ class Generator {
   HttpMethods (method) {
     // console.log('HttpMethods')
     return method.eval()
+  }
+
+  /**
+   * [Axiom description]
+   * @param  {[type]} axiom [description]
+   * @return {[type]}       [description]
+   */
+  Axiom (axiom) {
+    // console.log('axiom')
+    return axiom.eval().join('.')
   }
 
   /**

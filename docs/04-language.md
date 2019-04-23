@@ -10,18 +10,18 @@ This flow can be represented via the following FlowNote code:
 
 ```java
 // Define Nodes that execute a series of Actions
-Node getClick = extractClickData, extractPlayerId
-Node extractXY = getXYCoordsFromClickData
-Node movePlayer = getPlayerById, detectPlayerMovementEvents, movePlayer, dispatchPlayerMovementEvents
-Node displayBoundaryError = getPlayerById, sendBoundaryError
-Node notifyRoom = getBroadcastMessage, getRoomByPlayerId, broadcastToRoom
+node getClick = extractClickData, extractPlayerId
+node extractXY = getXYCoordsFromClickData
+node movePlayer = getPlayerById, detectPlayerMovementEvents, movePlayer, dispatchPlayerMovementEvents
+node displayBoundaryError = getPlayerById, sendBoundaryError
+node notifyRoom = getBroadcastMessage, getRoomByPlayerId, broadcastToRoom
 
 // Create a Flow that can be accessed via GET /click
 // The first node in the Flow will be the getClick Node.
 // getClick has been silenced ($) and will not emit events.
 // getClick connects via a StandardChannel (->) to an extractXY Node.
 // The extractXY Node is given an instance name of "clickBranch"
-Flow click(GET /click) = getClick$ -> extractXY#clickBranch
+flow click(GET /click) = getClick$ -> extractXY#clickBranch
 
 // Using the "clickBranch" instance name, we attach a Coordinates Channel and its options (-Coordinates{ ... }>) to the extractXY Node within the click Flow.
 // Then we connect the Coordinates Channel to a movePlayer Node and allow the Channel to retry exceptions from movePlayer three times.

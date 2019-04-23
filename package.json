@@ -30,6 +30,7 @@
   ],
   "scripts": {
     "test": "nyc ava",
+    "test-only": "ava",
     "test-watch": "ava --watch",
     "profiler": "./node_modules/.bin/clinic doctor --autocannon / --method GET -- node profiler.js",
     "profiler-explorer": "./node_modules/.bin/clinic bubbleprof --autocannon / --method GET -- node profiler.js",

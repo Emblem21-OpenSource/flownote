@@ -31,21 +31,23 @@ Milestones will execute all `schedule`d Actions that have been accumulated.  Sch
 This example defines Nodes and the Actions they will execute.
 
 ```java
-Node someNode = action1
-Node anotherNode = action2, action3
-Node lastNode = action4, action5, action6
+node someNode = action1
+node anotherNode = action2, action3
+node lastNode = action4, action5, action6
 ```
+
+Node, Milestone, and Action names can only be letters, numbers, or periods.
 
 This defines a Flow as a single Node.
 
 ```java
-Flow example(GET /example) = someNode
+flow example(GET /example) = someNode
 ```
 
 This defines a Flow as a single Node which leads to a Milestone (*) that executes any accumulated Scheduled Actions.
 
 ```java
-Flow example(GET /example) = someNode*
+flow example(GET /example) = someNode*
 ```
 
 ## Examples

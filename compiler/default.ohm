@@ -14,11 +14,11 @@ FlowNote {
   PathTypes
     = Path
 
-  FlowDefinition = "flow" label "(" HttpMethods "/" ListOf<label, "/"> ")" Properties? "=" NonemptyListOf<Nodes, Channel>
+  FlowDefinition = "flow" Axiom "(" HttpMethods "/" ListOf<Axiom, "/"> ")" Properties? "=" NonemptyListOf<Nodes, Channel>
 
-  NodeDefinition = "node" label Properties? "=" Actions
+  NodeDefinition = "node" Axiom Properties? "=" Actions
 
-  Actions = ListOf<label, ",">
+  Actions = ListOf<Axiom, ",">
 
   Path = StandardNode Channel NonemptyListOf<Nodes, Channel>
 
@@ -28,13 +28,13 @@ FlowNote {
     = WaitFor
     | Node
 
-  WaitFor = Node "..." label
+  WaitFor = Node "..." Axiom
 
   Node
     = IdentityNode
     | NodeBase
 
-  IdentityNode = NodeBase "#" label
+  IdentityNode = NodeBase "#" Axiom
 
   NodeBase
     = Milestone
@@ -47,19 +47,19 @@ FlowNote {
 
   SilentNode = StandardNode "$"
 
-  StandardNode = label
+  StandardNode = Axiom
   
   Channel
     = ErrorChannel
     | NamedChannel
     | PlainChannel
 
-  ErrorChannel = "-" label Properties? "!"
-  NamedChannel = "-" label Properties? ">"
+  ErrorChannel = "-" Axiom Properties? "!"
+  NamedChannel = "-" Axiom Properties? ">"
   PlainChannel = "-" Properties? ">"
 
   Properties = "{" ListOf<Property, ","> "}"
-  Property = label ":" label
+  Property = label ":" Axiom
 
   HttpMethods
     = "GET"
@@ -69,7 +69,8 @@ FlowNote {
     | "OPTIONS"
     | "HEAD"
 
-  label = (alnum|"_")+
+  Axiom = NonemptyListOf<label, ".">
+  label = alnum+
   string  (a string literal) = "\"" (~"\"" ~"\n" any)* "\""
   number  (a number literal)
     = fraction

@@ -74,6 +74,9 @@ function getSemantics (application, compiler) {
     HttpMethods: (method) => {
       return generator.HttpMethods(method)
     },
+    Axiom: (axiom) => {
+      return generator.Axiom(axiom)
+    },
     label: (label) => {
       return generator.label(label)
     },

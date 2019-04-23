@@ -16,41 +16,43 @@ If a Node or Milestone throws an exception and the preceding Channel had retry o
 This defines a Flow as a Node connecting to another Node.
 
 ```java
-Flow example(GET /example) = someNode -> anotherNode
+flow example(GET /example) = someNode -> anotherNode
 ```
 
 This defines a Flow as a Node connecting to another Node with a custom reference.  The referenced Node is then attached to the last Node.
 
 ```java
-Flow example(GET /example) = someNode -> anotherNode#customReference
+flow example(GET /example) = someNode -> anotherNode#customReference
 customReference -> lastNode
 ```
 
 This defines a Flow as a Node connecting to another Node with a custom reference.  The referenced Node is then attached to the last Node via an Error Channel (!) that listens for `RangeErrors`.
 
+Channel names can only be letters, numbers, or periods.
+
 ```java
-Flow example(GET /example) = someNode -> anotherNode#customReference
+flow example(GET /example) = someNode -> anotherNode#customReference
 customReference -RangeError! lastNode
 ```
 
 This defines a Flow as a Node connecting to another Node with a custom reference.  The referenced Node is then attached to the last Node via an Named Channel that listens for `Named` events.
 
 ```java
-Flow example(GET /example) = someNode -> anotherNode#customReference
+flow example(GET /example) = someNode -> anotherNode#customReference
 customReference -NamedChannel> lastNode
 ```
 
 This defines a Flow as a Node connecting to another Node with a custom reference.  The referenced Node is then attached to the last Node with retry options.
 
 ```java
-Flow example(GET /example) = someNode -> anotherNode#customReference
+flow example(GET /example) = someNode -> anotherNode#customReference
 customReference -{ retry: 3, retryDelay: 3000 }> lastNode
 ```
 
 This defines a Flow as a Node connecting to another Node with a custom reference.  The referenced Node is then attached to the last Node with retry options set by returned results of an Action.
 
 ```java
-Flow example(GET /example) = someNode -> anotherNode#customReference
+flow example(GET /example) = someNode -> anotherNode#customReference
 customReference -{ retry: someActionThatReturnsNumber, retryDelay: someActionThatReturnsMilliseconds }> lastNode
 ```
 

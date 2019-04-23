@@ -20,13 +20,15 @@ Once requested, an Event will be passed to the first Node in the Flow. The Node 
 This defines a Flow that listens for `GET` requests to the `/example` path.  The Flow will execute a single Node.
 
 ```java
-Flow example(GET /example) = someNode
+flow example(GET /example) = someNode
 ```
 
 This defines a Flow that listens for `GET` requests to the `/example` path.  The Flow will execute a single Node and it will return the state, the trace, and all changes that happened to the state.
 
+Flow names can only be letters, numbers, or periods.
+
 ```java
-Flow example(GET /example) { showState: true, showTrace: true, showChanges: true } = someNode
+flow example(GET /example) { showState: true, showTrace: true, showChanges: true } = someNode
 ```
 
 ## Examples
