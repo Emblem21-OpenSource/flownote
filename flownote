@@ -29,7 +29,7 @@ do
     --standalone|-st) FLOWNOTE_STANDALONE=1;;
     --watch|-w) FLOWNOTE_WATCH=1;;
     *)
-  esac    
+  esac
 done
 
 case $1 in
@@ -84,6 +84,36 @@ case $1 in
     ;;
   test-coverage)
     npm run test-coverage
+    ;;
+  test-e2e)
+    echo "Running Ava..."
+    avaErrors=$(npm test 1>/dev/null)
+    echo "Running HTTP..."
+    httpErrors=$(timeout 3 ./flownote start-http 2>&1 > /dev/null)   
+    echo "Building browser version..."
+    browserBuildErrors=$(node --no-deprecation ./node_modules/.bin/webpack --no-progress --display=errors-only --mode production --colors 2>&1 > /dev/null)
+    echo "Testing browser version..."
+    browserRunErrors=$(node -e 'global.window = {}; require("./dist/flownote.min.js")' 2>&1 > /dev/null)
+    echo "Purging old Docker instances..."
+    ./flownote purge-all-docker 2>&1 > /dev/null
+    echo "Building Docker..."
+    dockerBuildErrors=$(./flownote build-docker 2>&1 > /dev/null)
+    echo "Running Docker..."
+    dockerRunErrors=$(./flownote start-docker-http 2>&1 > /dev/null)
+    httpOutput=$(wget -qO- http://$FLOWNOTE_SERVER_HOST/click?click[x]=10)
+
+    echo "Ava:             ${avaErrors:-OK}"
+    echo "HTTP:            ${httpErrors:-OK}"
+    echo "Browser Build:   ${browserBuildErrors:-OK}"
+    echo "Browser Run:     ${browserRunErrors:-OK}"
+    echo "Docker Build:    ${dockerBuildErrors:-OK}"
+    echo "Docker Run:      ${dockerRunErrors:-OK}"
+    
+    if [ "$httpOutput" = '{"state":{"click":{"x":"10"},"clickX":"10","player":{"name":"Alice","x":"1010","y":null}}}' ]; then \
+      echo "Docker Request:  OK"
+    else
+      echo "Docker Request:  Failed"
+    fi;
     ;;
   profile)
     npm run profiler
@@ -170,7 +200,8 @@ case $1 in
     printf "  \e[38;5;123mcompile                   \e[38;5;178mCompiles a $APP_NAME file into a JSON application.\n"
     printf "  \e[38;5;123mtest                      \e[38;5;178mRuns the test suite.\n"
     printf "  \e[38;5;123mtest-watch                \e[38;5;178mRuns the test suite every time code changes.\n"
-    printf "  \e[38;5;123mtest-coverage             \e[38;5;178mRuns the test suite  and generates a code coverage report.\n"
+    printf "  \e[38;5;123mtest-coverage             \e[38;5;178mRuns the test suite and generates a code coverage report.\n"
+    printf "  \e[38;5;123mtest-e2e                  \e[38;5;178mRuns a comprehensive test suite. (To be used before a release.)\n"
     printf "  \e[38;5;123mprofile                   \e[38;5;178mRuns a profiler and generates a performance report.\n"
     printf "  \e[38;5;123mprofile-explorer          \e[38;5;178mRuns a profiler and generates a very detailed performance report.\n"
     printf "  \e[38;5;123mbuild-browser             \e[38;5;178mBuilds $APP_NAME for the browser.\n"

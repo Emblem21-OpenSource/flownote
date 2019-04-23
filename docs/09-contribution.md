@@ -6,14 +6,7 @@ Chat us up on Gitter! [![Chat us up on Gitter](https://badges.gitter.im/flownote
 
 ## Testing
 
-Before submitting a Pull Request, make sure the following commands pass:
-
-* `npm test`
-* `npm run browser-test` then go to `http://localhost:1000`
-* `npm run browser-build`
-* `npm run profiler`
-* `./flownote start-http` then go to `http://localhost:8080/click?click[x]=10`
-* `./flownote start-docker-http` then go to `http://localhost/click?click[x]=10`
+Before submitting a Pull Request, run `./flownote test-e2e` to make sure the everything passes.
 
 ## Pull Requests
 

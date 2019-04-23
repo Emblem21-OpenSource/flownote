@@ -27,6 +27,20 @@ module.exports = (env, argv) => ({
         use: {
           loader: 'babel-loader'
         }
+      },
+      {
+        test: /\.ohm$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'raw-loader'
+        }
+      },
+      {
+        test: /\.flow$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'raw-loader'
+        }
       }
     ]
   },
