@@ -91,7 +91,7 @@ test('Request.getState', async t => {
 test('Request.addAction', async t => {
   const app = new Application(undefined, appName)
   const request = new Request(app, {}, flow, node)
-  const action = new Action(app, undefined, 'Double X', doubleX)
+  const action = new Action('Double X', doubleX, app)
 
   request.addAction(action)
   t.is(request.accumulatedActions.length, 1)

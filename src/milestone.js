@@ -82,7 +82,7 @@ class Milestone extends CommonClass {
       if (result.actions[i] instanceof Action) {
         this.addAction(result.actions[i])
       } else {
-        this.addAction(new Action(this.application).fromJSON(result.actions[i]))
+        this.addAction(new Action(undefined, undefined, this.application).fromJSON(result.actions[i]))
       }
     }
 

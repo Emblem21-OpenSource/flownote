@@ -16,21 +16,21 @@ const actionName = 'Double X'
 
 test('Define action', t => {
   const app = new Application(undefined, appName)
-  const action = new Action(app, undefined, actionName, doubleX)
+  const action = new Action(actionName, doubleX, app)
   t.is(action.name, actionName)
 })
 
 test('Action.asFlattened', t => {
   const app = new Application(undefined, appName)
-  const action = new Action(app, undefined, actionName, doubleX)
+  const action = new Action(actionName, doubleX, app)
   t.regex(action.asFlattened(), /,"Double X","function doubleX()/)
 })
 
 test('Action.loadFlattened', t => {
   const app = new Application(undefined, appName)
-  const action = new Action(app, undefined, actionName, doubleX)
+  const action = new Action(actionName, doubleX, app)
   const flattened = action.asFlattened()
-  const action2 = new Action(app).loadFlattened(flattened)
+  const action2 = new Action(undefined, undefined, app).loadFlattened(flattened)
 
   t.is(action.application, action2.application)
   t.is(action.id, action2.id)
@@ -46,7 +46,7 @@ test('Action.execute', async t => {
   const node = new Node(app, undefined, 'Double X', [], [], [])
   flow.connect(node)
 
-  const action = new Action(app, undefined, actionName, doubleX)
+  const action = new Action(actionName, doubleX, app)
   const request = new Request(app, {
     x: 7
   }, flow, node)
@@ -63,10 +63,10 @@ test('Action.execute after JSON', async t => {
   const node = new Node(app, undefined, 'Double X', [], [], [])
   flow.connect(node)
 
-  const action = new Action(app, undefined, actionName, doubleX)
+  const action = new Action(actionName, doubleX, app)
 
   const flattened = action.asFlattened()
-  const action2 = new Action(app).loadFlattened(flattened)
+  const action2 = new Action(undefined, undefined, app).loadFlattened(flattened)
 
   const request = new Request(app, {
     x: 7

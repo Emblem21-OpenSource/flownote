@@ -329,9 +329,9 @@ class Generator {
   WaitFor (nodeName, waitFor) {
     const node = nodeName.eval()
     const waitForAction = waitFor.eval()
-    const action = new Action(this.application, undefined, `waitFor${waitForAction}`, async function () {
+    const action = new Action(`waitFor${waitForAction}`, async function () {
       await this.waitFor(waitForAction)
-    })
+    }, this.application)
     node.addAction(action, node.actions.length - 1)
     return node
   }

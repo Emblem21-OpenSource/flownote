@@ -1,6 +1,6 @@
 {
   "name": "flownote",
-  "version": "1.0.0-beta.7",
+  "version": "1.0.0-beta.8",
   "description": "FlowNote lets developers create, organize, and reason about event-oriented applications with a simple flow-based language.",
   "main": "src/index.js",
   "keywords": [
@@ -97,6 +97,7 @@
     "copy-webpack-plugin": "^5.0.2",
     "fuzzur": "^0.1.2",
     "nodemon": "^1.18.11",
+    "np": "^5.0.0",
     "nyc": "^13.1.0",
     "raw-loader": "^2.0.0",
     "webpack": "^4.29.6",

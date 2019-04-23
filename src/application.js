@@ -325,7 +325,7 @@ class Application extends CommonClass {
         result.actions[i].application = this
         this.registerAction(result.actions[i].name, result.actions[i])
       } else if (result.actions[i] instanceof Object) {
-        this.registerAction(result.actions[i][0], new Action(this).fromJSON(result.actions[i][1]))
+        this.registerAction(result.actions[i][0], new Action(undefined, undefined, this).fromJSON(result.actions[i][1]))
       }
     }
 
@@ -451,7 +451,7 @@ class Application extends CommonClass {
   requireAction (actionName, method) {
     let action = this.getAction(actionName)
     if (!action) {
-      action = this.registerAction(actionName, new Action(this, undefined, actionName, method))
+      action = this.registerAction(actionName, new Action(actionName, method, this))
     }
     return action
   }

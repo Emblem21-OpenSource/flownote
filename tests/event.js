@@ -22,7 +22,7 @@ test('Define Event', t => {
   const flow = new Flow(app, undefined, 'Flow')
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -46,7 +46,7 @@ test('Event.asFlattened', t => {
   const flow = new Flow(app, undefined, 'Flow')
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -69,7 +69,7 @@ test('Event.asFlattened (Circular)', t => {
   const flow = new Flow(app, undefined, 'Flow')
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -91,7 +91,7 @@ test('Event.loadFlattened', t => {
   const flow = new Flow(app, undefined, 'Flow')
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -118,7 +118,7 @@ test('Event.loadFlattened (Circular)', t => {
   const flow = new Flow(app, undefined, 'Flow')
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -144,7 +144,7 @@ test('Event.attachRequest', t => {
   const flow = new Flow(app, undefined, 'Flow')
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])

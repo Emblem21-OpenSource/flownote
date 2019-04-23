@@ -19,7 +19,7 @@ test('EventQueue.push and EventQueue.process', async t => {
   const flow = new Flow(app, undefined, 'Flow', undefined, undefined, 'GET', '/test')
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new StandardNode(app, undefined, 'Double X.1', [], [], [ action ])

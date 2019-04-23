@@ -18,7 +18,7 @@ const doubleX = data => {
 test('Define Node', t => {
   const app = new Application(undefined, appName)
   const to = new Channel(app, undefined, channelName)
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node = new Node(app, undefined, nodeName, [ to ], [ 'test' ], [ action ])
@@ -36,7 +36,7 @@ test('Define Node', t => {
 test('Node.asFlattened', t => {
   const app = new Application(undefined, appName)
   const to = new Channel(app, undefined, channelName)
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node = new Node(app, undefined, nodeName, [ to ], [ 'test' ], [ action ])
@@ -51,7 +51,7 @@ test('Node.asFlattened', t => {
 test('Node.asFlattened (Circular)', t => {
   const app = new Application(undefined, appName)
   const to = new Channel(app, undefined, channelName)
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node = new Node(app, undefined, nodeName, [ to ], [ 'test' ], [ action ])
@@ -67,7 +67,7 @@ test('Node.asFlattened (Circular)', t => {
 test('Node.loadFlattened', t => {
   const app = new Application(undefined, appName)
   const to = new Channel(app, undefined, channelName)
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node = new Node(app, undefined, nodeName, [ to ], [ 'test' ], [ action ])
@@ -90,7 +90,7 @@ test('Node.loadFlattened (Circular)', t => {
   app.setPublicFlow(flow)
 
   const to = new Channel(app, undefined, channelName)
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node = new Node(app, undefined, nodeName, [ to ], [ 'test' ], [ action ])
@@ -114,7 +114,7 @@ test('Node.loadFlattened (Circular)', t => {
 test('Node.addAction with Action', t => {
   const app = new Application(undefined, appName)
   const to = new Channel(app, undefined, channelName)
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node = new Node(app, undefined, nodeName, [ to ], [ 'test' ], [ action ])
@@ -128,7 +128,7 @@ test('Node.addAction with Action', t => {
 test('Node.addAction with String', t => {
   const app = new Application(undefined, appName)
   const to = new Channel(app, undefined, channelName)
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node = new Node(app, undefined, nodeName, [ to ], [ 'test' ], [ action ])
@@ -143,7 +143,7 @@ test('Node.addAction with String', t => {
 test('Node.connect', t => {
   const app = new Application(undefined, appName)
   const to = new Channel(app, undefined, channelName)
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node = new Node(app, undefined, nodeName, [ to ], [ 'test' ], [ action ])

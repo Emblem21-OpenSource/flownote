@@ -24,7 +24,7 @@ test('Define Application', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -54,7 +54,7 @@ test('Application.asFlattened', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -78,7 +78,7 @@ test('Application.asFlattened (Circular)', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -101,7 +101,7 @@ test('Application.loadFlattened', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -135,7 +135,7 @@ test('Application.loadFlattened (Circular)', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -164,7 +164,7 @@ test('Application.connect', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -215,7 +215,7 @@ test('Application.setPublicFlow', t => {
 
 test('Application.registerAction and Application.getAction', t => {
   const app = new Application(undefined, appName, config, undefined, [])
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
   t.is(app.getAction(action.name), action)
 })

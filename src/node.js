@@ -85,7 +85,7 @@ class Node extends CommonClass {
       if (result.actions[i] instanceof Action) {
         this.actions.push(result.actions[i])
       } else {
-        this.actions.push(new Action(this.application).fromJSON(result.actions[i]))
+        this.actions.push(new Action(undefined, undefined, this.application).fromJSON(result.actions[i]))
       }
     }
 

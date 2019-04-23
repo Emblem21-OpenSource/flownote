@@ -24,7 +24,7 @@ test('Define Flow', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -47,7 +47,7 @@ test('Define Flow', t => {
 test('Define Flow with constructor-attached node', t => {
   const app = new Application(undefined, appName)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
   const node2 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -73,7 +73,7 @@ test('Flow.asFlattened', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -97,7 +97,7 @@ test('Flow.asFlattened (Circular)', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -120,7 +120,7 @@ test('Flow.loadFlattened', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -147,7 +147,7 @@ test('Flow.loadFlattened (Circular)', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])
@@ -173,7 +173,7 @@ test('Flow.connect', t => {
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
   app.setPublicFlow(flow)
 
-  const action = new Action(app, undefined, nodeName, doubleX)
+  const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
 
   const node1 = new Node(app, undefined, nodeName, [], [ 'test' ], [ action ])

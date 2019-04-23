@@ -22,42 +22,42 @@ function createApp () {
     silent
   })
 
-  const doubleXAction = new Action(app, undefined, 'doubleX', function doubleX () {
+  const doubleXAction = new Action('doubleX', function doubleX () {
     this.set('x', this.get('x') * 2)
-  })
-  const halveXAction = new Action(app, undefined, 'halveX', function halveX () {
+  }, app)
+  const halveXAction = new Action('halveX', function halveX () {
     this.set('x', this.get('x') / 2)
-  })
-  const addXAndYAction = new Action(app, undefined, 'addXAndY', function addXAndY () {
+  }, app)
+  const addXAndYAction = new Action('addXAndY', function addXAndY () {
     this.set('x', this.get('x') + this.get('y'))
-  })
-  const subtractXFromYAction = new Action(app, undefined, 'subtractXFromY', function subtractXFromY () {
+  }, app)
+  const subtractXFromYAction = new Action('subtractXFromY', function subtractXFromY () {
     this.set('y', this.get('x') - this.get('y'))
-  })
-  const throwError = new Action(app, undefined, 'throwError', function throwError () {
+  }, app)
+  const throwError = new Action('throwError', function throwError () {
     this.set('e', this.get('e') + 1)
     throw new Error('We break here')
-  })
-  const retryOnce = new Action(app, undefined, 'retryOnce', function retryOnce () {
+  }, app)
+  const retryOnce = new Action('retryOnce', function retryOnce () {
     this.set('retried', this.get('retried', 0) + 1)
     return 1
-  })
-  const getOneSecondRetryDelay = new Action(app, undefined, 'getOneSecondRetryDelay', function retryOnce () {
+  }, app)
+  const getOneSecondRetryDelay = new Action('getOneSecondRetryDelay', function retryOnce () {
     return 1000
-  })
-  const setXYToOne = new Action(app, undefined, 'setXYToOne', function setXYToOne () {
+  }, app)
+  const setXYToOne = new Action('setXYToOne', function setXYToOne () {
     this.set('x', 1)
     this.set('y', 1)
-  })
-  const delayTwentyMilliseconds = new Action(app, undefined, 'delayTwentyMilliseconds', function delayTwentyMilliseconds () {
+  }, app)
+  const delayTwentyMilliseconds = new Action('delayTwentyMilliseconds', function delayTwentyMilliseconds () {
     return new Promise(resolve => setTimeout(() => {
       this.set('y', this.get('y') * 10)
       resolve()
     }, 1000))
-  })
-  const waitForDelay = new Action(app, undefined, 'waitForDelay', function waitForDelay () {
+  }, app)
+  const waitForDelay = new Action('waitForDelay', function waitForDelay () {
     return this.waitFor(this.get('waitForDelayId'))
-  })
+  }, app)
 
   app.registerAction(doubleXAction.name, doubleXAction)
   app.registerAction(halveXAction.name, halveXAction)
@@ -360,18 +360,18 @@ test('Compiling a FlowNote into an Application', async t => {
     logLevel,
     silent
   }, undefined, undefined, [
-    new Action(undefined, undefined, 'extractClickData', function extractClickData () {
+    new Action('extractClickData', function extractClickData () {
       this.set('click', this.get('click'))
     }),
-    new Action(undefined, undefined, 'extractPlayerId', function extractPlayerId () {
+    new Action('extractPlayerId', function extractPlayerId () {
       this.set('playerId', this.get('playerId'))
     }),
-    new Action(undefined, undefined, 'getXYCoordsFromClickData', function getXYCoordsFromClickData () {
+    new Action('getXYCoordsFromClickData', function getXYCoordsFromClickData () {
       this.set('clickX', this.get('click').x)
       this.set('clickY', this.get('click').y)
       this.dispatch('Coordinates')
     }),
-    new Action(undefined, undefined, 'getPlayerById', function getPlayerById () {
+    new Action('getPlayerById', function getPlayerById () {
       this.set('player', {
         id: this.get('playerId'),
         name: 'Alice',
@@ -379,36 +379,37 @@ test('Compiling a FlowNote into an Application', async t => {
         y: 12
       })
     }),
-    new Action(undefined, undefined, 'detectPlayerMovementEvents', function detectPlayerMovementEvents () {
+    new Action('detectPlayerMovementEvents', function detectPlayerMovementEvents () {
       (this.get('events') || []).forEach(event => {
         if (event.type === 'move') {
           this.set('pendingMove', event)
         }
       })
     }),
-    new Action(undefined, undefined, 'movePlayer', function movePlayer () {
+    new Action('movePlayer', function movePlayer () {
       const player = this.get('player')
       player.x += this.get('clickX')
       player.y += this.get('clickY')
     }),
-    new Action(undefined, undefined, 'dispatchPlayerMovementEvents', function dispatchPlayerMovementEvents () {
+    new Action('dispatchPlayerMovementEvents', function dispatchPlayerMovementEvents () {
       this.dispatch('playerMoved')
     }),
-    new Action(undefined, undefined, 'sendBoundaryError', function sendBoundaryError () {
+    new Action('sendBoundaryError', function sendBoundaryError () {
       this.dispatch('BoundaryError')
     }),
-    new Action(undefined, undefined, 'getBroadcastMessage', function getBroadcastMessage () {
+    new Action('getBroadcastMessage', function getBroadcastMessage () {
       this.set('broadcastMessage', 'Player Moved')
     }),
-    new Action(undefined, undefined, 'getRoomByPlayerId', function getRoomByPlayerId () {
+    new Action('getRoomByPlayerId', function getRoomByPlayerId () {
       this.set('broadcastRoomId', 1)
     }),
-    new Action(undefined, undefined, 'broadcastToRoom', function broadcastToRoom () {
+    new Action('broadcastToRoom', function broadcastToRoom () {
       this.dispatch(`broadcast:${this.get('broadcastRoomId')}`, this.get('broadcastMessage'))
     })
   ])
 
   const compiler = new Compiler(undefined, undefined, app)
+
   await compiler.loadSemantics()
 
   const flowNoteCode = `

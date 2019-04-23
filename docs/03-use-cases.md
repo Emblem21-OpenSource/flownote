@@ -113,10 +113,10 @@ const app = new Application(undefined, 'App Name', {
   logLevel: 2
 }, undefined, undefined, [
   // Register Actions for the application
-  new Action(undefined, undefined, 'validateX', function someAction () {
+  new Action('validateX', function someAction () {
     this.set('x', parseInt(this.get('x')))
   }),
-  new Action(undefined, undefined, 'multiplyXByTwo', function someAction () {
+  new Action('multiplyXByTwo', function someAction () {
     this.set('x', this.get('x') * 2)
   })
 ])

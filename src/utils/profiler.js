@@ -11,35 +11,35 @@ const app = new Application(undefined, 'Test App', {
   silent: true
 })
 
-const doubleXAction = new Action(app, undefined, 'doubleX', function doubleX () {
+const doubleXAction = new Action('doubleX', function doubleX () {
   this.set('x', this.get('x') * 2)
-})
-const halveXAction = new Action(app, undefined, 'halveX', function halveX () {
+}, app)
+const halveXAction = new Action('halveX', function halveX () {
   this.set('x', this.get('x') / 2)
-})
-const addXAndYAction = new Action(app, undefined, 'addXAndY', function addXAndY () {
+}, app)
+const addXAndYAction = new Action('addXAndY', function addXAndY () {
   this.set('x', this.get('x') + this.get('y'))
-})
-const subtractXFromYAction = new Action(app, undefined, 'subtractXFromY', function subtractXFromY () {
+}, app)
+const subtractXFromYAction = new Action('subtractXFromY', function subtractXFromY () {
   this.set('y', this.get('x') - this.get('y'))
-})
-const throwError = new Action(app, undefined, 'throwError', function throwError () {
+}, app)
+const throwError = new Action('throwError', function throwError () {
   this.set('e', this.get('e') + 1)
   throw new Error('We break here')
-})
-const setXYToOne = new Action(app, undefined, 'setXYToOne', function setXYToOne () {
+}, app)
+const setXYToOne = new Action('setXYToOne', function setXYToOne () {
   this.set('x', 1)
   this.set('y', 1)
-})
-const delayTwentyMilliseconds = new Action(app, undefined, 'delayTwentyMilliseconds', function delayTwentyMilliseconds () {
+}, app)
+const delayTwentyMilliseconds = new Action('delayTwentyMilliseconds', function delayTwentyMilliseconds () {
   return new Promise(resolve => setTimeout(() => {
     this.set('y', this.get('y') * 10)
     resolve()
   }, 20))
 })
-const waitForDelay = new Action(app, undefined, 'waitForDelay', function waitForDelay () {
+const waitForDelay = new Action('waitForDelay', function waitForDelay () {
   return this.waitFor(this.get('waitForDelayId'))
-})
+}, app)
 
 app.registerAction(doubleXAction.name, doubleXAction)
 app.registerAction(halveXAction.name, halveXAction)

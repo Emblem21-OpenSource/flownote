@@ -17,9 +17,9 @@ function createHarness () {
     silent: true
   })
 
-  const setX = new Action(app, undefined, 'setX', function waitForDelay () {
+  const setX = new Action('setX', function waitForDelay () {
     return this.set('x')
-  })
+  }, app)
 
   app.registerAction(setX.name, setX)
 

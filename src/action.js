@@ -6,7 +6,7 @@ const idGenerator = IdGenerator()
 class Action extends CommonClass {
   /**
    */
-  constructor (applicaiton, id, name, method) {
+  constructor (name, method, applicaiton, id) {
     super()
     this.application = applicaiton
     if (name !== undefined) {
@@ -75,7 +75,7 @@ class Action extends CommonClass {
 Action.load = function load (actions) {
   const results = []
   for (const name in actions) {
-    results.push(new Action(undefined, undefined, name, actions[name]))
+    results.push(new Action(name, actions[name]))
   }
   return results
 }
