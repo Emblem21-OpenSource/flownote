@@ -240,7 +240,7 @@ class Generator {
    * @param {[type]} fileName  [description]
    * @param {[type]} extension [description]
    */
-  Import (filenameToken, compiler) {
+  Import (filenameToken, compiler, namespaceToken) {
     const filename = filenameToken.eval()
     const isUrl = filename.indexOf('//') > -1
 
@@ -248,7 +248,6 @@ class Generator {
       // @TODO
     } else {
       const extension = filename.substr(filename.lastIndexOf('.') + 1).toLowerCase()
-
       if (extension === 'js' || extension === 'mjs') {
         // Import actions
         let actions = require(`${process.cwd()}/${filename}`)
@@ -257,13 +256,25 @@ class Generator {
           actions = actions.default
         }
 
+        const namespace = namespaceToken.eval()[0]
+
+        if (!namespace) {
+          throw new Error(`Importing ${filename} requires a namespace`)
+        }
+
         actions.forEach(action => {
-          this.application.registerAction(action.name, action)
+          this.application.registerAction(`${namespace}.${action.name}`, action)
         })
       } else if (extension === 'flow') {
         // Import flow
+        const namespace = namespaceToken.eval()[0]
+
+        if (!namespace) {
+          throw new Error(`Importing ${filename} requires a namespace`)
+        }
+
         const contents = fs.readFileSync(`${process.cwd()}/${filename}`).toString()
-        compiler.compile(contents)
+        compiler.compile(contents, namespace)
       } else {
         // Use node_modules
 
@@ -277,13 +288,13 @@ class Generator {
         }
 
         actions.forEach(action => {
-          this.application.registerAction(action.name, action)
+          this.application.registerAction(`${filename}.${action.name}`, action)
         })
 
         // Import Flow file
         const flowDir = path.dirName(`${process.cwd()}/node_modules/${filename}/${main}`)
         const flowFile = fs.readFileSync(`${flowDir}/index.flow`).toString()
-        compiler.compile(flowFile)
+        compiler.compile(flowFile, filename)
       }
     }
   }
@@ -511,9 +522,14 @@ class Generator {
    * @param  {[type]} axiom [description]
    * @return {[type]}       [description]
    */
-  Axiom (axiom) {
+  Axiom (axiom, namespace) {
     // console.log('axiom')
-    return axiom.eval().join('.')
+
+    if (namespace) {
+      return `${namespace}.${axiom.eval().join('.')}`
+    } else {
+      return axiom.eval().join('.')
+    }
   }
 
   /**

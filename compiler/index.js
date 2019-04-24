@@ -36,9 +36,9 @@ class Compiler {
    * @param  {[type]} filename [description]
    * @return {[type]}          [description]
    */
-  compileFromFile (filename) {
+  compileFromFile (filename, namespace) {
     this.filename = filename
-    return this.compile(fs.readFileSync(this.filename, 'utf8'))
+    return this.compile(fs.readFileSync(this.filename, 'utf8'), namespace)
   }
 
   /**
@@ -46,9 +46,9 @@ class Compiler {
    * @param  {[type]} contents [description]
    * @return {[type]}          [description]
    */
-  compile (contents) {
+  compile (contents, namespace) {
     const semantics = new Semantics(this.semantics, this.grammarFilePath, this)
-    const generator = semantics.getGenerator(this.application, this)
+    const generator = semantics.getGenerator(this.application, this, namespace)
     const lines = contents.split('\n')
 
     lines.forEach(line => {

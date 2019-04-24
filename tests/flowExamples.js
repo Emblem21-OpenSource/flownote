@@ -462,8 +462,8 @@ test('Compiling a FlowNote into an Application with Import statement', async t =
   await compiler.loadSemantics()
 
   const flowNoteCode = `
-import "compiler/testActions.js"
-import "compiler/test.flow"
+import "compiler/testActions.js" as FlowNote
+import "compiler/test.flow" as FlowNote
 `
 
   compiler.compile(flowNoteCode)

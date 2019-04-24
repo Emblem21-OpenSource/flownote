@@ -28,7 +28,7 @@ customReference -> lastNode
 
 This defines a Flow as a Node connecting to another Node with a custom reference.  The referenced Node is then attached to the last Node via an Error Channel (!) that listens for `RangeErrors`.
 
-Channel names can only be letters, numbers, or periods.
+Channel names can only be letters or numbers.
 
 ```java
 flow example(GET /example) = someNode -> anotherNode#customReference

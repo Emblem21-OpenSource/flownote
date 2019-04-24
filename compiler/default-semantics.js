@@ -1,8 +1,7 @@
 import Generator from './generator'
 
-function getSemantics (application, compiler) {
+function getSemantics (application, compiler, namespace) {
   const generator = new Generator(application)
-
   return {
     Expression: generator.Expression,
     FlowTypes: generator.FlowTypes,
@@ -26,8 +25,8 @@ function getSemantics (application, compiler) {
     EmptyListOf: () => {
       return []
     },
-    Import: (_1, path) => {
-      return generator.Import(path, compiler)
+    Import: (_1, path, _2, namespace) => {
+      return generator.Import(path, compiler, namespace)
     },
     Nodes: (node) => {
       return generator.Nodes(node)
@@ -75,7 +74,7 @@ function getSemantics (application, compiler) {
       return generator.HttpMethods(method)
     },
     Axiom: (axiom) => {
-      return generator.Axiom(axiom)
+      return generator.Axiom(axiom, namespace)
     },
     label: (label) => {
       return generator.label(label)

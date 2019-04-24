@@ -45,8 +45,8 @@ class Semantics {
    * @param  {[type]} application [description]
    * @return {[type]}             [description]
    */
-  getGenerator (application, compiler) {
-    return this.grammar.createSemantics().addOperation('eval', this.semantics(application, this.compiler))
+  getGenerator (application, compiler, namespace) {
+    return this.grammar.createSemantics().addOperation('eval', this.semantics(application, this.compiler, namespace))
   }
 
   /**

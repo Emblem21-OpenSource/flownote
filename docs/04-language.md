@@ -43,17 +43,32 @@ In nine lines of code, we can orchestrate how multiple functions interact with o
 
 ## Import 
 
-Flow files can also import the Actions they need and other Flow files.  The `import` path should either be a module name or have an extension of `.js` or `.mjs`.  The file should export an array of Actions.  This dependency can be expressed in a Flow file in the following manner:
+Flow files can also import the Actions they need and other Flow files.  The `import` path should either be a module name or have an extension of `.js` or `.mjs`.  The file should export an array of Actions.  
+
+Imports also specify what namespace you wish to use when you reference imported Actions or Nodes.
+
+The following example will import local Actions from two folders, let you compose a new Node of out specific actions, and define a Flow using Nodes from all three sources:
 
 ```java
-import "actionDefinitions.js"
-import "src/otherDefinitions.js"
+import "appA/actionDefinitions.js" as "appA"
+import "appB/otherDefinitions.js" as "appB"
+
+node spiffyNode = appA.actionX, appB.actionY
+
+flow test(GET /test) = appA.nodeX -> appB.nodeY -> spiffyNode
 ```
 
-You can also import other Flow files to compose Applications out of Nodes and Flows.  Flow files imported in this manner should have an extension of `.flow`. This dependency can be expressed in a Flow file in the following manner:
+You can also import other Flow files to compose Applications out of Nodes and Flows.  Flow files imported in this manner should have an extension of `.flow`.
+
+In this example, we will import `appZ`'s defined actions an it's flows.  We will then build a Node from it's actions and a Flow from it's predefined Nodes.
 
 ```java
-import "someFileFile.flow"
+import "appZ/actions.js" as "appZ"
+import "appZ/index.flow" as "appZ"
+
+node spiffyNode = appZ.actionX, appZ.actionY
+
+flow test(GET /test) = appZ.nodeX -> appZ.nodeY -> spiffyNode
 ```
 
 Pathing for these `import` statements are based on the current working directory where you run your FlowNote, not based on relative pathing.
@@ -66,7 +81,7 @@ You can also import FlowNote Actions and Flows directly from modules.
 import "someModule"
 ```
 
-This will scan the Module's `package.json` for it's `main` entry and load that as Actions.  Then it will look for a `index.flow` in the same directory and load that as well.
+This will scan the Module's `package.json` for it's `main` entry and load that as Actions.  Then it will look for a `index.flow` in the same directory and load that as well.  The namespace will automatically be assigned to the module's name.
 
 ## Behavior Driven-Design (Coming soon!)
 

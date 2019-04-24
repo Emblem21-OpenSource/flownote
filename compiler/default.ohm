@@ -14,7 +14,7 @@ FlowNote {
   PathTypes
     = Path
 
-  FlowDefinition = "flow" Axiom "(" HttpMethods "/" ListOf<Axiom, "/"> ")" Properties? "=" NonemptyListOf<Nodes, Channel>
+  FlowDefinition = "flow" Axiom "(" HttpMethods "/" ListOf<label, "/"> ")" Properties? "=" NonemptyListOf<Nodes, Channel>
 
   NodeDefinition = "node" Axiom Properties? "=" Actions
 
@@ -22,7 +22,7 @@ FlowNote {
 
   Path = StandardNode Channel NonemptyListOf<Nodes, Channel>
 
-  Import = "import" string
+  Import = "import" string ("as" Axiom)?
 
   Nodes
     = WaitFor
@@ -54,8 +54,8 @@ FlowNote {
     | NamedChannel
     | PlainChannel
 
-  ErrorChannel = "-" Axiom Properties? "!"
-  NamedChannel = "-" Axiom Properties? ">"
+  ErrorChannel = "-" label Properties? "!"
+  NamedChannel = "-" label Properties? ">"
   PlainChannel = "-" Properties? ">"
 
   Properties = "{" ListOf<Property, ","> "}"

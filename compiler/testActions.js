@@ -49,4 +49,4 @@ const actions = [
   })
 ]
 
-export { actions as default}
+export { actions as default }
