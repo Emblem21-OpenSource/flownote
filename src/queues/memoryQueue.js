@@ -1,6 +1,6 @@
 import Queue from '../queue'
 
-const applicationQueues = new WeakMap()
+const applicationQueues = new Map()
 
 class MemoryQueue extends Queue {
   constructor (application, pendingEvents) {
@@ -18,7 +18,7 @@ class MemoryQueue extends Queue {
    * @return {[type]}       [description]
    */
   push (event) {
-    applicationQueues.get(this.application).push(event)
+    applicationQueues.get(this.application.id).push(event)
   }
 
   /**
@@ -26,7 +26,7 @@ class MemoryQueue extends Queue {
    * @return {[type]} [description]
    */
   pop () {
-    return applicationQueues.get(this.application).shift()
+    return applicationQueues.get(this.application.id).shift()
   }
 
   /**
@@ -34,7 +34,7 @@ class MemoryQueue extends Queue {
    * @return {Boolean} [description]
    */
   count () {
-    return applicationQueues.get(this.application).length
+    return applicationQueues.get(this.application.id).length
   }
 
   /**
@@ -44,7 +44,7 @@ class MemoryQueue extends Queue {
   toJSON () {
     return {
       type: this.type,
-      pendingEvents: applicationQueues.get(this.application).entries()
+      pendingEvents: applicationQueues.get(this.application.id)
     }
   }
 
@@ -64,7 +64,7 @@ class MemoryQueue extends Queue {
       throw new Error(`Expected MemoryQueue JSON to be a string or an object, but got a ${typeof json} instead`)
     }
 
-    applicationQueues.set(this.application, result.pendingEvents)
+    applicationQueues.set(this.application.id, result.pendingEvents)
 
     return this
   }
