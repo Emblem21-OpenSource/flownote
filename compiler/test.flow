@@ -1,8 +1,10 @@
-node getClick = extractClickData, extractPlayerId
-node extractXY = getXYCoordsFromClickData
-node movePlayer = getPlayerById, detectPlayerMovementEvents, movePlayer, dispatchPlayerMovementEvents
-node displayBoundaryError = getPlayerById, sendBoundaryError
-node notifyRoom = getBroadcastMessage, getRoomByPlayerId, broadcastToRoom
+import "compiler/testActions.js" as FlowNote
+
+node getClick = FlowNote.extractClickData, FlowNote.extractPlayerId
+node extractXY = FlowNote.getXYCoordsFromClickData
+node movePlayer = FlowNote.getPlayerById, FlowNote.detectPlayerMovementEvents, FlowNote.movePlayer, FlowNote.dispatchPlayerMovementEvents
+node displayBoundaryError = FlowNote.getPlayerById, FlowNote.sendBoundaryError
+node notifyRoom = FlowNote.getBroadcastMessage, FlowNote.getRoomByPlayerId, FlowNote.broadcastToRoom
 
 flow click(GET /click) = getClick$ -> extractXY#clickBranch
 

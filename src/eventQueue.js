@@ -2,7 +2,6 @@ import Event from './event'
 import Spider from './spider'
 import ActionContext from './actionContext'
 import MemoryQueue from './queues/memoryQueue'
-import Flow from './flow'
 
 const CommonClass = require('./utils/commonClass')
 const Log = require('./utils/log')
@@ -129,7 +128,6 @@ class EventQueue extends CommonClass {
             // The step has retry instructions
             if (event.retries <= retryCount - 1) {
               if (retryDelay > 0) {
-                // @TODO This is probably pretty naive
                 setTimeout(() => {
                   this.log.debug('Retrying...')
                   this.application.dispatch('RetryChannel', event.request, event.flow, lastStep || event.from, event.retries + 1)

@@ -13,37 +13,37 @@ If you wish for FlowNote to be a standalone server, here are four ways you can d
 ### Run a stdin server from your project
 
 ```bash
-./node_modules/.bin/flownote start-stdin --standalone --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+./node_modules/.bin/flownote start-stdin --standalone --flow=<pathToApp.flow>
 ```
 
 ### Run a HTTP server from your project
 
 ```bash
-./node_modules/.bin/flownote start-http --standalone --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+./node_modules/.bin/flownote start-http --standalone --flow=<pathToApp.flow>
 ```
 
 ### Run a watch-restarting stdin server from your project
 
 ```bash
-./node_modules/.bin/flownote start-stdin --standalone --watch --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+./node_modules/.bin/flownote start-stdin --standalone --watch --flow=<pathToApp.flow>
 ```
 
 ### Run a watch-restarting HTTP server from your project
 
 ```bash
-./node_modules/.bin/flownote start-http --standalone --watch --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+./node_modules/.bin/flownote start-http --standalone --watch --flow=<pathToApp.flow>
 ```
 
 ### Run a stdin server via Docker
 
 ```bash
-./node_modules/.bin/flownote start-docker-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+./node_modules/.bin/flownote start-docker-stdin --flow=<pathToApp.flow>
 ```
 
 ### Run a HTTP server via Docker
 
 ```bash
-./node_modules/.bin/flownote start-docker-http --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>
+./node_modules/.bin/flownote start-docker-http --flow=<pathToApp.flow>
 ```
 
 ### Within a Dockerfile
@@ -324,31 +324,45 @@ IF you are doing work on FlowNote's internals, here's some handy commands you ca
 
 ### See all runtime options
 
-`./node_modules/.bin/flownote`
+```shell
+./node_modules/.bin/flownote
+```
 
 ### Run a FlowNote Server that listens to stdin requests
 
-`./node_modules/.bin/flownote start-stdin --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>`
+```shell
+./node_modules/.bin/flownote start-stdin --flow=<pathToApp.flow>
+```
 
 ### Run a FlowNote Server that listens to HTTP requests
 
-`./node_modules/.bin/flownote start-http --host=<hostname> --port=<port> --flow=<pathToApp.flow> --actions=<pathToActionDefinitions.js>`
+```shell
+./node_modules/.bin/flownote start-http --host=<hostname> --port=<port> --flow=<pathToApp.flow>
+```
 
 ### Output the Application JSON of compiled FlowNote code.
 
-`./node_modules/.bin/flownote compile <pathToApp.flow>`
+```shell
+./node_modules/.bin/flownote compile <pathToApp.flow>
+```
 
 ### Stream FlowNote code into the compiler
 
-`cat <pathToApp.flow > ./compile`
+```shell
+cat <pathToApp.flow > ./compile
+```
 
 ### Run tests to make sure you haven't broken anything
 
-`./flownote test`
+```shell
+./flownote test
+```
 
 ### Run tests every time you change a file
 
-`./flownote test-watch`
+```shell
+./flownote test-watch
+```
 
 ##### Documentation
 

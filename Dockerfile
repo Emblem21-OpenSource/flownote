@@ -14,6 +14,7 @@ WORKDIR /usr/src/flownote
 # Copy the dependencies
 COPY package.json /usr/src/flownote
 COPY yarn.lock /usr/src/flownote
+COPY  __app__.flow-json /usr/src/flownote/app.json
 
 # Install Node Modules
 RUN set -ex; \

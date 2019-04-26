@@ -82,6 +82,15 @@ class Log {
   }
 
   /**
+   * [write description]
+   * @param  {...[type]} data [description]
+   * @return {[type]}         [description]
+   */
+  write (data) {
+    this.outputPipe.write(getLog(this.contextId, this.contextType, this.contextName, data) + '\n')
+  }
+
+  /**
    * [error description]
    * @param  {...[type]} data [description]
    * @return {[type]}         [description]
