@@ -70,9 +70,12 @@ class Channel extends CommonClass {
 
     if (result.to instanceof Node) {
       this.connect(result.to)
-    } else if (result.to !== undefined) {
+    } else if (result.to !== undefined && !this.application.isPendingStep(result.to.id)) {
       let existingNode
-      if (this.application.publicFlow !== undefined) {
+
+      this.application.setPendingStep(result.to.id)
+
+      if (this.application !== undefined) {
         existingNode = new Spider().search(this.application, result.to.id)
       }
 
@@ -81,6 +84,7 @@ class Channel extends CommonClass {
       } else {
         this.connect(new Node(this.application).fromJSON(result.to))
       }
+      this.application.removePendingStep(result.to.id)
     }
 
     this.retry = result.retry

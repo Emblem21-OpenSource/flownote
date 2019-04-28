@@ -17,7 +17,7 @@ function doubleX () {
 test('EventQueue.push and EventQueue.process', async t => {
   const app = new Application(undefined, appName)
   const flow = new Flow(app, undefined, 'Flow', undefined, undefined, 'GET', '/test')
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)

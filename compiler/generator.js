@@ -262,7 +262,9 @@ class Generator {
           throw new Error(`Importing ${filename} requires a namespace`)
         }
 
-        actions.forEach(action => {
+        this.application.actionGenerators.push(actions.toString())
+
+        actions.call(this.application, require).forEach(action => {
           this.application.registerAction(`${namespace}.${action.name}`, action)
         })
       } else if (extension === 'flow') {
@@ -287,7 +289,9 @@ class Generator {
           actions = actions.default
         }
 
-        actions.forEach(action => {
+        this.application.actionGenerators.push(actions.toString())
+
+        actions.call(this.application, require).forEach(action => {
           this.application.registerAction(`${filename}.${action.name}`, action)
         })
 

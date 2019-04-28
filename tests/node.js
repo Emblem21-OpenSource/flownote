@@ -87,7 +87,7 @@ test('Node.loadFlattened', t => {
 test('Node.loadFlattened (Circular)', t => {
   const app = new Application(undefined, appName, {})
   const flow = new Flow(app, undefined, 'Flow')
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const to = new Channel(app, undefined, channelName)
   const action = new Action(nodeName, doubleX, app)
@@ -104,7 +104,7 @@ test('Node.loadFlattened (Circular)', t => {
   t.is(node2.application, app)
   t.is(node2.name, nodeName)
   t.is(node2.to.length, 1)
-  t.deepEqual(node2.to[0], to)
+  t.deepEqual(node2.to[0].id, to.id)
   t.is(node2.tags.length, 1)
   t.is(node2.tags[0], 'test')
   t.is(node2.actions.length, 1)

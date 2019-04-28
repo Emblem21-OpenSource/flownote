@@ -72,10 +72,12 @@ class Flow extends CommonClass {
 
     if (result.to instanceof Node) {
       this.connect(result.to)
-    } else if (result.to !== undefined) {
+    } else if (result.to !== undefined && !this.application.isPendingStep(result.to.id)) {
+      this.application.setPendingStep(result.to.id)
+
       let existingNode
 
-      if (this.application.publicFlow !== undefined) {
+      if (this.application !== undefined) {
         existingNode = new Spider().search(this.application, result.to.id)
       }
 
@@ -84,6 +86,7 @@ class Flow extends CommonClass {
       } else {
         this.connect(new Node(this.application).fromJSON(result.to))
       }
+      this.application.removePendingStep(result.to.id)
     }
 
     this.endpointRoute = result.endpointRoute
@@ -152,7 +155,7 @@ class Flow extends CommonClass {
   }
 
   print (source = this, indents = '') {
-    console.log(indents + source.name)
+    console.log(indents + source.name + ` (${source.id})`)
     if (source.to instanceof Array) {
       for (var i = 0, len = source.to.length; i < len; i++) {
         this.print(source.to[i], indents + ' ')

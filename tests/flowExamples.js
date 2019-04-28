@@ -76,7 +76,7 @@ function createApp () {
 test('Basic math flow', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
@@ -110,7 +110,7 @@ test('Basic math flow showing result state, changes, and trace', async t => {
     showChanges: true,
     showState: true
   }, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
@@ -154,7 +154,7 @@ test('Basic math flow showing result state, changes, and trace', async t => {
 test('Basic math flow with unreachable error', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])
@@ -184,7 +184,7 @@ test('Basic math flow with unreachable error', async t => {
 test('Basic math flow with reachable error', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
@@ -220,7 +220,7 @@ test('Basic math flow with reachable error', async t => {
 test('Basic math flow with retries error', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
@@ -256,7 +256,7 @@ test('Basic math flow with retries error', async t => {
 test('Basic math flow with custom retries error', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
@@ -293,7 +293,7 @@ test('Basic math flow with custom retries error', async t => {
 test('Basic math flow with custom retries error with a 1 second delay', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
@@ -330,7 +330,7 @@ test('Basic math flow with custom retries error with a 1 second delay', async t 
 test('Self-referential flow to trigger cyclical error', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel A', undefined, [], undefined, undefined, [])
@@ -356,57 +356,62 @@ test('Self-referential flow to trigger cyclical error', async t => {
 })
 
 test('Compiling a FlowNote into an Application', async t => {
+  function actionGenerator () {
+    const { Action } = require('../src/index')
+
+    return [
+      new Action('extractClickData', function extractClickData () {
+        this.set('click', this.get('click'))
+      }),
+      new Action('extractPlayerId', function extractPlayerId () {
+        this.set('playerId', this.get('playerId'))
+      }),
+      new Action('getXYCoordsFromClickData', function getXYCoordsFromClickData () {
+        this.set('clickX', this.get('click').x)
+        this.set('clickY', this.get('click').y)
+        this.dispatch('Coordinates')
+      }),
+      new Action('getPlayerById', function getPlayerById () {
+        this.set('player', {
+          id: this.get('playerId'),
+          name: 'Alice',
+          x: 10,
+          y: 12
+        })
+      }),
+      new Action('detectPlayerMovementEvents', function detectPlayerMovementEvents () {
+        (this.get('events') || []).forEach(event => {
+          if (event.type === 'move') {
+            this.set('pendingMove', event)
+          }
+        })
+      }),
+      new Action('movePlayer', function movePlayer () {
+        const player = this.get('player')
+        player.x += this.get('clickX')
+        player.y += this.get('clickY')
+      }),
+      new Action('dispatchPlayerMovementEvents', function dispatchPlayerMovementEvents () {
+        this.dispatch('playerMoved')
+      }),
+      new Action('sendBoundaryError', function sendBoundaryError () {
+        this.dispatch('BoundaryError')
+      }),
+      new Action('getBroadcastMessage', function getBroadcastMessage () {
+        this.set('broadcastMessage', 'Player Moved')
+      }),
+      new Action('getRoomByPlayerId', function getRoomByPlayerId () {
+        this.set('broadcastRoomId', 1)
+      }),
+      new Action('broadcastToRoom', function broadcastToRoom () {
+        this.dispatch(`broadcast:${this.get('broadcastRoomId')}`, this.get('broadcastMessage'))
+      })
+    ]
+  }
   const app = new Application(undefined, 'New App', {
     logLevel,
     silent
-  }, undefined, undefined, [
-    new Action('extractClickData', function extractClickData () {
-      this.set('click', this.get('click'))
-    }),
-    new Action('extractPlayerId', function extractPlayerId () {
-      this.set('playerId', this.get('playerId'))
-    }),
-    new Action('getXYCoordsFromClickData', function getXYCoordsFromClickData () {
-      this.set('clickX', this.get('click').x)
-      this.set('clickY', this.get('click').y)
-      this.dispatch('Coordinates')
-    }),
-    new Action('getPlayerById', function getPlayerById () {
-      this.set('player', {
-        id: this.get('playerId'),
-        name: 'Alice',
-        x: 10,
-        y: 12
-      })
-    }),
-    new Action('detectPlayerMovementEvents', function detectPlayerMovementEvents () {
-      (this.get('events') || []).forEach(event => {
-        if (event.type === 'move') {
-          this.set('pendingMove', event)
-        }
-      })
-    }),
-    new Action('movePlayer', function movePlayer () {
-      const player = this.get('player')
-      player.x += this.get('clickX')
-      player.y += this.get('clickY')
-    }),
-    new Action('dispatchPlayerMovementEvents', function dispatchPlayerMovementEvents () {
-      this.dispatch('playerMoved')
-    }),
-    new Action('sendBoundaryError', function sendBoundaryError () {
-      this.dispatch('BoundaryError')
-    }),
-    new Action('getBroadcastMessage', function getBroadcastMessage () {
-      this.set('broadcastMessage', 'Player Moved')
-    }),
-    new Action('getRoomByPlayerId', function getRoomByPlayerId () {
-      this.set('broadcastRoomId', 1)
-    }),
-    new Action('broadcastToRoom', function broadcastToRoom () {
-      this.dispatch(`broadcast:${this.get('broadcastRoomId')}`, this.get('broadcastMessage'))
-    })
-  ])
+  }, undefined, undefined, [ actionGenerator ])
 
   const compiler = new Compiler(undefined, undefined, app)
 
@@ -493,7 +498,7 @@ import "compiler/test.flow" as FlowNote
 test('Flow with waitFor', async t => {
   const app = createApp()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])

@@ -43,7 +43,7 @@ In nine lines of code, we can orchestrate how multiple functions interact with o
 
 ## Import 
 
-Flow files can also import the Actions they need and other Flow files.  The `import` path should either be a module name or have an extension of `.js` or `.mjs`.  The file should export an array of Actions.  
+Flow files can also import the Actions they need and other Flow files.  The `import` path should either be a module name or have an extension of `.js` or `.mjs`.  The file should export a function which returns an array of Actions.  
 
 Imports also specify what namespace you wish to use when you reference imported Actions or Nodes.
 

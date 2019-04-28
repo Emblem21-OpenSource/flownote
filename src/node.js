@@ -71,11 +71,17 @@ class Node extends CommonClass {
     this.config = result.config
 
     for (var i = 0, len = result.to.length; i < len; i++) {
+      if (this.application.isPendingStep(result.to[i].id)) {
+        continue
+      }
+
+      this.application.setPendingStep(result.to[i].id)
       if (result.to[i] instanceof Channel) {
         this.connect(result.to[i])
       } else {
         this.connect(new Channel(this.application).fromJSON(result.to[i]))
       }
+      this.application.removePendingStep(result.to[i].id)
     }
 
     this.tags = result.tags

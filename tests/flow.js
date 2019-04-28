@@ -95,7 +95,7 @@ test('Flow.asFlattened', t => {
 test('Flow.asFlattened (Circular)', t => {
   const app = new Application(undefined, appName)
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
@@ -145,7 +145,7 @@ test('Flow.loadFlattened', t => {
 test('Flow.loadFlattened (Circular)', t => {
   const app = new Application(undefined, appName)
   const flow = new Flow(app, undefined, flowName, config, undefined, 'GET', '/testFlow', [])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
@@ -159,10 +159,12 @@ test('Flow.loadFlattened (Circular)', t => {
   const flattened = flow.asFlattened()
   const restoredFlow = new Flow(app).loadFlattened(flattened)
 
-  t.is(restoredFlow.application, app)
+  t.is(restoredFlow.application.name, app.name)
   t.is(restoredFlow.name, flowName)
   t.deepEqual(restoredFlow.config, config)
-  t.is(restoredFlow.to, node1)
+  t.is(restoredFlow.to.id, node1.id)
+  t.is(restoredFlow.to.to[0].id, node1.to[0].id)
+  // @TODO t.is(restoredFlow.to.to[0].to, node1.id)
   t.is(restoredFlow.endpointMethod, 'GET')
   t.is(restoredFlow.endpointRoute, '/testFlow')
   t.is(restoredFlow.endpointParams.length, 0)

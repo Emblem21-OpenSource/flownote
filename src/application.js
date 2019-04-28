@@ -4,6 +4,7 @@ import Compiler from '../compiler/index'
 import Action from './action'
 
 const querystring = require('qs')
+const executeCode = require('./utils/vm')
 const IdGenerator = require('./utils/idGenerator')
 const EventQueue = require('./eventQueue')
 // const Delegate = require('./delegate')
@@ -23,11 +24,10 @@ class Application extends CommonClass {
    * @param  {[type]} id         [description]
    * @param  {[type]} name       [description]
    * @param  {[type]} config     [description]
-   * @param  {[type]} publicFlow [description]
    * @param  {[type]} flows      [description]
    * @return {[type]}            [description]
    */
-  constructor (id, name, config, publicFlow, flows, actions, inputPipe, outputPipe, errorPipe, eventQueue) {
+  constructor (id, name, config, publicFlow, flows, actionGenerators, inputPipe, outputPipe, errorPipe, eventQueue) {
     super()
 
     this.inputPipe = inputPipe || process.stdin
@@ -41,9 +41,9 @@ class Application extends CommonClass {
         logLevel: 2,
         silent: true
       }, config || {}),
-      publicFlow: publicFlow || undefined,
+      // publicFlow: publicFlow || undefined,
       flows: flows || [],
-      actions: actions || new Map(),
+      actionGenerators: actionGenerators || [],
       eventQueue: eventQueue || {
         queue: {
           type: 'memory',
@@ -93,7 +93,7 @@ class Application extends CommonClass {
           error: e.message
         }
 
-        if (e instanceof NotFoundError) { // @TODO I'll probably need a custom error for this
+        if (e instanceof NotFoundError) {
           res.writeHead(404, { 'Content-Type': 'text/plain' })
         } else {
           res.writeHead(500, { 'Content-Type': 'text/plain' })
@@ -233,22 +233,18 @@ class Application extends CommonClass {
    * @return {[type]} [description]
    */
   toJSON () {
-    const actions = []
-
-    for (var [key, action] of this.actions.entries()) {
-      actions.push([
-        key,
-        action
-      ])
+    const actionGenerators = []
+    for (var i = 0, len = this.actionGenerators.length; i < len; i++) {
+      actionGenerators.push(this.actionGenerators[i].toString())
     }
 
     return {
       id: this.id,
       name: this.name,
       config: this.config,
-      publicFlow: this.publicFlow,
+      // publicFlow: this.publicFlow.asFlattened(),
       flows: this.flows,
-      actions,
+      actionGenerators,
       eventQueue: this.eventQueue
     }
   }
@@ -270,6 +266,7 @@ class Application extends CommonClass {
    */
   fromJSON (flattened) {
     let result
+    var i, len
 
     if (typeof flattened === 'string') {
       result = this.loadFlattened(flattened)
@@ -279,9 +276,11 @@ class Application extends CommonClass {
       throw new Error(`Expected Application JSON to be a string or an object, but got a ${typeof json} instead`)
     }
 
+    /*
     if (result.flows.length === 0 && result.publicFlow) {
       result.flows.push(result.publicFlow)
     }
+    */
 
     this.id = result.id
     this.name = result.name
@@ -295,23 +294,25 @@ class Application extends CommonClass {
     this.onShutdown = noop
     this.listening = false
     this.nodeAliases = new Map()
+    this.actionGenerators = []
+    this.pendingSteps = []
+
     // this.delegate = new Delegate(this)
 
-    if (result.eventQueue instanceof EventQueue) {
-      this.eventQueue = result.eventQueue
-      this.eventQueue.application = this
-    } else if (result.eventQueue instanceof Object) {
-      this.eventQueue = new EventQueue(this).fromJSON(result.eventQueue)
-    }
-
+    /*
     if (result.publicFlow instanceof Flow) {
-      this.publicFlow = result.publicFlow
-      this.publicFlow.application = this
-    } else if (result.publicFlow instanceof Object) {
-      this.publicFlow = new Flow(this).fromJSON(result.publicFlow)
+      this.setPublicFlow(this.publicFlow)
+    } else if (result.publicFlow instanceof Object || typeof result.publicFlow === 'string') {
+      this.setPublicFlow(new Flow(this).fromJSON(result.publicFlow))
     }
+    */
 
-    for (var i = 0, len = result.flows.length; i < len; i++) {
+    for (i = 0, len = result.flows.length; i < len; i++) {
+      /*
+      if (result.flows[i].id === result.publicFlow.id) {
+        continue
+      }
+      */
       if (result.flows[i] instanceof Flow) {
         result.flows[i].application = this
         this.registerFlow(result.flows[i])
@@ -320,13 +321,16 @@ class Application extends CommonClass {
       }
     }
 
-    for (i = 0, len = result.actions.length; i < len; i++) {
-      if (result.actions[i] instanceof Action) {
-        result.actions[i].application = this
-        this.registerAction(result.actions[i].name, result.actions[i])
-      } else if (result.actions[i] instanceof Object) {
-        this.registerAction(result.actions[i][0], new Action(undefined, undefined, this).fromJSON(result.actions[i][1]))
-      }
+    // Register Action Generators and their Actions
+    for (i = 0, len = result.actionGenerators.length; i < len; i++) {
+      this.registerActionGenerator(result.actionGenerators[i])
+    }
+
+    if (result.eventQueue instanceof EventQueue) {
+      this.eventQueue = result.eventQueue
+      this.eventQueue.application = this
+    } else if (result.eventQueue instanceof Object) {
+      this.eventQueue = new EventQueue(this).fromJSON(result.eventQueue)
     }
 
     this.log = new Log(this.id, 'Application', this.name, this.config.logLevel, this.outputPipe, this.errorPipe)
@@ -339,10 +343,65 @@ class Application extends CommonClass {
    * @param {[type]} flow [description]
    */
   setPublicFlow (flow) {
+    /*
     this.log.debug(`Connecting ${flow.name}:${flow.id} flow to ${this.name} application`)
     this.publicFlow = flow
+
     if (this.flows.indexOf(flow) === -1) {
+      // Register the flow if it is the first flow
       this.registerFlow(flow)
+    }
+    */
+  }
+
+  /**
+   * [registerActionGenerator description]
+   * @param  {[type]} generator [description]
+   * @return {[type]}           [description]
+   */
+  registerActionGenerator (generator) {
+    const actionMethod = executeCode(generator)
+
+    this.actionGenerators.push(actionMethod)
+
+    let actions = []
+
+    actions = actionMethod.call(this, require)
+
+    actions.forEach(action => {
+      this.registerAction(action.name, action)
+    })
+  }
+
+  /**
+   * [setPendingStep description]
+   * @param {[type]} stepId [description]
+   */
+  setPendingStep (stepId) {
+    // @TODO Detect pending steps that overlap and schedule them for connection once everything is done at the app level
+    if (this.pendingSteps.indexOf(stepId) === -1) {
+      this.pendingSteps.push(stepId)
+    }
+  }
+
+  /**
+   * [hasPendingStep description]
+   * @param  {[type]}  stepId [description]
+   * @return {Boolean}        [description]
+   */
+  isPendingStep (stepId) {
+    return this.pendingSteps.indexOf(stepId) > -1
+  }
+
+  /**
+   * [removePendingStep description]
+   * @param  {[type]}  stepId [description]
+   * @return {Boolean}        [description]
+   */
+  removePendingStep (stepId) {
+    const index = this.pendingSteps.indexOf(stepId)
+    if (index > -1) {
+      this.pendingSteps.splice(index, 1)
     }
   }
 
@@ -493,6 +552,8 @@ class Application extends CommonClass {
    * @return {[type]}      [description]
    */
   registerFlow (flow) {
+    flow.application = this
+
     for (var index = 0, len = this.flows.length; index < len; index++) {
       // Overwrite any flow with matching unique data
       if (this.flows[index].id === flow.id || (this.flows[index].endpointRoute === flow.endpointRoute && this.flows[index].endpointMethod === flow.endpointMethod)) {
@@ -500,6 +561,7 @@ class Application extends CommonClass {
         return
       }
     }
+
     this.flows.push(flow)
   }
 
@@ -526,9 +588,15 @@ class Application extends CommonClass {
    * @param  {[type]} node [description]
    * @return {[type]}      [description]
    */
-  connect (node) {
+  connect (node, flow) {
+    if (flow === undefined) {
+      flow = this.flows[0]
+      if (flow === undefined) {
+        throw new RangeError('No flow specified for Application to connect to')
+      }
+    }
     this.log.debug(`Connecting ${node.name}:${node.id} to ${this.name} applicaiton`)
-    this.publicFlow.connect(node)
+    flow.connect(node)
   }
 
   /**

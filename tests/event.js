@@ -20,7 +20,7 @@ const doubleX = data => {
 test('Define Event', t => {
   const app = new Application(undefined, appName)
   const flow = new Flow(app, undefined, 'Flow')
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
@@ -44,7 +44,7 @@ test('Define Event', t => {
 test('Event.asFlattened', t => {
   const app = new Application(undefined, appName)
   const flow = new Flow(app, undefined, 'Flow')
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
@@ -67,7 +67,7 @@ test('Event.asFlattened', t => {
 test('Event.asFlattened (Circular)', t => {
   const app = new Application(undefined, appName)
   const flow = new Flow(app, undefined, 'Flow')
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
@@ -89,7 +89,7 @@ test('Event.asFlattened (Circular)', t => {
 test('Event.loadFlattened', t => {
   const app = new Application(undefined, appName)
   const flow = new Flow(app, undefined, 'Flow')
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
@@ -110,13 +110,13 @@ test('Event.loadFlattened', t => {
   t.is(typeof restoredEvent.id, 'string')
   t.is(restoredEvent.type, 'event')
   t.is(restoredEvent.request, undefined)
-  t.is(restoredEvent.from, node1)
+  t.is(restoredEvent.from, node1) // @TODO
 })
 
 test('Event.loadFlattened (Circular)', t => {
   const app = new Application(undefined, appName)
   const flow = new Flow(app, undefined, 'Flow')
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)
@@ -142,7 +142,7 @@ test('Event.loadFlattened (Circular)', t => {
 test('Event.attachRequest', t => {
   const app = new Application(undefined, appName)
   const flow = new Flow(app, undefined, 'Flow')
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const action = new Action(nodeName, doubleX, app)
   app.registerAction(action.name, action)

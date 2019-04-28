@@ -70,15 +70,17 @@ const FlowNote = require('flownote')
 // Define the Application
 const app = new FlowNote.Application(undefined, 'App Name', {
   logLevel: 2
-}, undefined, undefined, [
-  // Register Actions for the application
-  new FlowNote.Action(undefined, undefined, 'validateX', function someAction () {
-    this.set('x', parseInt(this.get('x')))
-  }),
-  new FlowNote.Action(undefined, undefined, 'multiplyXByTwo', function someAction () {
-    this.set('x', this.get('x') * 2)
-  })
-])
+}, undefined, undefined, function actionGenerator () {
+  return [
+    // Register Actions for the application
+    new FlowNote.Action(undefined, undefined, 'validateX', function someAction () {
+      this.set('x', parseInt(this.get('x')))
+    }),
+    new FlowNote.Action(undefined, undefined, 'multiplyXByTwo', function someAction () {
+      this.set('x', this.get('x') * 2)
+    })
+  ]
+})
 
 async function start () {
   // Compile FlowNote code into the app
@@ -111,15 +113,17 @@ import {
 // Define the Application
 const app = new Application(undefined, 'App Name', {
   logLevel: 2
-}, undefined, undefined, [
-  // Register Actions for the application
-  new Action('validateX', function someAction () {
-    this.set('x', parseInt(this.get('x')))
-  }),
-  new Action('multiplyXByTwo', function someAction () {
-    this.set('x', this.get('x') * 2)
-  })
-])
+}, undefined, undefined, function actionGenerator () {
+  return [
+    // Register Actions for the application
+    new Action('validateX', function someAction () {
+      this.set('x', parseInt(this.get('x')))
+    }),
+    new Action('multiplyXByTwo', function someAction () {
+      this.set('x', this.get('x') * 2)
+    })
+  ]
+})
 
 async function start () {
   // Compile FlowNote code into the app
@@ -152,15 +156,17 @@ const FlowNote = require('flownote')
 // Define the Application
 const app = new FlowNote.Application(undefined, 'App Name', {
   logLevel: 2
-}, undefined, undefined, [
-  // Register Actions for the application
-  new FlowNote.Action(undefined, undefined, 'validateX', function someAction () {
-    this.set('x', parseInt(this.get('x')))
-  }),
-  new FlowNote.Action(undefined, undefined, 'multiplyXByTwo', function someAction () {
-    this.set('x', this.get('x') * 2)
-  })
-])
+}, undefined, undefined, function actionGenerator () {
+  return [
+    // Register Actions for the application
+    new FlowNote.Action(undefined, undefined, 'validateX', function someAction () {
+      this.set('x', parseInt(this.get('x')))
+    }),
+    new FlowNote.Action(undefined, undefined, 'multiplyXByTwo', function someAction () {
+      this.set('x', this.get('x') * 2)
+    })
+  ]
+})
 
 async function start () {
   // Compile FlowNote code into the app
@@ -188,12 +194,14 @@ import {
 Application.compile('Name of your app', 'path/to/app.flow', {
   // Configuration options
   logLevel: 2
-}, [
-  // Register Actions for your App here
-  getAccount,
-  changeEmail,
-  emailBoss
-]).then(app => {
+}, function actionGenerator () {
+  return [
+    // Register Actions for your App here
+    getAccount,
+    changeEmail,
+    emailBoss
+  ]
+}).then(app => {
   app.listen()
 })
 ```
@@ -213,15 +221,17 @@ const http = require('http')
 // Define the Application
 const app = new FlowNote.Application(undefined, 'App Name', {
   logLevel: 2
-}, undefined, undefined, [
-  // Register Actions for the application
-  new FlowNote.Action(undefined, undefined, 'validateX', function someAction () {
-    this.set('x', parseInt(this.get('x')))
-  }),
-  new FlowNote.Action(undefined, undefined, 'multiplyXByTwo', function someAction () {
-    this.set('x', this.get('x') * 2)
-  })
-])
+}, undefined, undefined, function actionGenerator () {
+  return [
+    // Register Actions for the application
+    new FlowNote.Action(undefined, undefined, 'validateX', function someAction () {
+      this.set('x', parseInt(this.get('x')))
+    }),
+    new FlowNote.Action(undefined, undefined, 'multiplyXByTwo', function someAction () {
+      this.set('x', this.get('x') * 2)
+    })
+  ]
+})
 
 async function start () {
   // Compile FlowNote code into the app
@@ -251,12 +261,14 @@ import {
 Application.compile('Name of your app', 'path/to/app.flow', {
   // Configuration options
   logLevel: 4
-}, [
-  // Register Actions for your App here
-  getAccount,
-  changeEmail,
-  emailBoss
-]).then(app => {
+}, function () {
+  return [
+    // Register Actions for your App here
+    getAccount,
+    changeEmail,
+    emailBoss
+  ]
+}).then(app => {
   const httpServer = http.createServer(app.httpRequestHandler())
   httpServer.listen()
 })
@@ -288,15 +300,17 @@ Here's an example of how it would be used in a basic HTML template:
       // Define the Application
       var app = new FlowNote.Application(undefined, 'App Name', {
         logLevel: 2
-      }, undefined, undefined, [
-        // Register Actions for the application
-        new FlowNote.Action(undefined, undefined, 'validateX', function someAction () {
-          this.set('x', parseInt(this.get('x')))
-        }),
-        new FlowNote.Action(undefined, undefined, 'multiplyXByTwo', function someAction () {
-          this.set('x', this.get('x') * 2)
-        })
-      ])
+      }, undefined, undefined, function actionGenerator () {
+        return [
+          // Register Actions for the application
+          new FlowNote.Action(undefined, undefined, 'validateX', function someAction () {
+            this.set('x', parseInt(this.get('x')))
+          }),
+          new FlowNote.Action(undefined, undefined, 'multiplyXByTwo', function someAction () {
+            this.set('x', this.get('x') * 2)
+          })
+        ]
+      })
 
       async function start () {
         // Compile FlowNote code into the app

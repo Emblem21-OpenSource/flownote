@@ -64,7 +64,7 @@ test('Fuzz Testing Request', async t => {
   const app = createApp()
   app.listen()
   const flow = new Flow(app, undefined, 'Test Flow', {}, undefined, 'GET', '/testFlow', [ 'x', 'y' ])
-  app.setPublicFlow(flow)
+  app.registerFlow(flow)
 
   const doubleXNode = new StandardNode(app, undefined, 'Double X', [], [], [ app.getAction('doubleX') ])
   const channelA = new StandardChannel(app, undefined, 'Channel', undefined, [], undefined, undefined, [])

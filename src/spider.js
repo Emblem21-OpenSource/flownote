@@ -12,19 +12,21 @@ class Spider {
     var i, len
 
     if (source instanceof Application) {
+      /*
       if (source.publicFlow) {
         // Public Flow is designated
         return this.search(source.publicFlow, target)
       } else {
-        // Search all flows of an application
-        for (i = 0, len = source.flows; i < len; i++) {
-          const result = this.search(source.flows[i], target)
-          if (result) {
-            return result
-          }
+      */
+      // Search all flows of an application
+      for (i = 0, len = source.flows.length; i < len; i++) {
+        const result = this.search(source.flows[i], target)
+        if (result) {
+          return result
         }
-        return false
       }
+      return false
+      // }
     } else if ((source instanceof Channel) || (source instanceof Milestone) || (source instanceof Flow)) {
       // Dealing with a step
       list = [ source.to ]
