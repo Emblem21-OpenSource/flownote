@@ -1,4 +1,8 @@
 #!/bin/sh
+#set -e
+#trap "trap - TERM && kill -- -$$" INT TERM EXIT
+
+force_color_prompt=yes
 
 APP_NAME=FlowNote
 NODE_ENV=production

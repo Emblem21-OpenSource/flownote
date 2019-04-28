@@ -9,6 +9,7 @@
 * `./flownote start-docker-stdin` probably doesn't work everywhere correctly.
 * `./flownote start-stdin` probably doesn't work everywhere correctly.
 * [Outstanding bugs](https://github.com/Emblem21-OpenSource/flownote/labels/bug)
+* Terminal color codes are not not being respected bin/sh in Ubuntu terminal.
 
 ##### Documentation
 
